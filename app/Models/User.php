@@ -2,50 +2,83 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use App\Models\Role;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
+    /**
+     * Atribut yang dapat diisi secara massal.
+     * Sesuaikan dengan kolom di tabel 'users' Anda.
+     */
     protected $fillable = [
         'nama',
         'email',
         'password',
-        'phone_number',
-        'address',
-        'profile_picture',
-        'google_id',
+        'nama_lengkap',
         'role_id',
+        'foto_profile',
+        'alamat',
     ];
 
+    /**
+     * Atribut yang harus disembunyikan.
+     */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
-    protected function casts(): array
+    /**
+     * Mendapatkan peran dari pengguna.
+     */
+    public function role(): BelongsTo
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(Role::class, 'role_id');
     }
 
-    // Relasi One-to-Many (Inverse) dengan Role
-    public function role()
+    /**
+     * Mendapatkan kelas yang diajar oleh pengguna (jika dia seorang guru).
+     */
+    public function kelasDiajar(): HasMany
     {
-        return $this->belongsTo(Role::class);
+        return $this->hasMany(Kelas::class, 'guru_id');
     }
 
-    // Helper method to check user's role
-    public function hasRole($roleName)
+    /**
+     * Mendapatkan kelas yang diikuti oleh pengguna (jika dia seorang siswa).
+     */
+    public function kelasDiikuti(): BelongsToMany
     {
-        return $this->role && $this->role->name === $roleName;
+        return $this->belongsToMany(Kelas::class, 'keanggotaan_kelas', 'siswa_id', 'kelas_id');
+    }
+    
+    /**
+     * Mendapatkan wali dari pengguna (jika dia seorang siswa).
+     */
+    public function wali(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'wali_siswa', 'siswa_id', 'wali_id');
+    }
+
+    /**
+     * Mendapatkan anak dari pengguna (jika dia seorang wali).
+     */
+    public function anakWali(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'wali_siswa', 'wali_id', 'siswa_id');
+    }
+    
+    /**
+     * Mendapatkan semua tugas yang dikumpulkan oleh siswa ini.
+     */
+    public function pengumpulanTugas(): HasMany
+    {
+        return $this->hasMany(PengumpulanTugas::class, 'siswa_id');
     }
 }
