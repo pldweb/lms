@@ -1,0 +1,49 @@
+:root {
+
+}
+
+.icon-card-top > i {
+    font-size: 31px;
+    float: right;
+    padding-right: 6px;
+}
+
+.multi-level {
+    background-color: #2e3c51;
+    border-radius: 12px;
+}
+
+.card .table td, .card .table th {
+    vertical-align: baseline;
+}
+
+.column-gap-1 {
+    gap: 5px;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.modal .table td, .modal .table th {
+    white-space: wrap;
+}
+
+#universalModal {
+    .form-group:nth-child(even) {
+        background-color: #f4f4f4;
+    }
+
+    .form-group {
+        border-bottom: 1px solid #f4f4f4;
+        margin-bottom: 0 !important;
+        padding-top: 10px;
+        padding-bottom: 14px;
+    }
+
+}
+
+.max-500 {
+    overflow: scroll !important;
+    max-width: 500px !important;
+}

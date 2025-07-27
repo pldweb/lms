@@ -1,0 +1,32 @@
+.dark-overlay {
+    position: absolute;
+    content: "";
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: .5;
+}
+
+.main-menu ul.sub-menu li a {
+    position: relative;
+    padding-left: 0;
+}
+
+.main-menu ul.sub-menu:before {
+    display:none;
+}
+
+.master-menu {
+    flex-wrap: nowrap;
+}
+
+.picture-box2 [class*=picture-] {
+    max-width: 310px;
+}
+
+.sec-icon img {
+    max-width: 150px;
+}
+
