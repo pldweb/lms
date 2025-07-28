@@ -30,3 +30,17 @@
     max-width: 150px;
 }
 
+.date-box {
+    border-bottom: 1px solid #D2D2D2;
+    padding: 25px;
+}
+
+.category-img img {
+    height: 350px;
+    object-fit: cover;
+}
+
+.category-style1 .category-title a:hover {
+    color: white !important;
+}
+

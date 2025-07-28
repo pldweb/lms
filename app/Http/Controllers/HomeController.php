@@ -15,8 +15,8 @@ class HomeController extends Controller
         $data = [
             [
                 'image' => asset('landing/img/hero/hero-1.png'),
-                'title' => 'Ini Judul Hero',
-                'deskripsi' => 'Ini Dekripsi',
+                'title' => 'Selamat Datang di Website Resmi',
+                'deskripsi' => '"Membangun Generasi Cerdas, Berkarakter, dan Siap Masa Depan"',
                 'link' => 'https://google.com',
                 'tombol_text' => 'Segera Hubungi'
            ],
@@ -52,5 +52,20 @@ class HomeController extends Controller
             'heroSection' => self::heroSection()
         ];
         return view('landing.index', $params);
+    }
+
+    public function getLogin(){
+        $params = ['' => ''];
+        return view('landing.auth.login');
+    }
+
+    public function getRegister(){
+        $params = ['' => ''];
+        return view('landing.auth.register');
+    }
+
+    public function getResetPassword(){
+        $params = ['' => ''];
+        return view('landing.auth.reset-password');
     }
 }

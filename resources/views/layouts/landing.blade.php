@@ -49,7 +49,7 @@
         @yield('content')
     </div>
 
-    @include('landing.components.footer')
+    @include('landing.components.footer-1')
 
     <!-- Jquery -->
     <script src="{{asset('landing/js/vendor/jquery-3.6.0.min.js')}}"></script>
