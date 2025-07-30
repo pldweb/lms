@@ -50,7 +50,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Rute fallback jika tidak ada rute lain yang cocok (untuk halaman 404)
         Route::fallback(function () {
-            return response()->view('pages.error.404', [], 404);
+            return response()->view('error.404', [], 404);
         });
     }
 
@@ -83,13 +83,11 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Daftarkan rute dari sebuah controller.
      */
-    protected function registerRoutesFromController($controllerClass, $prefix)
-    {
+    protected function registerRoutesFromController($controllerClass, $prefix) {
         $reflection = new ReflectionClass($controllerClass);
         $namespace = $reflection->getNamespaceName();
         $controllerName = $reflection->getShortName();
 
-        // Aturan khusus untuk HomeController atau LandingController agar tidak memiliki prefix
         if ($controllerName === 'HomeController' || $controllerName === 'landingController') {
             $prefix = '/';
         } else {
@@ -97,23 +95,23 @@ class AppServiceProvider extends ServiceProvider
             $prefix .= $controllerNameKebab . '/';
         }
 
-        // Tentukan middleware yang akan digunakan untuk seluruh controller ini
+        // Tentukan middleware dasar
         $middlewares = ['web'];
-        $isAuthController = str_contains($namespace, 'App\Http\Controllers\auth');
 
-        if (!$isAuthController) {
-            $middlewares[] = 'auth'; // Jika bukan Auth Controller, wajib login
+        // Cek apakah controller berada di dalam namespace 'admin'
+        if (str_contains($namespace, 'App\Http\Controllers\admin')) {
+            // Jika ya, maka controller ini dilindungi dan wajib login
+            $middlewares[] = 'auth';
 
-            // Ambil peran yang diizinkan dari properti di dalam controller
+            // Ambil juga peran yang diizinkan dari properti controller
             if ($reflection->hasProperty('roles')) {
                 $roles = $reflection->getDefaultProperties()['roles'];
                 if (!empty($roles)) {
-                    // Terapkan middleware peran dari Spatie jika didefinisikan
                     $middlewares[] = 'role:' . implode('|', $roles);
                 }
             }
         }
-        
+
         // Grup semua rute dari controller ini dengan middleware yang sudah ditentukan
         Route::middleware($middlewares)->prefix($prefix)->group(function () use ($reflection, $controllerClass) {
             foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
@@ -122,14 +120,11 @@ class AppServiceProvider extends ServiceProvider
                 }
 
                 $methodName = $method->name;
-                // Hanya proses method yang diawali dengan get, post, put, patch, atau delete
                 if (preg_match('/^(get|post|put|patch|delete)(.+)$/', $methodName, $matches)) {
                     [$fullMatch, $httpVerb, $actionName] = $matches;
 
-                    // Membuat URI dari nama method (e.g., getIndex -> '', getDetailData -> /detail-data)
                     $uri = ($actionName === 'Index') ? '' : Str::kebab($actionName);
-                    
-                    // Menangani parameter rute
+
                     $paramString = '';
                     foreach($method->getParameters() as $param) {
                         $paramString .= '/{' . $param->getName() . ($param->isOptional() ? '?' : '') . '}';
@@ -137,7 +132,6 @@ class AppServiceProvider extends ServiceProvider
 
                     $route = Route::match([$httpVerb], rtrim($uri . $paramString, '/'), [$controllerClass, $methodName]);
 
-                    // Jika ini adalah controller login dan methodnya getIndex, beri nama 'login'
                     if ($reflection->getShortName() === 'LoginController' && $methodName === 'getIndex') {
                         $route->name('login');
                     }

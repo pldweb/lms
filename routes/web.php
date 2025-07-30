@@ -6,6 +6,7 @@ use App\Http\Controllers\auth\RegisterController;
 
 Route::controller(LoginController::class)->group(function () {
     Route::get('/user/login', 'getIndex');
+    Route::get('login', 'getIndex');
 });
 
 Route::controller(RegisterController::class)->group(function () {
