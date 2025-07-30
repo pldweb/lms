@@ -15,7 +15,7 @@ class KelasSeeder extends Seeder
      */
     public function run(): void
     {
-        $guruIds = User::where('role_id', 2)->pluck('id');
+        $guruIds = User::role('Guru')->pluck('id');
         $mapel = ['Matematika', 'Fisika', 'Biologi', 'Kimia', 'Bahasa Indonesia', 'Bahasa Inggris', 'Sejarah'];
         $jenjang = ['10', '11', '12'];
 

@@ -26,8 +26,9 @@ class StartSeeder extends Command
     {
         $this->info('🚀 Memulai proses seeding data dummy...');
         
-        // Menjalankan seeder utama
-        Artisan::call('migrate:fresh --seed');
+        $this->call('migrate:fresh', [
+            '--seed' => true,
+        ]);
         
         $this->info('✅ Proses seeding berhasil diselesaikan!');
         return 0;

@@ -44,3 +44,7 @@
     color: white !important;
 }
 
+.hero-layout1.style2 .hero-content {
+    max-width: 660px !important;
+}
+

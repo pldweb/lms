@@ -15,21 +15,31 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Membuat Admin Utama
-        User::create([
-            'nama' => 'Admin LMS',
-            'email' => 'admin@lms.test',
-            'password' => Hash::make('password'),
-            'role_id' => 1, // Asumsi ID 1 adalah Admin
+        // === DI SINI TEMPATNYA ===
+        // Membuat Admin Utama yang spesifik untuk Anda
+        $admin = User::create([
+            'nama'          => 'admin_lms', // atau username yang Anda inginkan
+            'email'         => 'admin@lms.test', // email spesifik Anda
+            'password'      => Hash::make('12345678'), // password spesifik Anda
+            'nama_lengkap'  => 'Admin LMS SMPN20',
+            'alamat'        => 'Jalan Admin No. 123',
         ]);
-
-        // Membuat Guru (10)
-        User::factory(10)->create(['role_id' => 2]); // Asumsi ID 2 adalah Guru
-
-        // Membuat Siswa (50)
-        User::factory(50)->create(['role_id' => 3]); // Asumsi ID 3 adalah Siswa
         
-        // Membuat Wali Murid (40)
-        User::factory(40)->create(['role_id' => 4]); // Asumsi ID 4 adalah Wali
+        // Menentukan perannya secara spesifik
+        $admin->assignRole('Admin');
+        // === SELESAI ===
+
+        // Setelah itu, baru buat pengguna dummy lainnya menggunakan factory
+        User::factory(10)->create()->each(function ($user) {
+            $user->assignRole('Guru');
+        });
+
+        User::factory(50)->create()->each(function ($user) {
+            $user->assignRole('Siswa');
+        });
+        
+        User::factory(40)->create()->each(function ($user) {
+            $user->assignRole('Wali Murid');
+        });
     }
 }

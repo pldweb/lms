@@ -15,22 +15,32 @@ class AppServiceProvider extends ServiceProvider
      * Register any application services.
      */
     public function register(): void
-    {}
+    {
+        //
+    }
 
     /**
      * Bootstrap any application services.
      */
     public function boot(): void
     {
+        // Panggil metode pemetaan rute
         $this->map();
+        // Atur Paginator untuk menggunakan Bootstrap 5
         Paginator::useBootstrapFive();
     }
 
+    /**
+     * Definisikan pemetaan rute untuk aplikasi.
+     */
     public function map()
     {
         $this->mapDynamicRoutes();
     }
 
+    /**
+     * Petakan rute secara dinamis dari controller.
+     */
     public function mapDynamicRoutes()
     {
         $controllerPath = app_path('Http/Controllers');
@@ -38,17 +48,18 @@ class AppServiceProvider extends ServiceProvider
 
         $this->registerRoutesFromFolder($controllerPath, $namespace);
 
+        // Rute fallback jika tidak ada rute lain yang cocok (untuk halaman 404)
         Route::fallback(function () {
-            return response()->view('error.404', [], 404);
+            return response()->view('pages.error.404', [], 404);
         });
     }
 
+    /**
+     * Pindai folder secara rekursif untuk mendaftarkan controller.
+     */
     public function registerRoutesFromFolder($folder, $namespace, $prefix = '')
     {
-        // Scan setiap file di dalam folder controller
         foreach (scandir($folder) as $file) {
-
-            // Skip . pada nama file
             if ($file === '.' || $file === '..') {
                 continue;
             }
@@ -57,16 +68,11 @@ class AppServiceProvider extends ServiceProvider
             $className = pathinfo($file, PATHINFO_FILENAME);
 
             if (is_dir($fullPath)) {
-
-                // Memastikan pemanggilan metode benar
+                // Jika ini adalah direktori, lakukan pemindaian rekursif
                 $this->registerRoutesFromFolder($fullPath, $namespace . '\\' . $className, $prefix . strtolower($className) . '/');
-
             } elseif (str_ends_with($file, 'Controller.php')) {
-
-                // Pastikan hanya file controller yang diproses
+                // Jika ini adalah file Controller, daftarkan rutenya
                 $controllerClass = $namespace . '\\' . $className;
-
-                // Cek apakah ada class
                 if (class_exists($controllerClass)) {
                     $this->registerRoutesFromController($controllerClass, $prefix);
                 }
@@ -74,69 +80,66 @@ class AppServiceProvider extends ServiceProvider
         }
     }
 
+    /**
+     * Daftarkan rute dari sebuah controller.
+     */
     protected function registerRoutesFromController($controllerClass, $prefix)
     {
         $reflection = new ReflectionClass($controllerClass);
-        $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
-
-        $controllerName = $reflection->getShortName();
         $namespace = $reflection->getNamespaceName();
+        $controllerName = $reflection->getShortName();
 
+        // Aturan khusus untuk HomeController atau LandingController agar tidak memiliki prefix
         if ($controllerName === 'HomeController' || $controllerName === 'landingController') {
             $prefix = '/';
         } else {
-            $controllerName = str_replace('Controller', '', $controllerName);
-            $controllerName = str::kebab($controllerName);
-            $prefix .= $controllerName . '/';
+            $controllerNameKebab = Str::kebab(str_replace('Controller', '', $controllerName));
+            $prefix .= $controllerNameKebab . '/';
         }
 
-        // Cek apakah controller ada di dalam folder Auth
-        $isAuthController = str_contains($namespace, 'App\Http\Controllers\Auth');
+        // Tentukan middleware yang akan digunakan untuk seluruh controller ini
+        $middlewares = ['web'];
+        $isAuthController = str_contains($namespace, 'App\Http\Controllers\auth');
 
-        Route::middleware(['web'])->group(function () use ($methods, $controllerClass, $prefix, $isAuthController) {
-            foreach ($methods as $method) {
+        if (!$isAuthController) {
+            $middlewares[] = 'auth'; // Jika bukan Auth Controller, wajib login
+
+            // Ambil peran yang diizinkan dari properti di dalam controller
+            if ($reflection->hasProperty('roles')) {
+                $roles = $reflection->getDefaultProperties()['roles'];
+                if (!empty($roles)) {
+                    // Terapkan middleware peran dari Spatie jika didefinisikan
+                    $middlewares[] = 'role:' . implode('|', $roles);
+                }
+            }
+        }
+        
+        // Grup semua rute dari controller ini dengan middleware yang sudah ditentukan
+        Route::middleware($middlewares)->prefix($prefix)->group(function () use ($reflection, $controllerClass) {
+            foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
                 if ($method->class !== $controllerClass || $method->isConstructor()) {
                     continue;
                 }
 
                 $methodName = $method->name;
-                preg_match('/^(get|post|put|delete|patch)(.+)$/', $methodName, $matches);
+                // Hanya proses method yang diawali dengan get, post, put, patch, atau delete
+                if (preg_match('/^(get|post|put|patch|delete)(.+)$/', $methodName, $matches)) {
+                    [$fullMatch, $httpVerb, $actionName] = $matches;
 
-                if (count($matches) === 3) {
-                    [$fullMatch, $httpVerb, $name] = $matches;
-                    $routeName = strtolower(preg_replace('/([a-z])([A-Z])/', '$1-$2', $name));
-
-                    if ($routeName === 'index') {
-                        $routeName = '';
+                    // Membuat URI dari nama method (e.g., getIndex -> '', getDetailData -> /detail-data)
+                    $uri = ($actionName === 'Index') ? '' : Str::kebab($actionName);
+                    
+                    // Menangani parameter rute
+                    $paramString = '';
+                    foreach($method->getParameters() as $param) {
+                        $paramString .= '/{' . $param->getName() . ($param->isOptional() ? '?' : '') . '}';
                     }
 
-                    $fullRoute = rtrim($prefix, '/') . ($routeName ? '/' . $routeName : '');
+                    $route = Route::match([$httpVerb], rtrim($uri . $paramString, '/'), [$controllerClass, $methodName]);
 
-                    // Ambil parameter function (jika ada)
-                    $parameters = $method->getParameters();
-                    $routeParamName = 'params';
-
-                    if (!empty($parameters)) {
-                        $routeParamName = $parameters[0]->getName(); // Nama parameter pertama
-                    }
-
-                    // Jika controller dalam folder Auth, tidak pakai middleware auth
-                    if ($isAuthController || $fullRoute === 'admin/umkm/store') {
-                        Route::match(strtolower($httpVerb), $fullRoute . '/{' . $routeParamName . '?}', [$controllerClass, $methodName])
-                            ->where($routeParamName, '.*');
-                    } else {
-                        if (strtolower($httpVerb) === 'get') {
-                            $route = Route::get($fullRoute . (!empty($parameters) ? '/{' . $routeParamName . '?}' : ''), [$controllerClass, $methodName]);
-
-                            if ($routeName === 'login') {
-                                $route->name('login');
-                            }
-                        } else {
-                            Route::middleware(['auth'])->group(function () use ($httpVerb, $fullRoute, $controllerClass, $methodName, $routeParamName, $parameters) {
-                                Route::match(strtolower($httpVerb), $fullRoute . (!empty($parameters) ? '/{' . $routeParamName . '?}' : ''), [$controllerClass, $methodName])
-                                    ->where($routeParamName, '.*');
-                            });
-                        }
+                    // Jika ini adalah controller login dan methodnya getIndex, beri nama 'login'
+                    if ($reflection->getShortName() === 'LoginController' && $methodName === 'getIndex') {
+                        $route->name('login');
                     }
                 }
             }

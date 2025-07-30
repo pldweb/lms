@@ -15,8 +15,8 @@ class WaliSiswaSeeder extends Seeder
      */
     public function run(): void
     {
-        $wali = User::where('role_id', 4)->pluck('id');
-        $siswa = User::where('role_id', 3)->pluck('id');
+        $wali = User::role('Wali Murid')->pluck('id');
+        $siswa = User::role('Siswa')->pluck('id');
 
         foreach ($siswa as $siswa_id) {
             DB::table('wali_siswa')->insert([

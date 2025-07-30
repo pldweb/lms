@@ -15,7 +15,7 @@ class HomeController extends Controller
         $data = [
             [
                 'image' => asset('landing/img/hero/hero-1.png'),
-                'title' => 'Selamat Datang di Website Resmi',
+                'title' => 'Selamat Datang di Website Resmi SMPN 20 Jakarta',
                 'deskripsi' => '"Membangun Generasi Cerdas, Berkarakter, dan Siap Masa Depan"',
                 'link' => 'https://google.com',
                 'tombol_text' => 'Segera Hubungi'
@@ -54,18 +54,4 @@ class HomeController extends Controller
         return view('landing.index', $params);
     }
 
-    public function getLogin(){
-        $params = ['' => ''];
-        return view('landing.auth.login');
-    }
-
-    public function getRegister(){
-        $params = ['' => ''];
-        return view('landing.auth.register');
-    }
-
-    public function getResetPassword(){
-        $params = ['' => ''];
-        return view('landing.auth.reset-password');
-    }
 }

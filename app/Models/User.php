@@ -5,24 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * Atribut yang dapat diisi secara massal.
-     * Sesuaikan dengan kolom di tabel 'users' Anda.
      */
     protected $fillable = [
         'nama',
         'email',
         'password',
         'nama_lengkap',
-        'role_id',
         'foto_profile',
         'alamat',
     ];
@@ -34,50 +30,28 @@ class User extends Authenticatable
         'password',
     ];
 
-    /**
-     * Mendapatkan peran dari pengguna.
-     */
-    public function role(): BelongsTo
-    {
-        return $this->belongsTo(Role::class, 'role_id');
-    }
-
-    /**
-     * Mendapatkan kelas yang diajar oleh pengguna (jika dia seorang guru).
-     */
-    public function kelasDiajar(): HasMany
+  
+    public function kelasDiajar()
     {
         return $this->hasMany(Kelas::class, 'guru_id');
     }
 
-    /**
-     * Mendapatkan kelas yang diikuti oleh pengguna (jika dia seorang siswa).
-     */
-    public function kelasDiikuti(): BelongsToMany
+    public function kelasDiikuti()
     {
         return $this->belongsToMany(Kelas::class, 'keanggotaan_kelas', 'siswa_id', 'kelas_id');
     }
     
-    /**
-     * Mendapatkan wali dari pengguna (jika dia seorang siswa).
-     */
-    public function wali(): BelongsToMany
+    public function wali()
     {
         return $this->belongsToMany(User::class, 'wali_siswa', 'siswa_id', 'wali_id');
     }
 
-    /**
-     * Mendapatkan anak dari pengguna (jika dia seorang wali).
-     */
-    public function anakWali(): BelongsToMany
+    public function anakWali()
     {
         return $this->belongsToMany(User::class, 'wali_siswa', 'wali_id', 'siswa_id');
     }
-    
-    /**
-     * Mendapatkan semua tugas yang dikumpulkan oleh siswa ini.
-     */
-    public function pengumpulanTugas(): HasMany
+
+    public function pengumpulanTugas()
     {
         return $this->hasMany(PengumpulanTugas::class, 'siswa_id');
     }

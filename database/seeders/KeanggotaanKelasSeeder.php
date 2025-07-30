@@ -15,7 +15,7 @@ class KeanggotaanKelasSeeder extends Seeder
      */
     public function run(): void
     {
-        $siswas = User::where('role_id', 3)->get();
+        $siswas = User::role('Siswa')->get();
         $kelases = Kelas::all();
 
         foreach ($siswas as $siswa) {

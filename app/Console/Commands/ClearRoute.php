@@ -27,6 +27,8 @@ class ClearRoute extends Command
     public function handle()
     {
         // Hapus cache route
+
+        
         Artisan::call('route:clear');
         $this->info('✔ Route cache cleared');
 
@@ -43,6 +45,9 @@ class ClearRoute extends Command
 
         Artisan::call('key:generate');
         $this->info('✔ Application configuration key generated');
+
+        Artisan::call('optimize:clear');
+        $this->info('✔ Application cache optimized');
 
         // List semua route (untuk debugging)
         Artisan::call('route:list');

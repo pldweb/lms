@@ -225,8 +225,8 @@ $font-sizes: (
 /* ========================= Variable Css Start ======================== */
 :root {    
   /* Font Family Variable */
-  --heading-font: "Urbanist", sans-serif;
-  --body-font: "Roboto", sans-serif;
+  --heading-font: "Poppins", sans-serif;
+  --body-font: "Poppins", sans-serif;
   
   /* Font Size Variable Start */
   --heading-one: clamp(2rem, -0.0733rem + 6.3692vw, 2.375rem); // Min:32px - Max:38px
@@ -238,9 +238,9 @@ $font-sizes: (
   /* Font Size End */
 
   /* template main color */
-  --main-h: 219;
-  --main-s: 94%;
-  --main-l: 61%;
+  --main-h: 213;
+  --main-s: 96%;
+  --main-l: 44%;
   --main: var(--main-h) var(--main-s) var(--main-l);
 
   /* template main color */

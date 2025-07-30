@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('nama_lengkap')->nullable();
-            $table->foreignId('role_id')->nullable()->constrained('role');
+            // $table->foreignId('role_id')->nullable()->constrained('role');
             $table->string('foto_profile')->nullable();
             $table->longText('alamat')->nullable();
             $table->timestamps();
