@@ -199,3 +199,49 @@
     // ========================= Header Sticky Js End===================
 
 })(jQuery);
+
+
+ $('#provinsi, #kota, #kecamatan, #desa').select2({
+      theme: 'bootstrap-5'
+  });
+
+
+  function ajxDropdown(url, targetSelector, placeholder) {
+        const target = $(targetSelector);
+        target.html('<option value="">Memuat...</option>').prop('disabled', true);
+        $.ajax({
+            url: url, type: 'GET', dataType: 'json',
+            success: function(response) {
+                target.html(`<option value="">${placeholder}</option>`).prop('disabled', false);
+                $.each(response, function(key, value) {
+                    target.append(`<option value="${value.kode}">${value.nama}</option>`);
+                });
+                // Re-inisialisasi Select2 pada target setelah diisi
+                target.select2({ theme: 'bootstrap-5' });
+            },
+            error: function() { 
+                target.html(`<option value="">Gagal memuat</option>`).prop('disabled', true);
+                target.select2({ theme: 'bootstrap-5' });
+            }
+        });
+    }
+    
+// function ajxDropdown(url, targetSelector, placeholder) {
+//     const target = $(targetSelector);
+//     target.html('<option value="">Memuat...</option>').prop('disabled', true); // Kasih tahu user sedang loading
+
+//     $.ajax({
+//         url: url,
+//         type: 'GET',
+//         dataType: 'json',
+//         success: function(response) {
+//             target.html(`<option value="">${placeholder}</option>`).prop('disabled', false);
+//             $.each(response, function(key, value) {
+//                 target.append(`<option value="${value.kode}">${value.nama}</option>`);
+//             });
+//         },
+//         error: function() {
+//             target.html(`<option value="">Gagal memuat</option>`).prop('disabled', true);
+//         }
+//     });
+// }

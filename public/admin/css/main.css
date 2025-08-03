@@ -9563,3 +9563,7 @@ button:focus {
 /* Email Css End */
 
 /*# sourceMappingURL=main.css.map */
+
+span.select2 .selection {
+    width: 100%;
+}

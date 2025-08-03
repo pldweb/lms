@@ -152,3 +152,9 @@ function hideModal() {
     $('#universalModal').find('form').trigger('reset');
 }
 
+
+
+/**
+ * Fungsi ringkas untuk mengambil data lokasi (JSON) dan mengisi dropdown.
+ */
+

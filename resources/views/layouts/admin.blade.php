@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="utf-8">
-    <title>LMS SMP 20 Jakarta</title>
+    <title>LMS SMP 20 Jakarta - @yield('title')</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -28,8 +28,16 @@
     <link rel="stylesheet" href="{{asset('admin/css/apexcharts.css')}}">
     <link rel="stylesheet" href="{{asset('admin/css/calendar.css')}}">
     <link rel="stylesheet" href="{{asset('admin/css/jquery-jvectormap-2.0.5.css')}}">
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+
     <link rel="stylesheet" href="{{asset('admin/css/main.css')}}">
-    @stack('styles')
+
+    <script src="{{asset('admin/js/jquery-3.7.1.min.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="{{asset('admin/js/main.js')}}"></script>
+
 </head>
 <body>
     @include('admin.components.sidebar')
@@ -43,8 +51,9 @@
         {{-- @include('admin.components.footer') --}}
     </div>
 
+    @include('admin.components.modal')
+
     <!-- Jquery -->
-    <script src="{{asset('admin/js/jquery-3.7.1.min.js')}}"></script>
     <script src="{{asset('admin/js/boostrap.bundle.min.js')}}"></script>
     <script src="{{asset('admin/js/phosphor-icon.js')}}"></script>
     <script src="{{asset('admin/js/file-upload.js')}}"></script>
@@ -58,7 +67,7 @@
     <script src="{{asset('admin/js/jquery-jvectormap-2.0.5.min.js')}}"></script>
     <script src="{{asset('admin/js/jquery-jvectormap-world-mill-en.js')}}"></script>
     <!-- main js -->
-    <script src="{{asset('admin/js/main.js')}}"></script>
+
     
 </body>
 </html>

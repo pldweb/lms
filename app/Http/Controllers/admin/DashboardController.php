@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class DashboardController extends Controller
 {
 
-    public array $roles = ['Admin', 'Guru'];
+    public array $roles = ['Admin', 'Guru', 'Siswa', 'Wali Murid'];
 
     public function getIndex(){
         return view('admin.dashboard');

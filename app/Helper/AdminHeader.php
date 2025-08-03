@@ -31,33 +31,15 @@ class AdminHeader
         $data = [
             [
                 'icon' => 'ph ph-gear',
-                'text' => 'Account Settings',
-                'url' => 'setting.html',
+                'text' => 'Pengaturan Akun',
+                'url' => '/admin/profile',
                 'class' => '',
             ],
             [
                 'icon' => 'ph ph-chart-line-up',
                 'text' => 'Daily Activity',
-                'url' => 'analytics.html',
+                'url' => '/admin/profile/daily-aktivitas',
                 'class' => '',
-            ],
-            [
-                'icon' => 'ph ph-chats-teardrop',
-                'text' => 'Inbox',
-                'url' => 'message.html',
-                'class' => '',
-            ],
-            [
-                'icon' => 'ph ph-envelope-simple',
-                'text' => 'Email',
-                'url' => 'email.html',
-                'class' => '',
-            ],
-            [
-                'icon' => 'ph ph-sign-out',
-                'text' => 'Log Out',
-                'url' => 'sign-in.html',
-                'class' => 'border-top border-gray-100 pt-8 text-danger-600 hover-text-danger-600 hover-bg-danger-50',
             ],
         ];
     return $data;

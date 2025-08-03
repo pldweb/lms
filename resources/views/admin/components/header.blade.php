@@ -84,8 +84,9 @@
                                 <div class="flex-align gap-8 mb-20 pb-20 border-bottom border-gray-100">
                                     <img src="{{asset('admin/images/thumbs/user-img.png')}}" alt="" class="w-54 h-54 rounded-circle">
                                     <div class="">
-                                        <h4 class="mb-0">Michel John</h4>
-                                        <p class="fw-medium text-13 text-gray-200">examplemail@mail.com</p>
+                                        <h4 class="mb-0">{{Auth::user()->nama}}</h4>
+                                        <p class="fw-medium text-13 text-gray-200">{{ Auth::user()->email }}</p>
+                                        <p class="fw-medium text-13 text-gray-200">Peran : {{ Auth::user()->roles->first()->name }}</p>
                                     </div>
                                 </div>
                                 <ul class="max-h-270 overflow-y-auto scroll-sm pe-4">
@@ -100,6 +101,14 @@
                                             </a>
                                         </li>
                                     @endforeach
+                                        <li class="mb-4">
+                                            <a href="javascript:void(0);" id="post-logout" class="py-12 text-15 px-20 hover-bg-gray-50 text-gray-300 rounded-8 flex-align gap-8 fw-medium text-15">
+                                                <span class="text-2xl text-danger-600 d-flex">
+                                                    <i class="ph ph-sign-out"></i>
+                                                </span>
+                                                <span class="text">Logout</span>
+                                            </a>
+                                        </li>
                                 </ul>
                             </div>
                         </div>
@@ -108,3 +117,23 @@
                 <!-- User Profile Start -->
             </div>
         </div>
+
+        <script>
+            $('#post-logout').click(function(e){
+                e.preventDefault();
+                $.ajax({
+                    url: "/auth/logout/logout-action", 
+                    type: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") // CSRF Token
+                    },
+                    success: function (response) {
+                        $('#message').html(response);
+                        window.location.href = "/login";
+                    },
+                    error: function () {
+                        alert("Gagal logout!");
+                    }
+                });
+            })
+        </script>

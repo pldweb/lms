@@ -36,6 +36,9 @@
     <link rel="stylesheet" href="{{asset('admin/css/jquery-jvectormap-2.0.5.css')}}">
     <link rel="stylesheet" href="{{asset('admin/css/main.css')}}">
 
+    <script src="{{asset('admin/js/jquery-3.7.1.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
+
     @stack('styles')
 </head>
 <body>
@@ -45,7 +48,6 @@
     </div>
 
     <!-- Jquery -->
-    <script src="{{asset('admin/js/jquery-3.7.1.min.js')}}"></script>
     <script src="{{asset('admin/js/boostrap.bundle.min.js')}}"></script>
     <script src="{{asset('admin/js/phosphor-icon.js')}}"></script>
     <script src="{{asset('admin/js/file-upload.js')}}"></script>

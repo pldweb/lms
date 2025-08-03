@@ -114,29 +114,33 @@ class AppServiceProvider extends ServiceProvider
 
         // Grup semua rute dari controller ini dengan middleware yang sudah ditentukan
         Route::middleware($middlewares)->prefix($prefix)->group(function () use ($reflection, $controllerClass) {
-            foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-                if ($method->class !== $controllerClass || $method->isConstructor()) {
-                    continue;
+        foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if ($method->class !== $controllerClass || $method->isConstructor()) {
+                continue;
+            }
+
+            $methodName = $method->name;
+            if (preg_match('/^(get|post|put|patch|delete)(.+)$/', $methodName, $matches)) {
+                [$fullMatch, $httpVerb, $actionName] = $matches;
+                $uri = ($actionName === 'Index') ? '' : Str::kebab($actionName);
+
+                $paramString = '';
+                foreach ($method->getParameters() as $param) {
+                    // Jangan buat parameter rute jika tipenya adalah Request
+                    $paramType = $param->getType();
+                    if ($paramType && $paramType->getName() === 'Illuminate\Http\Request') {
+                        continue; // Lewati parameter ini
+                    }
+                    $paramString .= '/{' . $param->getName() . ($param->isOptional() ? '?' : '') . '}';
                 }
 
-                $methodName = $method->name;
-                if (preg_match('/^(get|post|put|patch|delete)(.+)$/', $methodName, $matches)) {
-                    [$fullMatch, $httpVerb, $actionName] = $matches;
+                $route = Route::match([$httpVerb], rtrim($uri . $paramString, '/'), [$controllerClass, $methodName]);
 
-                    $uri = ($actionName === 'Index') ? '' : Str::kebab($actionName);
-
-                    $paramString = '';
-                    foreach($method->getParameters() as $param) {
-                        $paramString .= '/{' . $param->getName() . ($param->isOptional() ? '?' : '') . '}';
-                    }
-
-                    $route = Route::match([$httpVerb], rtrim($uri . $paramString, '/'), [$controllerClass, $methodName]);
-
-                    if ($reflection->getShortName() === 'LoginController' && $methodName === 'getIndex') {
-                        $route->name('login');
-                    }
+                if ($reflection->getShortName() === 'LoginController' && $methodName === 'getIndex') {
+                    $route->name('login');
                 }
             }
-        });
+        }
+    });
     }
 }

@@ -50,8 +50,10 @@ class ClearRoute extends Command
         $this->info('✔ Application cache optimized');
 
         // List semua route (untuk debugging)
-        Artisan::call('route:list');
-        $this->info(Artisan::output());
+        $this->info('Menampilkan daftar rute yang terdaftar:');
+        $this->call('route:list', [
+            '-v' => true
+        ]);
 
         $this->info('Berhasil clear cache route');
     }
