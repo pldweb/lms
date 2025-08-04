@@ -74,7 +74,7 @@
                 <div class="dropdown">
                     <button class="users arrow-down-icon border border-gray-200 rounded-pill p-4 d-inline-block pe-40 position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="position-relative">
-                            <img src="{{asset('admin/images/thumbs/user-img.png')}}" alt="Image" class="h-32 w-32 rounded-circle">
+                            <img src="{{Auth::user()->foto_profile ? Storage::url(Auth::user()->foto_profile) : asset('admin/images/thumbs/avatar-img1.png')}}" alt="Image" class="h-32 w-32 rounded-circle">
                             <span class="activation-badge w-8 h-8 position-absolute inset-block-end-0 inset-inline-end-0"></span>
                         </span>
                     </button>
@@ -82,7 +82,7 @@
                         <div class="card border border-gray-100 rounded-12 box-shadow-custom">
                             <div class="card-body">
                                 <div class="flex-align gap-8 mb-20 pb-20 border-bottom border-gray-100">
-                                    <img src="{{asset('admin/images/thumbs/user-img.png')}}" alt="" class="w-54 h-54 rounded-circle">
+                                    <img src="{{Auth::user()->foto_profile ? Storage::url(Auth::user()->foto_profile) : asset('admin/images/thumbs/avatar-img1.png')}}" alt="" class="w-54 h-54 rounded-circle">
                                     <div class="">
                                         <h4 class="mb-0">{{Auth::user()->nama}}</h4>
                                         <p class="fw-medium text-13 text-gray-200">{{ Auth::user()->email }}</p>

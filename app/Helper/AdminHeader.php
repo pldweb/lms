@@ -38,7 +38,7 @@ class AdminHeader
             [
                 'icon' => 'ph ph-chart-line-up',
                 'text' => 'Daily Activity',
-                'url' => '/admin/profile/daily-aktivitas',
+                'url' => '/admin/daily-aktivitas',
                 'class' => '',
             ],
         ];

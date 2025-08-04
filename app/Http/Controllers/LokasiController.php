@@ -19,9 +19,9 @@ class LokasiController extends Controller
         return response()->json($kecamatan['data']);
     }
 
-    public function getDesa($kecamatanId)
+    public function getKelurahan($kecamatanId)
     {
-        $desa = LokasiHelper::getDesa($kecamatanId);
+        $desa = LokasiHelper::getKelurahan($kecamatanId);
         return response()->json($desa['data']);
     }
 }

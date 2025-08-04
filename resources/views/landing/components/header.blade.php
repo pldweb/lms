@@ -38,7 +38,11 @@
                         </div>
                     </div>
                     <div class="col-auto">
-                        <a class="user-login" href="{{url('login')}}"><i class="fas fa-user-circle"></i> Login LMS</a>
+                        @if (Auth::check())
+                            <a class="user-login" href="{{url('admin/dashboard')}}"><i class="fas fa-user-circle"></i> Dashboard LMS</a>
+                        @else
+                            <a class="user-login" href="{{url('login')}}"><i class="fas fa-user-circle"></i> Login LMS</a>
+                        @endif
                     </div>
                     <div class="col-auto">
                         <div class="header-social">

@@ -81,3 +81,60 @@ if (!function_exists('dateTimeDisplay')) {
         return $time;
     }
 }
+
+if (!function_exists('getNameProvinsi')) {
+    function getNameProvinsi($id)
+    {
+        if (!$id) return '-';
+        $provinsiList = \App\Helper\LokasiHelper::getProvinsi()['data'];
+        foreach ($provinsiList as $provinsi) {
+            if ($provinsi['kode'] == $id) {
+                return $provinsi['nama'];
+            }
+        }
+        return '-';
+    }
+}
+
+if (!function_exists('getNameKota')) {
+    function getNameKota($id)
+    {
+        if (!$id) return '-';
+        $kotaList = \App\Helper\LokasiHelper::getKota($id)['data'];
+        foreach ($kotaList as $kota) {
+            if ($kota['kode'] == $id) {
+                return $kota['nama'];
+            }
+        }
+        return '-';
+    }
+}
+
+if (!function_exists('getNameKecamatan')) {
+    function getNameKecamatan($id)
+    {
+        if (!$id) return '-';
+        $kecamatanList = \App\Helper\LokasiHelper::getKecamatan($id)['data'];
+        foreach ($kecamatanList as $kecamatan) {
+            if ($kecamatan['kode'] == $id) {
+                return $kecamatan['nama'];
+            }
+        }
+        return '-';
+    }
+}
+
+if (!function_exists('getNameKelurahan')) {
+    function getNameKelurahan($id)
+    {
+        if (!$id) return '-';
+        $kelurahanList = \App\Helper\LokasiHelper::getKelurahan($id)['data'];
+        foreach ($kelurahanList as $kelurahan) {
+            if ($kelurahan['kode'] == $id) {
+                return $kelurahan['nama'];
+            }
+        }
+        return '-';
+    }
+}
+

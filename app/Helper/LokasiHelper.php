@@ -2,46 +2,48 @@
 
 namespace App\Helper;
 
+use App\Models\Kecamatan;
+use App\Models\Kelurahan;
+use App\Models\Kabupaten;
+use App\Models\Provinsi;
+
 class LokasiHelper 
 {
     public static function getProvinsi()
     {
-        $provinsiApi = @file_get_contents('https://api.nusakita.yuefii.site/v2/provinsi?pagination=false');
-        if ($provinsiApi === FALSE) {
-            return ['data' => []]; 
-        }
-        $provinsi = json_decode($provinsiApi, true);
-        return $provinsi;
+        $provinsis = Provinsi::orderBy('nama', 'asc')->get();
+        return ['data' => $provinsis];
     }
 
-    public static function getKota($provinsiId)
+   
+    public static function getKota($provinsiKode)
     {
-        $kotaApi = @file_get_contents("https://api.nusakita.yuefii.site/v2/{$provinsiId}/kab-kota");
-        if ($kotaApi === FALSE) {
-            return ['data' => []];
-        }
-        $kota = json_decode($kotaApi, true);
-        return $kota;
+        // Ganti panggilan API dengan query Eloquent ke tabel 'kabupatens'
+        $kabupatens = Kabupaten::where('kode_provinsi', $provinsiKode)
+                               ->orderBy('nama', 'asc')
+                               ->get();
+
+        return ['data' => $kabupatens];
     }
 
-    public static function getKecamatan($kotaId)
+    public static function getKecamatan($kabupatenKode)
     {
-        $kecamatanApi = @file_get_contents("https://api.nusakita.yuefii.site/v2/{$kotaId}/kecamatan");
-        if ($kecamatanApi === FALSE) {
-            return ['data' => []];
-        }
-        $kecamatan = json_decode($kecamatanApi, true);
-        return $kecamatan;
+        // Ganti panggilan API dengan query Eloquent ke tabel 'kecamatans'
+        $kecamatans = Kecamatan::where('kode_kabupaten', $kabupatenKode)
+                               ->orderBy('nama', 'asc')
+                               ->get();
+        
+        return ['data' => $kecamatans];
     }
 
-    public static function getDesa($kecamatanId)
+    public static function getKelurahan($kecamatanKode)
     {
-        // Sekarang memanggil method static, ini sudah benar.
-        $desaApi = @file_get_contents("https://api.nusakita.yuefii.site/v2/{$kecamatanId}/desa-kel");
-        if ($desaApi === FALSE) {
-            return ['data' => []];
-        }
-        $desa = json_decode($desaApi, true);
-        return $desa;
+        // Ganti panggilan API dengan query Eloquent ke tabel 'kelurahans'
+        $kelurahans = Kelurahan::where('kode_kecamatan', $kecamatanKode)
+                               ->orderBy('nama', 'asc')
+                               ->get();
+
+        return ['data' => $kelurahans];
     }
+
 }

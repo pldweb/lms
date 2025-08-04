@@ -126,7 +126,6 @@ class AppServiceProvider extends ServiceProvider
 
                 $paramString = '';
                 foreach ($method->getParameters() as $param) {
-                    // Jangan buat parameter rute jika tipenya adalah Request
                     $paramType = $param->getType();
                     if ($paramType && $paramType->getName() === 'Illuminate\Http\Request') {
                         continue; // Lewati parameter ini

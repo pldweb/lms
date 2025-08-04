@@ -63,7 +63,7 @@
     <script src="{{asset('admin/js/jquery-ui.js')}}"></script>
     <script src="{{asset('admin/js/editor-quill.js')}}"></script>
     <script src="{{asset('admin/js/apexcharts.min.js')}}"></script>
-    <script src="{{asset('admin/js/calendar.js')}}"></script>
+    {{-- <script src="{{asset('admin/js/calendar.js')}}"></script> --}}
     <script src="{{asset('admin/js/jquery-jvectormap-2.0.5.min.js')}}"></script>
     <script src="{{asset('admin/js/jquery-jvectormap-world-mill-en.js')}}"></script>
     <!-- main js -->
