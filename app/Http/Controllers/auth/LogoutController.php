@@ -11,6 +11,6 @@ class LogoutController extends Controller
 {
     public function postLogoutAction(Request $request){
         Auth::logout();
-        return redirect('/');
+        return successAlert('Anda telah logout',  $redirect = '/login');
     }
 }

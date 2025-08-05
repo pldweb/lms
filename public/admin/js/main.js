@@ -218,7 +218,7 @@ $(document).ready(function() {
                 target.append(`<option value="${value.kode}">${value.nama}</option>`);
             });
             target.select2({ theme: 'bootstrap-5' });
-            if (typeof callback === "function") callback(); // 🔁 jalankan callback kalau ada
+            if (typeof callback === "function") callback();
         },
         error: function() { 
             target.html(`<option value="">Gagal memuat</option>`).prop('disabled', true);

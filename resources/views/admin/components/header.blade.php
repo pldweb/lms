@@ -121,19 +121,24 @@
         <script>
             $('#post-logout').click(function(e){
                 e.preventDefault();
-                $.ajax({
-                    url: "/auth/logout/logout-action", 
-                    type: "POST",
-                    headers: {
-                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") // CSRF Token
-                    },
-                    success: function (response) {
-                        $('#message').html(response);
-                        window.location.href = "/login";
-                    },
-                    error: function () {
-                        alert("Gagal logout!");
-                    }
-                });
+                confirmModal('Anda yakin ingin logout?', function(){
+                    ajxProcess('/auth/logout/logout-action', null, '#message-modal');
+                })
             })
+
+                // $.ajax({
+                //     url: "/auth/logout/logout-action", 
+                //     type: "POST",
+                //     headers: {
+                //         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") // CSRF Token
+                //     },
+                //     success: function (response) {
+                //         $('#message').html(response);
+                //         window.location.href = "/login";
+                //     },
+                //     error: function () {
+                //         alert("Gagal logout!");
+                //     }
+                // });
+            // })
         </script>

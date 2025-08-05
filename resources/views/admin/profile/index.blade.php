@@ -81,13 +81,18 @@
                                         </select>
                                     </div>
                                 </div>
-
                                 <div class="col-md-6 mt-20">
                                     <div class="form-group">
                                         <label for="kelurahan">Kelurahan</label>
                                         <select class="form-control" id="kelurahan" name="kelurahan" disabled>
                                             <option value="">Pilih Kecamatan Dahulu</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mt-20">
+                                    <div class="form-group">
+                                        <label for="kodepos">Kode Pos</label>
+                                        <input type="text" class="form-control" id="kodepos" name="kodepos" placeholder="Kode Pos" value="{{$user->kodepos ?? ''}}">
                                     </div>
                                 </div>
                             </div>

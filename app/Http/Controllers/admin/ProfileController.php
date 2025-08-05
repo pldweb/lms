@@ -116,7 +116,7 @@ class ProfileController extends Controller
         try{
             DB::beginTransaction();
             $user = Auth::user();
-            $user->password = Hash::make('password');
+            $user->password = Hash::make($password);
             User::where('id', $user->id)->update(['password' => $user->password]);
             DB::commit();
             return successAlert('Password berhasil diganti', '/admin/profile');
