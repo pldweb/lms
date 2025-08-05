@@ -2,53 +2,123 @@
 
 namespace App\Helper;
 
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Traits\HasRoles;
+
+
 class AdminSidebar 
 {
-    public static function setSidebarMenu(){
-        $data = [
+    public static function setSidebarMenu()
+    {
+        $user = Auth::user();
+        $menu = [];
+
+        if (!$user) {
+            return [];
+        }
+
+        if ($user->hasRole(['Admin', 'Guru'])) {
+            $menu = [
                 [
                     'text' => 'Dashboard',
                     'icon' => 'ph ph-squares-four',
-                    'badge' => '3',
+                    'link' => 'admin/dashboard',
+                ],
+                ['type' => 'label', 'text' => 'Manajemen'],
+                [
+                    'text' => 'Pengguna',
+                    'icon' => 'ph ph-users-three',
                     'submenu' => [
-                        ['text' => 'Dashboard One', 'link' => 'index.html'],
-                        ['text' => 'Dashboard Two', 'link' => 'index-2.html'],
-                        ['text' => 'Dashboard Three', 'link' => 'index-3.html'],
+                        ['text' => 'Data Admin', 'link' => 'admin/user/admin'],
+                        ['text' => 'Data Guru', 'link' => 'admin/user/guru'],
+                        ['text' => 'Data Siswa', 'link' => 'admin/user/siswa'],
+                        ['text' => 'Data Wali Murid', 'link' => 'admin/user/wali-murid'],
                     ],
                 ],
                 [
-                    'text' => 'Courses',
+                    'text' => 'Akademik',
+                    'icon' => 'ph ph-books',
+                    'submenu' => [
+                        ['text' => 'Tahun Ajaran', 'link' => 'admin/akademik/tahun-ajaran'],
+                        ['text' => 'Mata Pelajaran', 'link' => 'admin/akademik/mapel'],
+                        ['text' => 'Daftar Kelas', 'link' => 'admin/akademik/kelas'],
+                    ],
+                ],
+                [
+                    'text' => 'Pembelajaran',
                     'icon' => 'ph ph-graduation-cap',
                     'submenu' => [
-                        ['text' => 'Student Courses', 'link' => 'student-courses.html'],
-                        ['text' => 'Mentor Courses', 'link' => 'mentor-courses.html'],
-                        ['text' => 'Create Course', 'link' => 'create-course.html'],
+                        ['text' => 'Jadwal Pelajaran', 'link' => 'admin/pembelajaran/jadwal'],
+                        ['text' => 'Keanggotaan Kelas', 'link' => 'admin/pembelajaran/anggota-kelas'],
                     ],
                 ],
-                ['text' => 'Students', 'icon' => 'ph ph-users-three', 'link' => 'students.html'],
-                ['text' => 'Assignments', 'icon' => 'ph ph-clipboard-text', 'link' => 'assignment.html'],
-                ['text' => 'Mentors', 'icon' => 'ph ph-users', 'link' => 'mentors.html'],
-                ['text' => 'Resources', 'icon' => 'ph ph-bookmarks', 'link' => 'resources.html'],
-                ['text' => 'Messages', 'icon' => 'ph ph-chats-teardrop', 'link' => 'message.html'],
-                ['text' => 'Analytics', 'icon' => 'ph ph-chart-bar', 'link' => 'analytics.html'],
-                ['text' => 'Events', 'icon' => 'ph ph-calendar-dots', 'link' => 'event.html'],
-                ['text' => 'Library', 'icon' => 'ph ph-books', 'link' => 'library.html'],
-                ['text' => 'Pricing', 'icon' => 'ph ph-coins', 'link' => 'pricing-plan.html'],
-                ['type' => 'label', 'text' => 'Settings'],
-                ['text' => 'Account Settings', 'icon' => 'ph ph-gear', 'link' => 'setting.html'],
+                ['type' => 'label', 'text' => 'Aktivitas Mengajar'],
                 [
-                    'text' => 'Authentication',
-                    'icon' => 'ph ph-shield-check',
+                    'text' => 'Jadwal Kelas',
+                    'icon' => 'ph ph-calendar-dots',
+                    'link' => 'guru/jadwal',
+                ],
+                [
+                    'text' => 'Materi Pelajaran',
+                    'icon' => 'ph ph-bookmarks',
+                    'link' => 'guru/materi',
+                ],
+                [
+                    'text' => 'Tugas & Nilai',
+                    'icon' => 'ph ph-clipboard-text',
                     'submenu' => [
-                        ['text' => 'Sign In', 'link' => 'sign-in.html'],
-                        ['text' => 'Sign Up', 'link' => 'sign-up.html'],
-                        ['text' => 'Forgot Password', 'link' => 'forgot-password.html'],
-                        ['text' => 'Reset Password', 'link' => 'reset-password.html'],
-                        ['text' => 'Verify Email', 'link' => 'verify-email.html'],
-                        ['text' => 'Two Step Verification', 'link' => 'two-step-verification.html'],
+                        ['text' => 'Daftar Tugas', 'link' => 'guru/tugas'],
+                        ['text' => 'Pengumpulan Siswa', 'link' => 'guru/penilaian'],
+                    ],
+                ],
+                ['type' => 'label', 'text' => 'Tentang Sekolah'],
+                [
+                    'text' => 'Informasi Sekolah',
+                    'icon' => 'ph ph-clipboard-text',
+                    'link' => 'admin/nilai',
+                ],
+                [
+                    'text' => 'Website Sekolah',
+                    'icon' => 'ph ph-globe',
+                    'submenu' => [
+                        ['text' => 'Berita', 'link' => 'guru/tugas'],
+                        ['text' => 'Pengumuman', 'link' => 'guru/penilaian'],
+                        ['text' => 'Slideshow', 'link' => 'guru/website'],
+                        ['text' => 'Kontak', 'link' => 'guru/website'],
+                        ['text' => 'Sosial Media', 'link' => 'guru/website'],
                     ],
                 ],
             ];
-        return $data;
+        }
+
+        elseif ($user->hasRole('Siswa')) {
+            $menu = [
+                [
+                    'text' => 'Dashboard',
+                    'icon' => 'ph ph-squares-four',
+                    'link' => 'siswa/dashboard',
+                ],
+                ['type' => 'label', 'text' => 'Aktivitas Belajar'],
+                [
+                    'text' => 'Kelas & Materi',
+                    'icon' => 'ph ph-books',
+                    'link' => 'siswa/kelas',
+                ],
+                [
+                    'text' => 'Tugas & Nilai',
+                    'icon' => 'ph ph-clipboard-text',
+                    'link' => 'siswa/tugas',
+                ],
+            ];
+        }
+
+        $menu[] = ['type' => 'label', 'text' => 'Akun Saya'];
+        $menu[] = [
+            'text' => 'Profil Saya',
+            'icon' => 'ph ph-user',
+            'link' => 'admin/profile'
+        ];
+
+        return $menu;
     }
 }

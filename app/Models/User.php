@@ -15,12 +15,11 @@ class User extends Authenticatable
 {
     // Gunakan trait untuk Factory, Notifikasi, dan Spatie Roles
     use HasFactory, Notifiable, HasRoles;
-
-    /**
-     * Atribut yang dapat diisi secara massal (mass assignable).
-     *
-     * @var array<int, string>
+    
+     /**
+     * * @mixin \Spatie\Permission\Traits\HasRoles
      */
+
     protected $fillable = [
         'nama',
         'email',

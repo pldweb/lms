@@ -9573,3 +9573,7 @@ span.select2 .selection {
     display: block;
     padding: 8px 12px;
 }
+
+.sidebar-submenu__link {
+  font-size: 15px;
+}
