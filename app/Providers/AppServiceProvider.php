@@ -11,9 +11,7 @@ use ReflectionMethod;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
+
     public function register(): void
     {
         //
@@ -24,23 +22,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Panggil metode pemetaan rute
         $this->map();
-        // Atur Paginator untuk menggunakan Bootstrap 5
         Paginator::useBootstrapFive();
     }
 
-    /**
-     * Definisikan pemetaan rute untuk aplikasi.
-     */
+    
     public function map()
     {
         $this->mapDynamicRoutes();
     }
 
-    /**
-     * Petakan rute secara dinamis dari controller.
-     */
     public function mapDynamicRoutes()
     {
         $controllerPath = app_path('Http/Controllers');
@@ -48,15 +39,11 @@ class AppServiceProvider extends ServiceProvider
 
         $this->registerRoutesFromFolder($controllerPath, $namespace);
 
-        // Rute fallback jika tidak ada rute lain yang cocok (untuk halaman 404)
         Route::fallback(function () {
             return response()->view('error.404', [], 404);
         });
     }
 
-    /**
-     * Pindai folder secara rekursif untuk mendaftarkan controller.
-     */
     public function registerRoutesFromFolder($folder, $namespace, $prefix = '')
     {
         foreach (scandir($folder) as $file) {
@@ -80,9 +67,6 @@ class AppServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * Daftarkan rute dari sebuah controller.
-     */
     protected function registerRoutesFromController($controllerClass, $prefix) {
         $reflection = new ReflectionClass($controllerClass);
         $namespace = $reflection->getNamespaceName();
@@ -112,7 +96,6 @@ class AppServiceProvider extends ServiceProvider
             }
         }
 
-        // Grup semua rute dari controller ini dengan middleware yang sudah ditentukan
         Route::middleware($middlewares)->prefix($prefix)->group(function () use ($reflection, $controllerClass) {
         foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
             if ($method->class !== $controllerClass || $method->isConstructor()) {
