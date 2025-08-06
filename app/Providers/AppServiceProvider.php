@@ -8,25 +8,22 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionMethod;
+use Illuminate\Http\Request;
 
 class AppServiceProvider extends ServiceProvider
 {
 
     public function register(): void
     {
-        //
+
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         $this->map();
         Paginator::useBootstrapFive();
     }
 
-    
     public function map()
     {
         $this->mapDynamicRoutes();
@@ -39,8 +36,11 @@ class AppServiceProvider extends ServiceProvider
 
         $this->registerRoutesFromFolder($controllerPath, $namespace);
 
-        Route::fallback(function () {
-            return response()->view('error.404', [], 404);
+        Route::fallback(function (Request $request) {
+            return response()->view('error.404', [
+                'url' => $request->url(),
+                'previousUrl' => url()->previous()
+            ], 404);
         });
     }
 
@@ -55,10 +55,8 @@ class AppServiceProvider extends ServiceProvider
             $className = pathinfo($file, PATHINFO_FILENAME);
 
             if (is_dir($fullPath)) {
-                // Jika ini adalah direktori, lakukan pemindaian rekursif
                 $this->registerRoutesFromFolder($fullPath, $namespace . '\\' . $className, $prefix . strtolower($className) . '/');
             } elseif (str_ends_with($file, 'Controller.php')) {
-                // Jika ini adalah file Controller, daftarkan rutenya
                 $controllerClass = $namespace . '\\' . $className;
                 if (class_exists($controllerClass)) {
                     $this->registerRoutesFromController($controllerClass, $prefix);
@@ -79,7 +77,6 @@ class AppServiceProvider extends ServiceProvider
             $prefix .= $controllerNameKebab . '/';
         }
 
-        // Tentukan middleware dasar
         $middlewares = ['web'];
 
         // Cek apakah controller berada di dalam namespace 'admin'
