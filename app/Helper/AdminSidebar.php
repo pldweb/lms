@@ -32,7 +32,6 @@ class AdminSidebar
                         ['text' => 'Data Admin', 'link' => 'admin/user/admin'],
                         ['text' => 'Data Guru', 'link' => 'admin/user/guru'],
                         ['text' => 'Data Siswa', 'link' => 'admin/user/siswa'],
-                        ['text' => 'Data Wali Murid', 'link' => 'admin/user/wali-murid'],
                     ],
                 ],
                 [

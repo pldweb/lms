@@ -6,38 +6,66 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Data Pengguna</h3>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="card-title w-content">Data Pengguna</h3>
+                    <div class="d-flex" style="gap: 5px;">
+                        <select id="exportOptions" class="form-select w-auto mb-3 mr-2">
+                            <option value="">Export</option>
+                            <option value="csv">Export to CSV</option>
+                            <option value="json">Export to JSON</option>
+                        </select>
+                        <div class="input-group">
+                            <input type="text" id="searchInput" class="form-control w-auto mb-3" placeholder="Cari...">
+                            <span class="input-group-text mb-3"><i class="ph ph-magnifying-glass"></i></span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="card-body" style="padding-top: 0;">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <table class="table table-bordered" style="margin-top: 20px; margin-bottom: 20px;">
+                        <div class="card overflow-hidden">
+                            <div class="card-body p-0 overflow-x-auto">
+                                <table id="studentTable" class="table table-striped table-hover">
                                     <thead>
-                                        <tr>
-                                            <th class="text-center">No</th>
-                                            <th class="text-center">Nama</th>
-                                            <th class="text-center">Email</th>
-                                            <th class="text-center">Role</th>
-                                            <th class="text-center">Aksi</th>
-                                        </tr>
+                                            <tr>
+                                                <th class="fixed-width">
+                                                    <input class="form-check-input border-gray-200 rounded-4" type="checkbox" id="selectAll">
+                                                </th>
+                                                <th class="h6 text-gray-300">Nama</th>
+                                                <th class="h6 text-gray-300">Email</th>
+                                                <th class="h6 text-gray-300">Role</th>
+                                                <th class="h6 text-gray-300">Aksi</th>
+                                            </tr>
                                     </thead>
-                                    <tbody>
-                                        @foreach ($users as $user)
-                                        <tr>
-                                            <td class="text-center">{{ $loop->index + 1 }}</td>
-                                            <td class="text-center">{{ $user->nama }}</td>
-                                            <td class="text-center">{{ $user->email }}</td>
-                                            <td class="text-center">{{ $user->roles->pluck('name')->implode(', ') }}</td>
-                                            <td class="text-center">
-                                                <a href="{{ url('/admin/user/edit') }}/{{ $user->id }}" class="btn btn-primary btn-sm">Edit</a>
-                                                <a href="{{ url('/admin/user/delete') }}/{{ $user->id }}" class="btn btn-danger btn-sm">Hapus</a>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        <tbody>
+                                            @foreach ($users as $user)
+                                                <tr>
+                                                    <td class="fixed-width">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input border-gray-200 rounded-4" type="checkbox">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="flex-align gap-8">
+                                                            <span class="h6 mb-0 fw-medium text-gray-300">{{ $user->nama }}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span class="h6 mb-0 fw-medium text-gray-300">{{ $user->email }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="h6 mb-0 fw-medium text-gray-300">{{ $user->roles->pluck('name')->implode(', ') }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{ url('/admin/user/detail') }}/{{ $user->id }}" class="btn btn-primary btn-sm">Detail</a>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -48,19 +76,85 @@
 </div>
 
 <script>
-    $(document).ready(function() {
-        $('.table').DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": true,
-            "responsive": true,
+    $(document).ready(function () {
+
+        $('#searchInput').on('keyup', function () {
+            let keyword = $(this).val().toLowerCase();
+
+            $('#studentTable tbody tr').filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(keyword) > -1);
+            });
         });
+
+        $('#studentTable').DataTable({
+            paging: false,
+            lengthChange: true,
+            searching: false,
+            ordering: false,
+            info: true,
+            autoWidth: true,
+            responsive: true,
+            columnDefs: [
+                { orderable: false, targets: [0, 4] } 
+            ]
+        });
+
+        $('#selectAll').on('change', function () {
+            const isChecked = $(this).prop('checked');
+            $('.form-check .form-check-input').prop('checked', isChecked);
+        });
+
+        // Export Data (CSV / JSON)
+        $('#exportOptions').on('change', function () {
+            const format = $(this).val();
+            const $table = $('#studentTable');
+            const headers = [];
+            const data = [];
+
+            $table.find('thead th').each(function () {
+                headers.push($(this).text().trim());
+            });
+
+            $table.find('tbody tr').each(function () {
+                const row = {};
+                $(this).find('td').each(function (index) {
+                    row[headers[index]] = $(this).text().trim();
+                });
+                data.push(row);
+            });
+
+            if (format === 'csv') {
+                downloadCSV(data);
+            } else if (format === 'json') {
+                downloadJSON(data);
+            }
+        });
+
+        // Fungsi Export CSV
+        function downloadCSV(data) {
+            const csv = data.map(row => Object.values(row).join(',')).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'users.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // Fungsi Export JSON
+        function downloadJSON(data) {
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'users.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
     });
-
 </script>
-
-
 @endsection
