@@ -3,7 +3,7 @@
 set -e
 
 # --- KONFIGURASI (SESUAIKAN INI) ---
-PROJECT_PATH="/var/www/lms-backend"
+PROJECT_PATH="/var/www/lms"
 # --- AKHIR KONFIGURASI ---
 
 echo "🚀 Memulai inisialisasi proyek Laravel..."
