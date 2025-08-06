@@ -3,15 +3,11 @@
 set -e
 
 # --- KONFIGURASI (SESUAIKAN INI) ---
-GIT_REPO_URL="https://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@github.com/pldweb/lms.git"
 PROJECT_PATH="/var/www/lms-backend"
 # --- AKHIR KONFIGURASI ---
 
 echo "🚀 Memulai inisialisasi proyek Laravel..."
 
-# 1. Clone repository dari GitHub
-echo "Melakukan clone dari repository..."
-git clone $GIT_REPO_URL $PROJECT_PATH
 
 # 2. Masuk ke direktori proyek
 cd $PROJECT_PATH
