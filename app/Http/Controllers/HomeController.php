@@ -46,12 +46,76 @@ class HomeController extends Controller
     }
 
     public function getIndex(){
+        // Ambil artikel terbaru untuk ditampilkan di landing page
+        $beritaTerbaru = Artikel::berita()
+            ->publish()
+            ->latest('tanggal_publish')
+            ->take(3)
+            ->get();
+
+        $pengumumanTerbaru = Artikel::pengumuman()
+            ->publish()
+            ->latest('tanggal_publish')
+            ->take(3)
+            ->get();
 
         $params = [
             'title' => 'Selamat Datang di SMP 20 Jakarta',
-            'heroSection' => self::heroSection()
+            'heroSection' => self::heroSection(),
+            'beritaTerbaru' => $beritaTerbaru,
+            'pengumumanTerbaru' => $pengumumanTerbaru
         ];
         return view('landing.index', $params);
+    }
+
+    public function getBerita(){
+        $berita = Artikel::berita()
+            ->publish()
+            ->with('penulis')
+            ->latest('tanggal_publish')
+            ->paginate(9);
+
+        $params = [
+            'title' => 'Berita Sekolah',
+            'berita' => $berita
+        ];
+        return view('landing.berita', $params);
+    }
+
+    public function getPengumuman(){
+        $pengumuman = Artikel::pengumuman()
+            ->publish()
+            ->with('penulis')
+            ->latest('tanggal_publish')
+            ->paginate(9);
+
+        $params = [
+            'title' => 'Pengumuman Sekolah',
+            'pengumuman' => $pengumuman
+        ];
+        return view('landing.pengumuman', $params);
+    }
+
+    public function getArtikel($id){
+        $artikel = Artikel::publish()->with('penulis')->findOrFail($id);
+        
+        // Increment views
+        $artikel->increment('views');
+
+        // Ambil artikel terkait berdasarkan jenis yang sama
+        $artikelTerkait = Artikel::where('jenis', $artikel->jenis)
+            ->where('id', '!=', $artikel->id)
+            ->publish()
+            ->latest('tanggal_publish')
+            ->take(3)
+            ->get();
+
+        $params = [
+            'title' => $artikel->judul,
+            'artikel' => $artikel,
+            'artikelTerkait' => $artikelTerkait
+        ];
+        return view('landing.artikel-detail', $params);
     }
 
 }

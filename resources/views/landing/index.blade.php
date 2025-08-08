@@ -16,7 +16,7 @@
         @include('landing.components.cta')
     </div>
 
-    <!--============================== Blog ==============================-->
-    @include('landing.components.blog')
+    <!--============================== Artikel ==============================-->
+    @include('landing.components.artikel')
     
 @endsection

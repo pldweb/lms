@@ -24,17 +24,14 @@ class LandingMenu
     $menu = [
         [
             'title' => 'Home',
-            'url' => '#',
+            'url' => url('/'),
         ],
         [
-            'title' => 'Berita',
+            'title' => 'Informasi',
             'url' => '#',
             'children' => [
-                ['title' => 'Pemindahan/Mutasi', 'url' => 'course.html'],
-                ['title' => 'Pengumuman', 'url' => 'courses-2.html'],
-                ['title' => 'Ekskul', 'url' => 'courses-2.html'],
-                ['title' => 'SPMB 2025', 'url' => 'courses-2.html'],
-                ['title' => 'Olahraga', 'url' => 'courses-2.html'],
+                ['title' => 'Berita Sekolah', 'url' => url('/berita')],
+                ['title' => 'Pengumuman', 'url' => url('/pengumuman')],
             ],
         ],
         [

@@ -80,8 +80,8 @@ class AdminSidebar
                     'text' => 'Website Sekolah',
                     'icon' => 'ph ph-globe',
                     'submenu' => [
-                        ['text' => 'Berita', 'link' => 'guru/tugas'],
-                        ['text' => 'Pengumuman', 'link' => 'guru/penilaian'],
+                        ['text' => 'Berita', 'link' => 'admin/artikel/berita'],
+                        ['text' => 'Pengumuman', 'link' => 'admin/artikel/pengumuman'],
                         ['text' => 'Slideshow', 'link' => 'guru/website'],
                         ['text' => 'Kontak', 'link' => 'guru/website'],
                         ['text' => 'Sosial Media', 'link' => 'guru/website'],
