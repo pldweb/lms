@@ -17,6 +17,7 @@ class UserController extends Controller
         $users = User::role(['Admin'])->get();
         $params = [
             'users' => $users,
+            'jenis' => 'admin'
         ];
         return view('admin.user.admin', $params);
     }
@@ -26,6 +27,7 @@ class UserController extends Controller
         $users = User::role(['Guru'])->get();
         $params = [
             'users' => $users,
+            'jenis' => 'guru'
         ];
         return view('admin.user.admin', $params);
     }
@@ -35,6 +37,7 @@ class UserController extends Controller
         $users = User::role(['Siswa'])->get();
         $params = [
             'users' => $users,
+            'jenis' => 'siswa'
         ];
         return view('admin.user.admin', $params);
     }

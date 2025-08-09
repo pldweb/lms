@@ -7,29 +7,11 @@
         <div class="card">
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="card-title w-content">
-                        @if(isset($jenis))
-                            Data {{ ucfirst($jenis) }}
-                        @else
-                            Data Artikel
-                        @endif
-                    </h3>
-                    <div class="d-flex" style="gap: 5px;">
-                        @if(isset($jenis))
-                            <a href="{{ url('/admin/artikel/create-' . $jenis) }}" class="btn btn-primary btn-sm">
-                                <i class="ph ph-plus"></i> Tambah {{ ucfirst($jenis) }}
-                            </a>
-                        @else
-                            <div class="dropdown">
-                                <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                    <i class="ph ph-plus"></i> Tambah Artikel
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="{{ url('/admin/artikel/create-berita') }}">Tambah Berita</a></li>
-                                    <li><a class="dropdown-item" href="{{ url('/admin/artikel/create-pengumuman') }}">Tambah Pengumuman</a></li>
-                                </ul>
-                            </div>
-                        @endif
+                    <h3 class="card-title w-content">Data {{ ucfirst($jenis) ?? 'Pengumuman' }}</h3>
+                    <div class="d-flex justify-center align-items-center" style="gap: 5px;">
+                        <a href="{{ url('/admin/artikel/create') }}" class="btn btn-primary mb-3 btn-add" style="white-space: nowrap">
+                                <i class="ph ph-plus"></i> Tambah Artikel
+                        </a>                   
                         <select id="exportOptions" class="form-select w-auto mb-3 mr-2">
                             <option value="">Export</option>
                             <option value="csv">Export to CSV</option>
@@ -57,7 +39,6 @@
                                             @if(!isset($jenis))
                                             <th class="h6 text-gray-300">Jenis</th>
                                             @endif
-                                            <th class="h6 text-gray-300">Penulis</th>
                                             <th class="h6 text-gray-300">Status</th>
                                             <th class="h6 text-gray-300">Tanggal Publish</th>
                                             <th class="h6 text-gray-300">Views</th>
@@ -93,9 +74,6 @@
                                                 </td>
                                                 @endif
                                                 <td>
-                                                    <span class="h6 mb-0 fw-medium text-gray-300">{{ $item->penulis->nama }}</span>
-                                                </td>
-                                                <td>
                                                     <span class="badge bg-{{ $item->status == 'publish' ? 'success' : 'warning' }}">
                                                         {{ ucfirst($item->status) }}
                                                     </span>
@@ -110,7 +88,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="dropdown">
-                                                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                                        <button class="btn btn-sm btn-add btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                                             Aksi
                                                         </button>
                                                         <ul class="dropdown-menu">
@@ -159,7 +137,7 @@
         });
 
         $('#artikelTable').DataTable({
-            paging: true,
+            paging: false,
             lengthChange: true,
             searching: false,
             ordering: true,

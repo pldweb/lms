@@ -3,7 +3,7 @@
 @section('content')
 
 <!-- Page Header -->
-<section class="page-header bg-{{ $artikel->jenis == 'berita' ? 'primary' : 'info' }} text-white py-5">
+{{-- <section class="page-header bg-{{ $artikel->jenis == 'berita' ? 'primary' : 'info' }} text-white py-5">
     <div class="container">
         <div class="row">
             <div class="col-md-12 text-center">
@@ -19,10 +19,10 @@
             </div>
         </div>
     </div>
-</section>
+</section> --}}
 
 <!-- Artikel Content -->
-<section class="artikel-detail section-padding">
+<section class="artikel-detail section-padding mt-4">
     <div class="container">
         <div class="row">
             <!-- Main Content -->
@@ -31,14 +31,9 @@
                     <!-- Artikel Meta -->
                     <div class="artikel-meta mb-4 p-3 bg-light rounded">
                         <div class="row align-items-center">
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-user me-2 text-muted"></i>
-                                    <span class="me-3"><strong>Penulis:</strong> {{ $artikel->penulis->nama }}</span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-center justify-content-md-end">
+                            <div class="col-md-12">
+                                <div class="d-flex align-items-center justify-content-md-start">
+                                    <span class="me-3 italic"><strong>Penulis:</strong> {{ $artikel->penulis->nama }}</span>
                                     <i class="fas fa-calendar me-2 text-muted"></i>
                                     <span class="me-3">{{ $artikel->tanggal_publish->format('d F Y, H:i') }}</span>
                                     <i class="fas fa-eye me-2 text-muted"></i>
@@ -55,25 +50,15 @@
                     </div>
                     @endif
 
-                    <!-- Ringkasan -->
-                    @if($artikel->ringkasan)
-                    <div class="artikel-ringkasan mb-4">
-                        <div class="alert alert-{{ $artikel->jenis == 'berita' ? 'primary' : 'info' }} alert-dismissible" role="alert">
-                            <h6 class="alert-heading"><i class="fas fa-info-circle me-2"></i>Ringkasan</h6>
-                            <p class="mb-0">{{ $artikel->ringkasan }}</p>
-                        </div>
-                    </div>
-                    @endif
-
                     <!-- Isi Artikel -->
                     <div class="artikel-body">
                         <div class="content-text">
-                            {!! nl2br(e($artikel->isi)) !!}
+                            {!! $artikel->isi !!}
                         </div>
                     </div>
 
                     <!-- Share Buttons -->
-                    <div class="artikel-share mt-5 p-3 bg-light rounded">
+                    <div class="artikel-share mt-5 mb-5 p-3 pl-0 rounded">
                         <h6 class="mb-3"><i class="fas fa-share-alt me-2"></i>Bagikan Artikel</h6>
                         <div class="share-buttons">
                             <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->fullUrl()) }}" target="_blank" class="btn btn-primary btn-sm me-2">
@@ -161,6 +146,88 @@
 
 .content-text p {
     margin-bottom: 1.2rem;
+}
+
+.content-text h1, .content-text h2, .content-text h3, 
+.content-text h4, .content-text h5, .content-text h6 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    color: #2c3e50;
+}
+
+.content-text h1 { font-size: 2rem; }
+.content-text h2 { font-size: 1.75rem; }
+.content-text h3 { font-size: 1.5rem; }
+.content-text h4 { font-size: 1.25rem; }
+.content-text h5 { font-size: 1.1rem; }
+.content-text h6 { font-size: 1rem; }
+
+.content-text img {
+    max-width: 100%;
+    height: auto;
+    margin: 1rem 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.content-text table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.content-text table th,
+.content-text table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.content-text table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.content-text blockquote {
+    background: #f8f9fa;
+    border-left: 4px solid var(--bs-{{ $artikel->jenis == 'berita' ? 'primary' : 'info' }});
+    margin: 1.5rem 0;
+    padding: 1rem;
+    font-style: italic;
+}
+
+.content-text ul, .content-text ol {
+    margin: 1rem 0;
+    padding-left: 2rem;
+}
+
+.content-text li {
+    margin-bottom: 0.5rem;
+}
+
+.content-text strong {
+    font-weight: 600;
+}
+
+.content-text em {
+    font-style: italic;
+}
+
+.content-text a {
+    color: var(--bs-{{ $artikel->jenis == 'berita' ? 'primary' : 'info' }});
+    text-decoration: none;
+}
+
+.content-text a:hover {
+    text-decoration: underline;
+}
+
+.content-text hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #ddd, transparent);
+    margin: 2rem 0;
 }
 
 .sidebar-widget {

@@ -1,5 +1,19 @@
 @extends('layouts.admin')
 @section('title', isset($jenis) ? 'Tambah ' . ucfirst($jenis) : 'Tambah Artikel')
+
+@push('styles')
+<script src="https://cdn.tiny.cloud/1/sn32vy26z8kumz26wibs2fxo0g1tt4jyps2d26s2epz27j2m/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<style>
+.tox-tinymce {
+    border-radius: 6px !important;
+    border: 1px solid #d1d5db !important;
+}
+.tox .tox-edit-area__iframe {
+    background-color: #fff !important;
+}
+</style>
+@endpush
+
 @section('content')
 
 <div class="row mt-20">
@@ -59,7 +73,7 @@
                             <!-- Isi Artikel -->
                             <div class="mb-3">
                                 <label for="isi" class="form-label">Isi Artikel <span class="text-danger">*</span></label>
-                                <textarea name="isi" id="isi" class="form-control" rows="15" placeholder="Tulis isi artikel di sini...">{{ old('isi') }}</textarea>
+                                <textarea name="isi" id="isi" class="form-control tinymce-editor" placeholder="Tulis isi artikel di sini...">{{ old('isi') }}</textarea>
                                 @error('isi')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
@@ -116,8 +130,92 @@
 
 <script>
     $(document).ready(function() {
+        // Initialize TinyMCE
+        tinymce.init({
+            selector: '.tinymce-editor',
+            height: 500,
+            menubar: true,
+            language: 'id',
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'help', 'wordcount', 'paste',
+                'textcolor', 'colorpicker', 'hr', 'pagebreak', 'nonbreaking'
+            ],
+            toolbar1: 'undo redo | cut copy paste | bold italic underline strikethrough | ' +
+                'fontfamily fontsize | forecolor backcolor | alignleft aligncenter alignright alignjustify',
+            toolbar2: 'bullist numlist | outdent indent | blockquote hr | ' +
+                'table link image media | insertdatetime charmap | ' +
+                'searchreplace | preview code fullscreen | help',
+            font_family_formats: 
+                'Arial=arial,helvetica,sans-serif; ' +
+                'Georgia=georgia,serif; ' +
+                'Helvetica=helvetica; ' +
+                'Times New Roman=times new roman,times; ' +
+                'Verdana=verdana,geneva;',
+            font_size_formats: '8px 10px 12px 14px 16px 18px 20px 24px 28px 32px 36px 48px',
+            block_formats: 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3; Header 4=h4; Header 5=h5; Header 6=h6; Preformatted=pre',
+            content_style: `
+                body { 
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 
+                    font-size: 14px; 
+                    line-height: 1.6;
+                    margin: 1rem;
+                }
+                img { max-width: 100%; height: auto; }
+                table { border-collapse: collapse; width: 100%; }
+                table td, table th { border: 1px solid #ddd; padding: 8px; }
+            `,
+            paste_as_text: false,
+            paste_auto_cleanup_on_paste: true,
+            paste_remove_styles: false,
+            paste_remove_spans: false,
+            paste_strip_class_attributes: 'all',
+            extended_valid_elements: 'img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|style]',
+            image_advtab: true,
+            image_caption: true,
+            image_title: true,
+            automatic_uploads: false,
+            setup: function (editor) {
+                editor.on('change', function () {
+                    editor.save();
+                });
+                editor.on('init', function () {
+                    console.log('TinyMCE initialized successfully');
+                });
+            },
+            file_picker_callback: function (callback, value, meta) {
+                if (meta.filetype === 'image') {
+                    const input = document.createElement('input');
+                    input.setAttribute('type', 'file');
+                    input.setAttribute('accept', 'image/*');
+                    
+                    input.onchange = function () {
+                        const file = this.files[0];
+                        if (file && file.size <= 5 * 1024 * 1024) { // Max 5MB
+                            const reader = new FileReader();
+                            reader.onload = function () {
+                                callback(reader.result, {
+                                    alt: file.name,
+                                    title: file.name
+                                });
+                            };
+                            reader.readAsDataURL(file);
+                        } else {
+                            alert('Ukuran file terlalu besar. Maksimal 5MB.');
+                        }
+                    };
+                    
+                    input.click();
+                }
+            }
+        });
+
         // Handle form submission for save and publish
         $('button[name="action"]').click(function() {
+            // Sync TinyMCE content
+            tinymce.triggerSave();
+            
             if ($(this).val() === 'save_and_publish') {
                 $('#status').val('publish');
             } else {
@@ -138,12 +236,6 @@
             } else {
                 $('#imagePreview').hide();
             }
-        });
-
-        // Auto resize textarea
-        $('#isi').on('input', function() {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
         });
 
         // Character counter for judul
@@ -167,9 +259,12 @@
 
         // Form validation
         $('#artikelForm').submit(function(e) {
+            // Sync TinyMCE content before validation
+            tinymce.triggerSave();
+            
             const jenis = $('#jenis').val();
             const judul = $('#judul').val().trim();
-            const isi = $('#isi').val().trim();
+            const isi = tinymce.get('isi').getContent().trim();
 
             if (!jenis) {
                 alert('Pilih jenis artikel terlebih dahulu');
@@ -185,9 +280,9 @@
                 return false;
             }
 
-            if (!isi) {
+            if (!isi || isi === '<p></p>' || isi === '') {
                 alert('Isi artikel wajib diisi');
-                $('#isi').focus();
+                tinymce.get('isi').focus();
                 e.preventDefault();
                 return false;
             }

@@ -7,8 +7,11 @@
         <div class="card">
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="card-title w-content">Data Pengguna</h3>
-                    <div class="d-flex" style="gap: 5px;">
+                    <h3 class="card-title w-content">Data {{ ucfirst($jenis) }}</h3>
+                    <div class="d-flex justify-center align-items-center" style="gap: 5px;">
+                        <a href="{{ url('/admin/user/create') }}" class="btn btn-primary btn-sm btn-add" style="white-space: nowrap">
+                            <i class="ph ph-plus"></i> Tambah {{ ucfirst($jenis) }} 
+                        </a>
                         <select id="exportOptions" class="form-select w-auto mb-3 mr-2">
                             <option value="">Export</option>
                             <option value="csv">Export to CSV</option>
@@ -34,7 +37,6 @@
                                                 </th>
                                                 <th class="h6 text-gray-300">Nama</th>
                                                 <th class="h6 text-gray-300">Email</th>
-                                                <th class="h6 text-gray-300">Role</th>
                                                 <th class="h6 text-gray-300">Aksi</th>
                                             </tr>
                                     </thead>
@@ -55,10 +57,7 @@
                                                         <span class="h6 mb-0 fw-medium text-gray-300">{{ $user->email }}</span>
                                                     </td>
                                                     <td>
-                                                        <span class="h6 mb-0 fw-medium text-gray-300">{{ $user->roles->pluck('name')->implode(', ') }}</span>
-                                                    </td>
-                                                    <td>
-                                                        <a href="{{ url('/admin/user/detail') }}/{{ $user->id }}" class="btn btn-primary btn-sm">Detail</a>
+                                                        <a href="{{ url('/admin/user/detail') }}/{{ $user->id }}" class="btn btn-primary btn-add btn-sm">Detail</a>
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -95,7 +94,7 @@
             autoWidth: true,
             responsive: true,
             columnDefs: [
-                { orderable: false, targets: [0, 4] } 
+                { orderable: false, targets: [0, 3] } 
             ]
         });
 

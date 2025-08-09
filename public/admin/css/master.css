@@ -1,0 +1,21 @@
+.btn-add {
+    position: relative;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    font-weight: 500;
+    font-family: var(--body-font);
+    color: hsl(var(--white)) !important;
+    z-index: 1;
+    line-height: 1;
+    padding: 10px 13px;
+    font-size: 15px;
+    text-transform: capitalize;
+}
+
+.card-body {
+    min-height: 500px;
+}
+
+.border-1 {
+    border: 1px solid #E0E0E0;
+}
