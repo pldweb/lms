@@ -3,7 +3,7 @@
         <div class="vs-menu-area text-center">
             <button class="vs-menu-toggle"><i class="fal fa-times"></i></button>
             <div class="mobile-logo">
-                <a href="index.html"><img src="{{asset('landing/img/logo.svg')}}" alt="Educino"></a>
+                <a href="{{url('/')}}"><img src="{{asset('landing/img/Logo-SMPN20.png')}}" alt="Educino"></a>
             </div>
             <div class="vs-mobile-menu">
                 <ul>
@@ -59,7 +59,7 @@
                     <div class="row gx-50 align-items-center justify-content-between master-menu">
                         <div class="col-auto col-xl align-self-stretch">
                             <div class="vs-logo style2">
-                                <a href="index.html"><img src="{{asset('img/logo-SMPN20.png')}}" alt="logo"></a>
+                                <a href="{{url('/')}}"><img src="{{asset('img/Logo-SMPN20.png')}}" alt="logo"></a>
                             </div>
                         </div>
                         <div class="col-auto">
