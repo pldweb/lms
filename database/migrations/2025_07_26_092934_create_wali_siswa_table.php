@@ -17,7 +17,7 @@ return new class extends Migration
                 $table->foreignId('wali_id')->nullable()->constrained('users')->cascadeOnDelete();
                 $table->foreignId('siswa_id')->nullable()->constrained('users')->cascadeOnDelete();
 
-                $table->primary(['wali_id', 'siswa_id']);
+                $table->unique(['wali_id', 'siswa_id']);
                 $table->timestamps();
             });
         });
