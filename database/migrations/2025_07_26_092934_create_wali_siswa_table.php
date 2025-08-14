@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('wali_siswa', function (Blueprint $table) {
             // $table->id();
-            $table->foreignId('wali_id')->nullable()->constrained('users')->cascadeOnDelete();
-            $table->foreignId('siswa_id')->nullable()->constrained('users')->cascadeOnDelete();
+            Schema::create('wali_siswa', function (Blueprint $table) {
+                $table->foreignId('wali_id')->nullable()->constrained('users')->cascadeOnDelete();
+                $table->foreignId('siswa_id')->nullable()->constrained('users')->cascadeOnDelete();
 
-            $table->primary(['wali_id', 'siswa_id']);
-            $table->timestamps();
+                $table->primary(['wali_id', 'siswa_id']);
+                $table->timestamps();
+            });
         });
     }
 
