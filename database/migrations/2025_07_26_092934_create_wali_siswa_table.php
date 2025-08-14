@@ -12,15 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('wali_siswa', function (Blueprint $table) {
-            // $table->id();
-            Schema::create('wali_siswa', function (Blueprint $table) {
-                $table->foreignId('wali_id')->nullable()->constrained('users')->cascadeOnDelete();
-                $table->foreignId('siswa_id')->nullable()->constrained('users')->cascadeOnDelete();
+                $table->foreignId('wali_id')->constrained('users')->cascadeOnDelete();
+                $table->foreignId('siswa_id')->constrained('users')->cascadeOnDelete();
+                $table->primary(['wali_id', 'siswa_id']);
 
-                $table->unique(['wali_id', 'siswa_id']);
                 $table->timestamps();
             });
-        });
     }
 
     /**
