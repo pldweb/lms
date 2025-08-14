@@ -36,11 +36,7 @@ class LandingMenu
         ],
         [
             'title' => 'Galeri',
-            'url' => '#',
-            'children' => [
-                ['title' => 'Album Foto', 'url' => 'course.html'],
-                ['title' => 'Koleksi Video', 'url' => 'courses-2.html'],
-            ],
+            'url' => url('/galeri'),
         ],
         [
             'title' => 'PPID',

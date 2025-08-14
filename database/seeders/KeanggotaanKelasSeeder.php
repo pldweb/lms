@@ -10,9 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class KeanggotaanKelasSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+    
     public function run(): void
     {
         $siswas = User::role('Siswa')->get();

@@ -34,49 +34,29 @@
                 </div>
             </div>
             <div class="card-body">
-                <form id="artikelForm" action="{{ url('/admin/artikel/store') }}" method="POST" enctype="multipart/form-data">
+                <form id="artikelForm" method="POST" enctype="multipart/form-data" onsubmit="return false;">
                     @csrf
-                    
                     <div class="row">
                         <div class="col-md-8">
                             <!-- Jenis Artikel -->
-                            <div class="mb-3">
-                                <label for="jenis" class="form-label">Jenis Artikel <span class="text-danger">*</span></label>
-                                <select name="jenis" id="jenis" class="form-select" {{ isset($jenis) ? 'readonly' : '' }}>
-                                    <option value="">Pilih Jenis Artikel</option>
-                                    <option value="berita" {{ (isset($jenis) && $jenis == 'berita') || old('jenis') == 'berita' ? 'selected' : '' }}>Berita</option>
-                                    <option value="pengumuman" {{ (isset($jenis) && $jenis == 'pengumuman') || old('jenis') == 'pengumuman' ? 'selected' : '' }}>Pengumuman</option>
-                                </select>
-                                @error('jenis')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
+                            <input type="hidden" name="jenis" id="jenis" class="form-control" value="{{ $jenis }}">
 
                             <!-- Judul -->
                             <div class="mb-3">
                                 <label for="judul" class="form-label">Judul <span class="text-danger">*</span></label>
                                 <input type="text" name="judul" id="judul" class="form-control" value="{{ old('judul') }}" placeholder="Masukkan judul artikel">
-                                @error('judul')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
                             </div>
 
                             <!-- Ringkasan -->
                             <div class="mb-3">
                                 <label for="ringkasan" class="form-label">Ringkasan</label>
-                                <textarea name="ringkasan" id="ringkasan" class="form-control" rows="3" placeholder="Ringkasan singkat artikel (opsional)">{{ old('ringkasan') }}</textarea>
-                                @error('ringkasan')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
+                                <textarea name="ringkasan" id="ringkasan" class="form-control" style="height: auto;" rows="3" cols="6" placeholder="Ringkasan singkat artikel (opsional)">{{ old('ringkasan') }}</textarea>
                             </div>
 
                             <!-- Isi Artikel -->
                             <div class="mb-3">
                                 <label for="isi" class="form-label">Isi Artikel <span class="text-danger">*</span></label>
                                 <textarea name="isi" id="isi" class="form-control tinymce-editor" placeholder="Tulis isi artikel di sini...">{{ old('isi') }}</textarea>
-                                @error('isi')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
                             </div>
                         </div>
 
@@ -86,11 +66,16 @@
                                 <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
                                 <select name="status" id="status" class="form-select">
                                     <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>Draft</option>
-                                    <option value="publish" {{ old('status') == 'publish' ? 'selected' : '' }}>Publish</option>
+                                    <option value="publish" {{ old('status') == 'publish' ? 'selected' : '' }}>Publish Sekarang</option>
+                                    <option value="scheduled" {{ old('status') == 'scheduled' ? 'selected' : '' }}>Jadwalkan Publish</option>
                                 </select>
-                                @error('status')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
+                            </div>
+
+                            <!-- Tanggal Publish (untuk status scheduled) -->
+                            <div class="mb-3" id="tanggal-publish-group" style="display: none;">
+                                <label for="tanggal_publish" class="form-label">Tanggal & Waktu Publish <span class="text-danger">*</span></label>
+                                <input type="datetime-local" name="tanggal_publish" id="tanggal_publish" class="form-control" value="{{ old('tanggal_publish') }}">
+                                <div class="form-text">Artikel akan otomatis dipublish pada tanggal dan waktu yang ditentukan</div>
                             </div>
 
                             <!-- Gambar -->
@@ -98,9 +83,6 @@
                                 <label for="gambar" class="form-label">Gambar Artikel</label>
                                 <input type="file" name="gambar" id="gambar" class="form-control" accept="image/*">
                                 <div class="form-text">Format: JPG, PNG, GIF. Max: 2MB</div>
-                                @error('gambar')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
                                 
                                 <!-- Preview Image -->
                                 <div id="imagePreview" class="mt-3" style="display: none;">
@@ -110,15 +92,15 @@
 
                             <!-- Submit Buttons -->
                             <div class="mb-3 d-grid gap-2">
-                                <button type="submit" name="action" value="save" class="btn btn-primary">
-                                    <i class="ph ph-floppy-disk"></i> Simpan
+                                <button type="button" id="simpanDraft" class="btn btn-secondary">
+                                    <i class="ph ph-floppy-disk"></i> Simpan sebagai Draft
                                 </button>
-                                <button type="submit" name="action" value="save_and_publish" class="btn btn-success">
-                                    <i class="ph ph-paper-plane-tilt"></i> Simpan & Publish
+                                <button type="button" id="publishSekarang" class="btn btn-success">
+                                    <i class="ph ph-paper-plane-tilt"></i> Publish Sekarang
                                 </button>
-                                <a href="{{ url('/admin/artikel' . (isset($jenis) ? '/' . $jenis : '')) }}" class="btn btn-secondary">
-                                    <i class="ph ph-x"></i> Batal
-                                </a>
+                                <button type="button" id="jadwalkanPublish" class="btn btn-primary" style="display: none;">
+                                    <i class="ph ph-clock"></i> Jadwalkan Publish
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -211,16 +193,113 @@
             }
         });
 
-        // Handle form submission for save and publish
-        $('button[name="action"]').click(function() {
-            // Sync TinyMCE content
+        // Handle status change untuk show/hide tanggal publish
+        $('#status').change(function() {
+            const status = $(this).val();
+            if (status === 'scheduled') {
+                $('#tanggal-publish-group').show();
+                $('#jadwalkanPublish').show();
+                $('#publishSekarang').hide();
+                $('#tanggal_publish').attr('required', true);
+            } else {
+                $('#tanggal-publish-group').hide();
+                $('#jadwalkanPublish').hide();
+                $('#publishSekarang').show();
+                $('#tanggal_publish').attr('required', false);
+            }
+        });
+
+        // Set minimum date untuk tanggal publish (tidak boleh kurang dari sekarang)
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+        $('#tanggal_publish').attr('min', minDateTime);
+
+        // Function untuk validasi form
+        function validateForm() {
             tinymce.triggerSave();
             
-            if ($(this).val() === 'save_and_publish') {
-                $('#status').val('publish');
-            } else {
-                $('#status').val('draft');
+            const jenis = $('#jenis').val();
+            const judul = $('#judul').val().trim();
+            const isi = tinymce.get('isi').getContent().trim();
+            const status = $('#status').val();
+            const tanggalPublish = $('#tanggal_publish').val();
+
+            if (!jenis) {
+                alert('Pilih jenis artikel terlebih dahulu');
+                $('#jenis').focus();
+                return false;
             }
+
+            if (!judul) {
+                alert('Judul artikel wajib diisi');
+                $('#judul').focus();
+                return false;
+            }
+
+            if (!isi || isi === '<p></p>' || isi === '') {
+                alert('Isi artikel wajib diisi');
+                tinymce.get('isi').focus();
+                return false;
+            }
+
+            if (status === 'scheduled' && !tanggalPublish) {
+                alert('Tanggal publish wajib diisi untuk artikel terjadwal');
+                $('#tanggal_publish').focus();
+                return false;
+            }
+
+            if (status === 'scheduled' && new Date(tanggalPublish) <= new Date()) {
+                alert('Tanggal publish harus lebih dari waktu sekarang');
+                $('#tanggal_publish').focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        // Function untuk submit artikel
+        function submitArtikel(actionType) {
+            if (!validateForm()) {
+                return false;
+            }
+
+            // Set status berdasarkan action
+            let statusValue = 'draft';
+            let confirmMessage = 'Apakah Anda yakin ingin menyimpan artikel sebagai draft?';
+            
+            if (actionType === 'publish') {
+                statusValue = 'publish';
+                confirmMessage = 'Apakah Anda yakin ingin mempublish artikel sekarang?';
+            } else if (actionType === 'schedule') {
+                statusValue = 'scheduled';
+                const tanggal = new Date($('#tanggal_publish').val()).toLocaleString('id-ID');
+                confirmMessage = `Apakah Anda yakin ingin menjadwalkan publish artikel pada ${tanggal}?`;
+            }
+
+            $('#status').val(statusValue);
+            const data = new FormData($('#artikelForm')[0]);
+
+            confirmModal(confirmMessage, function() {
+                ajxProcess('/admin/artikel/store', data, '#message-modal');
+            });
+        }
+
+        // Event handlers untuk tombol
+        $('#simpanDraft').click(function() {
+            submitArtikel('draft');
+        });
+
+        $('#publishSekarang').click(function() {
+            submitArtikel('publish');
+        });
+
+        $('#jadwalkanPublish').click(function() {
+            submitArtikel('schedule');
         });
 
         // Image preview
@@ -257,44 +336,6 @@
             }
         });
 
-        // Form validation
-        $('#artikelForm').submit(function(e) {
-            // Sync TinyMCE content before validation
-            tinymce.triggerSave();
-            
-            const jenis = $('#jenis').val();
-            const judul = $('#judul').val().trim();
-            const isi = tinymce.get('isi').getContent().trim();
-
-            if (!jenis) {
-                alert('Pilih jenis artikel terlebih dahulu');
-                $('#jenis').focus();
-                e.preventDefault();
-                return false;
-            }
-
-            if (!judul) {
-                alert('Judul artikel wajib diisi');
-                $('#judul').focus();
-                e.preventDefault();
-                return false;
-            }
-
-            if (!isi || isi === '<p></p>' || isi === '') {
-                alert('Isi artikel wajib diisi');
-                tinymce.get('isi').focus();
-                e.preventDefault();
-                return false;
-            }
-
-            // Show loading
-            $(this).find('button[type="submit"]').prop('disabled', true).html('<i class="ph ph-spinner"></i> Menyimpan...');
-        });
-
-        @if(isset($jenis))
-        // Disable jenis select if jenis is preset
-        $('#jenis').prop('disabled', true);
-        @endif
     });
 </script>
 

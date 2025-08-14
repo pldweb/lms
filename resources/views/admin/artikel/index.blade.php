@@ -7,9 +7,9 @@
         <div class="card">
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="card-title w-content">Data {{ ucfirst($jenis) ?? 'Pengumuman' }}</h3>
+                    <h3 class="card-title w-content">Data {{ ucfirst($jenis) }}</h3>
                     <div class="d-flex justify-center align-items-center" style="gap: 5px;">
-                        <a href="{{ url('/admin/artikel/create') }}" class="btn btn-primary mb-3 btn-add" style="white-space: nowrap">
+                        <a href="{{ url('/admin/artikel/create-' . $jenis) }}" class="btn btn-primary mb-3 btn-add" style="white-space: nowrap">
                                 <i class="ph ph-plus"></i> Tambah Artikel
                         </a>                   
                         <select id="exportOptions" class="form-select w-auto mb-3 mr-2">
@@ -74,9 +74,13 @@
                                                 </td>
                                                 @endif
                                                 <td>
-                                                    <span class="badge bg-{{ $item->status == 'publish' ? 'success' : 'warning' }}">
-                                                        {{ ucfirst($item->status) }}
-                                                    </span>
+                                                    @if($item->status == 'publish')
+                                                        <span class="badge bg-success">Publish</span>
+                                                    @elseif($item->status == 'scheduled')
+                                                        <span class="badge bg-info">Terjadwal</span>
+                                                    @else
+                                                        <span class="badge bg-warning">Draft</span>
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     <span class="h6 mb-0 fw-medium text-gray-300">

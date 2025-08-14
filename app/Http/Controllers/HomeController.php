@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Helper\MenuNavbarHelper;
 use App\Helper\TimHelper;
 use App\Models\Artikel;
+use App\Models\KategoriGaleri;
+use App\Models\Galeri;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,31 +48,37 @@ class HomeController extends Controller
     }
 
     public function getIndex(){
-        // Ambil artikel terbaru untuk ditampilkan di landing page
         $beritaTerbaru = Artikel::berita()
-            ->publish()
+            ->published()
             ->latest('tanggal_publish')
             ->take(3)
             ->get();
 
         $pengumumanTerbaru = Artikel::pengumuman()
-            ->publish()
+            ->published()
             ->latest('tanggal_publish')
             ->take(3)
+            ->get();
+
+        $galeriTerbaru = Galeri::aktif()
+            ->with('kategori')
+            ->latest()
+            ->take(6)
             ->get();
 
         $params = [
             'title' => 'Selamat Datang di SMP 20 Jakarta',
             'heroSection' => self::heroSection(),
             'beritaTerbaru' => $beritaTerbaru,
-            'pengumumanTerbaru' => $pengumumanTerbaru
+            'pengumumanTerbaru' => $pengumumanTerbaru,
+            'galeriTerbaru' => $galeriTerbaru
         ];
         return view('landing.index', $params);
     }
 
     public function getBerita(){
         $berita = Artikel::berita()
-            ->publish()
+            ->published()
             ->with('penulis')
             ->latest('tanggal_publish')
             ->paginate(9);
@@ -84,7 +92,7 @@ class HomeController extends Controller
 
     public function getPengumuman(){
         $pengumuman = Artikel::pengumuman()
-            ->publish()
+            ->published()
             ->with('penulis')
             ->latest('tanggal_publish')
             ->paginate(9);
@@ -97,15 +105,13 @@ class HomeController extends Controller
     }
 
     public function getArtikel($id){
-        $artikel = Artikel::publish()->with('penulis')->findOrFail($id);
+        $artikel = Artikel::published()->with('penulis')->findOrFail($id);
         
-        // Increment views
         $artikel->increment('views');
 
-        // Ambil artikel terkait berdasarkan jenis yang sama
         $artikelTerkait = Artikel::where('jenis', $artikel->jenis)
             ->where('id', '!=', $artikel->id)
-            ->publish()
+            ->published()
             ->latest('tanggal_publish')
             ->take(3)
             ->get();
@@ -116,6 +122,63 @@ class HomeController extends Controller
             'artikelTerkait' => $artikelTerkait
         ];
         return view('landing.artikel-detail', $params);
+    }
+
+    public function getGaleri()
+    {
+        $kategori = KategoriGaleri::aktif()
+            ->withCount(['galeriAktif'])
+            ->orderBy('urutan')
+            ->get();
+
+        $galeriTerbaru = Galeri::aktif()
+            ->with('kategori')
+            ->latest()
+            ->take(6)
+            ->get();
+
+        $params = [
+            'title' => 'Galeri Sekolah',
+            'kategori' => $kategori,
+            'galeriTerbaru' => $galeriTerbaru
+        ];
+        return view('landing.galeri', $params);
+    }
+
+    public function getGaleriKategori($slug)
+    {
+        $kategori = KategoriGaleri::where('slug', $slug)->aktif()->firstOrFail();
+        
+        $galeri = Galeri::where('kategori_galeri_id', $kategori->id)
+            ->aktif()
+            ->orderBy('urutan')
+            ->orderBy('created_at', 'desc')
+            ->paginate(12);
+
+        $params = [
+            'title' => $kategori->nama_kategori,
+            'kategori' => $kategori,
+            'galeri' => $galeri
+        ];
+        return view('landing.galeri-kategori', $params);
+    }
+
+    public function getGaleriDetail($id)
+    {
+        $galeri = Galeri::aktif()->with('kategori')->findOrFail($id);
+        $galeriTerkait = Galeri::where('kategori_galeri_id', $galeri->kategori_galeri_id)
+            ->where('id', '!=', $galeri->id)
+            ->aktif()
+            ->latest()
+            ->take(6)
+            ->get();
+
+        $params = [
+            'title' => $galeri->judul,
+            'galeri' => $galeri,
+            'galeriTerkait' => $galeriTerkait
+        ];
+        return view('landing.galeri-detail', $params);
     }
 
 }

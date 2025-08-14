@@ -22,34 +22,41 @@ class AdminSidebar
                 [
                     'text' => 'Dashboard',
                     'icon' => 'ph ph-squares-four',
-                    'link' => 'admin/dashboard',
+                    'link' => 'admin/dashboard/',
                 ],
                 ['type' => 'label', 'text' => 'Manajemen'],
                 [
                     'text' => 'Pengguna',
                     'icon' => 'ph ph-users-three',
                     'submenu' => [
-                        ['text' => 'Data Admin', 'link' => 'admin/user/admin'],
-                        ['text' => 'Data Guru', 'link' => 'admin/user/guru'],
-                        ['text' => 'Data Siswa', 'link' => 'admin/user/siswa'],
+                        ['text' => 'Data Admin', 'link' => 'admin/user/admin/'],
+                        ['text' => 'Data Guru', 'link' => 'admin/user/guru/'],
+                        ['text' => 'Data Siswa', 'link' => 'admin/user/siswa/'],
                     ],
                 ],
                 [
                     'text' => 'Akademik',
                     'icon' => 'ph ph-books',
                     'submenu' => [
-                        ['text' => 'Tahun Ajaran', 'link' => 'admin/akademik/tahun-ajaran'],
-                        ['text' => 'Mata Pelajaran', 'link' => 'admin/akademik/mapel'],
-                        ['text' => 'Daftar Kelas', 'link' => 'admin/akademik/kelas'],
+                        ['text' => 'Tahun Ajaran', 'link' => 'admin/tahun-ajaran/'],
+                        ['text' => 'Mata Pelajaran', 'link' => 'admin/mata-pelajaran/'],
+                        ['text' => 'Daftar Kelas', 'link' => 'admin/kelas/'],
                     ],
                 ],
                 [
                     'text' => 'Pembelajaran',
                     'icon' => 'ph ph-graduation-cap',
                     'submenu' => [
-                        ['text' => 'Jadwal Pelajaran', 'link' => 'admin/pembelajaran/jadwal'],
-                        ['text' => 'Keanggotaan Kelas', 'link' => 'admin/pembelajaran/anggota-kelas'],
+                        ['text' => 'Jadwal Pelajaran', 'link' => 'admin/jadwal-pelajaran/'],
+                        ['text' => 'Keanggotaan Kelas', 'link' => 'admin/keanggotaan-kelas/'],
+                        ['text' => 'Nilai Siswa', 'link' => 'admin/nilai-siswa/'],
                     ],
+                ],
+                ['type' => 'label', 'text' => 'Laporan & Raport'],
+                [
+                    'text' => 'E-Raport',
+                    'icon' => 'ph ph-file-pdf',
+                    'link' => 'admin/e-raport/',
                 ],
                 ['type' => 'label', 'text' => 'Aktivitas Mengajar'],
                 [
@@ -80,11 +87,13 @@ class AdminSidebar
                     'text' => 'Website Sekolah',
                     'icon' => 'ph ph-globe',
                     'submenu' => [
-                        ['text' => 'Berita', 'link' => 'admin/artikel/berita'],
+                        ['text' => 'Berita', 'link' => 'admin/artikel/'],
                         ['text' => 'Pengumuman', 'link' => 'admin/artikel/pengumuman'],
-                        ['text' => 'Slideshow', 'link' => 'guru/website'],
-                        ['text' => 'Kontak', 'link' => 'guru/website'],
-                        ['text' => 'Sosial Media', 'link' => 'guru/website'],
+                        ['text' => "Galeri", 'link' => 'admin/galeri/'],
+                        ['text' => "Kategori Galeri", 'link' => 'admin/galeri-kategori/'],
+                        ['text' => 'Slideshow', 'link' => 'admin/slideshow/'],
+                        ['text' => 'Kontak', 'link' => 'admin/kontak/'],
+                        ['text' => 'Sosial Media', 'link' => 'admin/sosial-media/'],
                     ],
                 ],
             ];
@@ -115,7 +124,7 @@ class AdminSidebar
         $menu[] = [
             'text' => 'Profil Saya',
             'icon' => 'ph ph-user',
-            'link' => 'admin/profile'
+            'link' => 'admin/profile/'
         ];
 
         return $menu;

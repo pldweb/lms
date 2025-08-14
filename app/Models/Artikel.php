@@ -16,6 +16,7 @@ class Artikel extends Model
         'penulis_id',
         'jenis',
         'judul',
+        'slug',
         'ringkasan',
         'isi',
         'gambar',
@@ -46,11 +47,35 @@ class Artikel extends Model
 
     public function scopePublish($query)
     {
-        return $query->where('status', 'publish');
+        return $query->where('status', 'publish')
+                    ->where(function($q) {
+                        $q->whereNull('tanggal_publish')
+                          ->orWhere('tanggal_publish', '<=', now());
+                    });
     }
 
     public function scopeDraft($query)
     {
         return $query->where('status', 'draft');
+    }
+
+    public function scopeScheduled($query)
+    {
+        return $query->where('status', 'scheduled')
+                    ->where('tanggal_publish', '>', now());
+    }
+
+    public function scopePublished($query)
+    {
+        return $query->where(function($q) {
+            $q->where('status', 'publish')
+              ->where(function($subQ) {
+                  $subQ->whereNull('tanggal_publish')
+                       ->orWhere('tanggal_publish', '<=', now());
+              });
+        })->orWhere(function($q) {
+            $q->where('status', 'scheduled')
+              ->where('tanggal_publish', '<=', now());
+        });
     }
 }

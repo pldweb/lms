@@ -7,7 +7,11 @@ use App\Models\Artikel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
+use function Laravel\Prompts\error;
 
 class ArtikelController extends Controller
 {
@@ -42,11 +46,6 @@ class ArtikelController extends Controller
         return view('admin.artikel.index', $params);
     }
 
-    public function getCreate()
-    {
-        return view('admin.artikel.create');
-    }
-
     public function getCreateBerita()
     {
         $params = ['jenis' => 'berita'];
@@ -61,24 +60,60 @@ class ArtikelController extends Controller
 
     public function postStore(Request $request)
     {
-        $data = $request->only(['jenis', 'judul', 'ringkasan', 'isi', 'status']);
-        $data['penulis_id'] = Auth::id();
+        try {
+            DB::beginTransaction();
 
-        if ($request->status === 'publish') {
-            $data['tanggal_publish'] = now();
+            $data = [
+                'jenis' => $request->jenis,
+                'judul' => $request->judul,
+                'isi' => $request->isi,
+                'status' => $request->status,
+                'penulis_id' => Auth::id(),
+                'tanggal_publish' => null
+            ];
+
+            // Handle tanggal publish untuk artikel scheduled
+            if ($request->status === 'scheduled') {
+                if (!$request->tanggal_publish) {
+                    return errorAlert('Tanggal publish harus diisi untuk artikel terjadwal');
+                }
+
+                $tanggalPublish = Carbon::parse($request->tanggal_publish);
+                if ($tanggalPublish->isPast()) {
+                    return errorAlert('Tanggal publish harus lebih dari waktu sekarang');
+                }
+
+                $data['tanggal_publish'] = $tanggalPublish;
+            } elseif ($request->status === 'publish') {
+                $data['tanggal_publish'] = now();
+            }
+
+            // Handle upload gambar
+            if ($request->hasFile('gambar')) {
+                $file = $request->file('gambar');
+                $filename = 'artikel-' . time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('img/artikel'), $filename);
+                $data['gambar'] = $filename;
+            }
+
+            $artikel = Artikel::create($data);
+
+            DB::commit();
+
+            $statusMessage = [
+                'draft' => 'Artikel berhasil disimpan sebagai draft',
+                'publish' => 'Artikel berhasil dipublish',
+                'scheduled' => 'Artikel berhasil dijadwalkan untuk dipublish'
+            ];
+
+            $redirectUrl = $request->jenis ? "/admin/artikel/{$request->jenis}" : '/admin/artikel';
+
+            return successAlert($statusMessage[$request->status], null, '', $redirectUrl);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return errorAlert('Terjadi kesalahan saat menyimpan artikel: ' . $e->getMessage());
         }
-
-        if ($request->hasFile('gambar')) {
-            $file = $request->file('gambar');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('artikel', $fileName, 'public');
-            $data['gambar'] = $filePath;
-        }
-
-        Artikel::create($data);
-
-        $redirectURL = url('/admin/artikel/' . $request->jenis);
-        return successAlert('Artikel berhasil disimpan', null, '', $redirectURL);
     }
 
     public function getDetail($id)
@@ -156,7 +191,6 @@ class ArtikelController extends Controller
             ]);
             $message = 'Artikel berhasil dijadikan draft';
         }
-
         return successAlert($message, null, '', url('/admin/artikel/' . $artikel->jenis));
     }
 }

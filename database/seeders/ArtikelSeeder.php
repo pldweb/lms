@@ -9,9 +9,7 @@ use App\Models\User;
 
 class ArtikelSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+    
     public function run(): void
     {
         // Ambil user pertama sebagai penulis (biasanya admin)

@@ -52,6 +52,7 @@
 
                     <!-- Isi Artikel -->
                     <div class="artikel-body">
+                        <h2 class="mb-3">{{ $artikel->judul }}</h2>
                         <div class="content-text">
                             {!! $artikel->isi !!}
                         </div>
@@ -132,137 +133,6 @@
         </div>
     </div>
 </section>
-
-<style>
-.page-header {
-    background: linear-gradient(135deg, var(--bs-{{ $artikel->jenis == 'berita' ? 'primary' : 'info' }}) 0%, {{ $artikel->jenis == 'berita' ? '#0056b3' : '#0aa4b3' }} 100%);
-}
-
-.content-text {
-    font-size: 16px;
-    line-height: 1.8;
-    text-align: justify;
-}
-
-.content-text p {
-    margin-bottom: 1.2rem;
-}
-
-.content-text h1, .content-text h2, .content-text h3, 
-.content-text h4, .content-text h5, .content-text h6 {
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-    color: #2c3e50;
-}
-
-.content-text h1 { font-size: 2rem; }
-.content-text h2 { font-size: 1.75rem; }
-.content-text h3 { font-size: 1.5rem; }
-.content-text h4 { font-size: 1.25rem; }
-.content-text h5 { font-size: 1.1rem; }
-.content-text h6 { font-size: 1rem; }
-
-.content-text img {
-    max-width: 100%;
-    height: auto;
-    margin: 1rem 0;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.content-text table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1rem 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.content-text table th,
-.content-text table td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
-}
-
-.content-text table th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-}
-
-.content-text blockquote {
-    background: #f8f9fa;
-    border-left: 4px solid var(--bs-{{ $artikel->jenis == 'berita' ? 'primary' : 'info' }});
-    margin: 1.5rem 0;
-    padding: 1rem;
-    font-style: italic;
-}
-
-.content-text ul, .content-text ol {
-    margin: 1rem 0;
-    padding-left: 2rem;
-}
-
-.content-text li {
-    margin-bottom: 0.5rem;
-}
-
-.content-text strong {
-    font-weight: 600;
-}
-
-.content-text em {
-    font-style: italic;
-}
-
-.content-text a {
-    color: var(--bs-{{ $artikel->jenis == 'berita' ? 'primary' : 'info' }});
-    text-decoration: none;
-}
-
-.content-text a:hover {
-    text-decoration: underline;
-}
-
-.content-text hr {
-    border: none;
-    height: 2px;
-    background: linear-gradient(to right, transparent, #ddd, transparent);
-    margin: 2rem 0;
-}
-
-.sidebar-widget {
-    background: #f8f9fa;
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 30px;
-    border: 1px solid #e9ecef;
-}
-
-.widget-title h5 {
-    color: #495057;
-    border-bottom: 2px solid var(--bs-{{ $artikel->jenis == 'berita' ? 'primary' : 'info' }});
-    padding-bottom: 10px;
-    margin-bottom: 15px;
-}
-
-.related-article:hover {
-    background-color: #f8f9fa;
-    transform: translateY(-2px);
-    transition: all 0.3s ease;
-}
-
-.share-buttons .btn {
-    border-radius: 20px;
-}
-
-.breadcrumb-item + .breadcrumb-item::before {
-    color: rgba(255,255,255,0.7);
-}
-
-.artikel-meta {
-    border-left: 4px solid var(--bs-{{ $artikel->jenis == 'berita' ? 'primary' : 'info' }});
-}
-</style>
 
 <script>
 function copyUrl() {
