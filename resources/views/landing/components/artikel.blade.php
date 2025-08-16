@@ -1,5 +1,4 @@
-<!--============================== Berita & Pengumuman ==============================-->
-<section class="blog-area section-padding bg-white">
+<section class="blog-area section-padding bg-white" style="margin-top: 50px;">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -10,15 +9,17 @@
             </div>
         </div>
 
+        @if($beritaTerbaru->count() > 0)
         <!-- Berita Terbaru -->
         <div class="row mb-5">
             <div class="col-md-12">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4 class="text-primary"><i class="fas fa-newspaper me-2"></i>Berita Terbaru</h4>
+                    <h4 class="text-primary">Berita Terbaru</h4>
                     <a href="{{ url('/berita') }}" class="btn btn-outline-primary btn-sm">Lihat Semua Berita</a>
                 </div>
             </div>
         </div>
+        @endif
 
         <div class="row mb-5">
             @if($beritaTerbaru->count() > 0)
@@ -67,6 +68,7 @@
             @endif
         </div>
 
+        @if($pengumumanTerbaru->count() > 0)
         <!-- Pengumuman Terbaru -->
         <div class="row mb-4">
             <div class="col-md-12">
@@ -76,6 +78,7 @@
                 </div>
             </div>
         </div>
+        @endif
 
         <div class="row">
             @if($pengumumanTerbaru->count() > 0)

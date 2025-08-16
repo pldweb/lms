@@ -9,21 +9,10 @@ use Throwable;
 
 class ImportLokasi extends Command
 {
-    /**
-     * The name and signature of the console command.
-     * @var string
-     */
     protected $signature = 'app:import-lokasi';
 
-    /**
-     * The console command description.
-     * @var string
-     */
-    protected $description = 'Ambil data lokasi dari 4 API flat dan simpan ke database lokal';
+    protected $description = 'Ambil data lokasi dari 4 API Nusakita';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
         $this->info('🚀 Memulai proses impor data lokasi dari 4 API.');
@@ -38,7 +27,6 @@ class ImportLokasi extends Command
         ];
 
         try {
-            // 1. Impor Provinsi
             $this->processEndpoint($endpoints['provinsi'], 'provinsis', [
                 'kode' => 'kode',
                 'nama' => 'nama',
@@ -46,7 +34,6 @@ class ImportLokasi extends Command
                 'lng' => 'lng'
             ]);
 
-            // 2. Impor Kabupaten
             $this->processEndpoint($endpoints['kabupaten'], 'kabupatens', [
                 'kode' => 'kode',
                 'nama' => 'nama',
@@ -55,7 +42,6 @@ class ImportLokasi extends Command
                 'lng' => 'lng'
             ]);
 
-            // 3. Impor Kecamatan
             $this->processEndpoint($endpoints['kecamatan'], 'kecamatans', [
                 'kode' => 'kode',
                 'nama' => 'nama',
@@ -64,11 +50,10 @@ class ImportLokasi extends Command
                 'lng' => 'lng'
             ]);
 
-            // 4. Impor Kelurahan
             $this->processEndpoint($endpoints['kelurahan'], 'kelurahans', [
                 'kode' => 'kode',
                 'nama' => 'nama',
-                'kode_kecamatan' => 'kode_kecamatan', // Pastikan nama key ini sesuai dengan response AP
+                'kode_kecamatan' => 'kode_kecamatan',
                 'lat' => 'lat',
                 'lng' => 'lng'
             ]);
@@ -107,7 +92,6 @@ class ImportLokasi extends Command
             $insertData = [];
             foreach ($chunk as $item) {
                 $newItem = [];
-                // Petakan kolom dari API ke kolom database
                 foreach ($columnMapping as $dbColumn => $apiColumn) {
                     $newItem[$dbColumn] = $item[$apiColumn] ?? null;
                 }

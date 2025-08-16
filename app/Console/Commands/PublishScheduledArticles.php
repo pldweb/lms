@@ -8,28 +8,14 @@ use Carbon\Carbon;
 
 class PublishScheduledArticles extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'artikel:publish-scheduled';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Publish scheduled articles that are due';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
         $now = Carbon::now();
         
-        // Find scheduled articles that should be published
         $scheduledArticles = Artikel::where('status', 'scheduled')
             ->where('tanggal_publish', '<=', $now)
             ->get();

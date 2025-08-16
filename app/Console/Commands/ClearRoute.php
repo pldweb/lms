@@ -7,28 +7,14 @@ use Illuminate\Support\Facades\Artisan;
 
 class ClearRoute extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'app:clear-route';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
+    protected $description = 'Menghapus cache route dan konfigurasi';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
-        // Hapus cache route
+        $this->info('🚀 Memulai proses clear cache route dan konfigurasi...');
 
-        
         Artisan::call('route:clear');
         $this->info('✔ Route cache cleared');
 

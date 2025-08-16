@@ -2,21 +2,17 @@
 @section('title', $title)
 @section('content')
     
-    <!--============================== Hero Area ==============================-->
     @include('landing.components.hero')
 
-    <!--============================== About Area ==============================-->
-    @include('landing.components.about')
-    
-    <!--============================== Category Area ==============================-->
+    @include('landing.components.count-school')
+
     @include('landing.components.category')
 
-    <!--============================== CTA Area ==============================-->
-    <div data-bg-src="{{asset('landing/img/bg/course-bg-pattern.jpg')}}">
-        @include('landing.components.cta')
-    </div>
+    @include('landing.components.cta')
 
-    <!--============================== Artikel ==============================-->
+    {{-- <div data-bg-src="{{asset('landing/img/bg/course-bg-pattern.jpg')}}">
+    </div> --}}
+
     @include('landing.components.artikel')
     
 @endsection
