@@ -85,7 +85,7 @@ class AdminSidebar
                     'text' => 'Website Sekolah',
                     'icon' => 'ph ph-globe',
                     'submenu' => [
-                        ['text' => 'Berita', 'link' => 'admin/artikel/'],
+                        ['text' => 'Berita', 'link' => 'admin/artikel/berita'],
                         ['text' => 'Pengumuman', 'link' => 'admin/artikel/pengumuman'],
                         ['text' => "Galeri", 'link' => 'admin/galeri/'],
                         ['text' => "Kategori Galeri", 'link' => 'admin/galeri-kategori/'],

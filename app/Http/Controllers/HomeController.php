@@ -7,44 +7,40 @@ use App\Helper\TimHelper;
 use App\Models\Artikel;
 use App\Models\KategoriGaleri;
 use App\Models\Galeri;
+use App\Models\Kontak;
+use App\Models\Slideshow;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\admin\SlideshowController;
+use App\Http\Controllers\admin\KontakController;
 
 class HomeController extends Controller
 {
     private function heroSection(){
-        $data = [
-            [
-                'image' => asset('landing/img/hero/hero-1.png'),
-                'title' => 'Selamat Datang di Website Resmi SMPN 20 Jakarta',
-                'deskripsi' => '"Membangun Generasi Cerdas, Berkarakter, dan Siap Masa Depan"',
-                'link' => 'https://google.com',
-                'tombol_text' => 'Segera Hubungi'
-           ],
-           [
-                'image' => asset('landing/img/hero/hero-2.png'),
-                'title' => 'Ini Judul Hero',
-                'deskripsi' => 'Ini Dekripsi',
-                'link' => 'https://google.com',
-                 'tombol_text' => 'Segera Hubungi'
-           ],
-           [
-                'image' => asset('landing/img/hero/hero-3.png'),
-                'title' => 'Ini Judul Hero',
-                'deskripsi' => 'Ini Dekripsi',
-                'link' => 'https://google.com',
-                 'tombol_text' => 'Segera Hubungi'
-           ],
-           [
-                'image' => asset('landing/img/hero/hero-4.png'),
-                'title' => 'Ini Judul Hero',
-                'deskripsi' => 'Ini Dekripsi',
-                'link' => 'https://google.com',
-                 'tombol_text' => 'Segera Hubungi'
-           ]
-        ];
-        return $data;
+        $slideshow = Slideshow::aktif()
+            ->urutan()
+            ->get()
+            ->toArray();
+            
+        if (empty($slideshow)) {
+            $slideshow = SlideshowController::getSlideshow();
+        }
+        
+        return $slideshow;
+    }
+    
+    private function kontakSection(){
+        $kontak = Kontak::aktif()
+            ->urutan()
+            ->get()
+            ->toArray();
+            
+        if (empty($kontak)) {
+            $kontak = KontakController::getKontak();
+        }
+        
+        return $kontak;
     }
 
     public function getIndex(){
@@ -71,7 +67,8 @@ class HomeController extends Controller
             'heroSection' => self::heroSection(),
             'beritaTerbaru' => $beritaTerbaru,
             'pengumumanTerbaru' => $pengumumanTerbaru,
-            'galeriTerbaru' => $galeriTerbaru
+            'galeriTerbaru' => $galeriTerbaru,
+            'kontak' => self::kontakSection()
         ];
         return view('landing.index', $params);
     }

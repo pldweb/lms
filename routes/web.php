@@ -9,6 +9,8 @@ use App\Http\Controllers\Guru\TugasController as GuruTugasController;
 use App\Http\Controllers\Siswa\TugasController as SiswaTugasController;
 use App\Http\Controllers\Guru\NilaiController as GuruNilaiController;
 use App\Http\Controllers\Siswa\NilaiController as SiswaNilaiController;
+use App\Http\Controllers\admin\SlideshowController;
+use App\Http\Controllers\admin\KontakController;
 
 Route::middleware('guest')->group(function () {
     Route::controller(LoginController::class)->group(function () {
@@ -88,4 +90,24 @@ Route::prefix('siswa/nilai')->controller(SiswaNilaiController::class)->group(fun
     Route::get('/show/{id}', 'getShow');
     Route::get('/export/csv', 'exportCSV');
     Route::get('/export/json', 'exportJSON');
+});
+
+// Admin Slideshow Routes
+Route::prefix('admin/slideshow')->controller(SlideshowController::class)->group(function () {
+    Route::get('/', 'getIndex');
+    Route::get('/create', 'getCreate');
+    Route::post('/store', 'postStore');
+    Route::get('/edit/{id}', 'getEdit');
+    Route::post('/update/{id}', 'postUpdate');
+    Route::get('/delete/{id}', 'getDelete');
+    Route::post('/ajax-delete', 'postAjaxDelete');
+});
+
+// Admin Kontak Routes
+Route::prefix('admin/kontak')->controller(KontakController::class)->group(function () {
+    Route::get('/', 'getIndex');
+    Route::get('/create', 'getCreate');
+    Route::post('/store', 'postStore');
+    Route::get('/edit/{id}', 'getEdit');
+    Route::get('/delete/{id}', 'postDeleteAction');
 });

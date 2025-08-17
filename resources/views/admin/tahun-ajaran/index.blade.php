@@ -43,7 +43,7 @@
                                     <tbody>
                                         @forelse($tahunAjaran as $index => $ta)
                                         <tr>
-                                            <td> <span class="h6 mb-0 fw-medium text-gray-300">{{ $index + 1 }}</span></td>
+                                            <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $index + 1 }}</span></td>
                                             <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $ta->nama }}</span></td>
                                             <td>
                                                 @if($ta->status === 'aktif')
@@ -78,7 +78,7 @@
     </div>
 </div>
 <script>
-$(document).ready(function () {
+    $(document).ready(function () {
         $('#searchInput').on('keyup', function () {
             let keyword = $(this).val().toLowerCase();
             $('#table-tahun-ajaran tbody tr').filter(function () {

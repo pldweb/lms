@@ -57,8 +57,8 @@
                                                         <span class="h6 mb-0 fw-medium text-gray-300">{{ $user->email }}</span>
                                                     </td>
                                                     <td>
-                                                        <button onclick="showModal('/admin/user/detail/{{ $user->id }}', 'Data Detail {{ ucfirst($jenis) }}')" class="btn btn-primary btn-add btn-sm">Detail</buttin>
-                                                        <button onclick="deleteUser('{{ $user->id }}', '{{ $jenis }}')" class="btn btn-danger btn-add btn-sm">Hapus</button>
+                                                        <button onclick="showModal('/admin/user/detail/{{ $user->id }}', 'Data Detail {{ ucfirst($jenis) }}')" style="margin-right: 5px;" class="btn btn-primary btn-add btn-sm"><i class="ph ph-eye btn-icon"></i></buttin>
+                                                        <button onclick="deleteUser('{{ $user->id }}', '{{ $jenis }}')" class="btn btn-danger btn-add btn-sm"><i class="ph ph-trash btn-icon"></i></button>
                                                     </td>
                                                 </tr>
                                                 @endforeach
