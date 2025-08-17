@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             KelasSeeder::class,
             KeanggotaanKelasSeeder::class,
             PengaturanSistemSeeder::class,
+            PengajarSeeder::class,
         ]);
     }
 }

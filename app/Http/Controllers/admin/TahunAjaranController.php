@@ -18,7 +18,6 @@ class TahunAjaranController extends Controller
             $params = [
                 'tahunAjaran' => $tahunAjaran
             ];
-
         return view('admin.tahun-ajaran.index', $params);
     }
 
@@ -30,6 +29,7 @@ class TahunAjaranController extends Controller
     public function postStore(Request $request)
     {
         try {
+            DB::beginTransaction();
             DB::table('tahun_ajaran')->insert([
                 'nama' => $request->nama,
                 'tanggal_mulai' => $request->tanggal_mulai,
@@ -39,13 +39,11 @@ class TahunAjaranController extends Controller
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
-
-            return redirect('/admin/tahun-ajaran/')
-                ->with('success', 'Tahun ajaran berhasil ditambahkan!');
+            DB::commit();
+            return successAlert('Tahun ajaran berhasil ditambahkan!', null, '#message-modal', '/admin/tahun-ajaran/');
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            DB::rollBack();
+            return errorAlert('Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
@@ -89,7 +87,7 @@ class TahunAjaranController extends Controller
         return view('admin.tahun-ajaran.edit', compact('tahunAjaran'));
     }
 
-    public function putUpdate(Request $request, string $id)
+    public function postUpdate(Request $request, string $id)
     {
         try {
             DB::table('tahun_ajaran')
@@ -111,30 +109,31 @@ class TahunAjaranController extends Controller
         }
     }
 
-    public function deleteDestroy(string $id)
+    public function postDelete(string $id)
     {
         try {
             // Cek apakah tahun ajaran sedang digunakan
             $kelasCount = DB::table('kelas')->where('tahun_ajaran_id', $id)->count();
             
             if ($kelasCount > 0) {
-                return redirect()->back()
-                    ->with('error', 'Tahun ajaran tidak dapat dihapus karena masih memiliki ' . $kelasCount . ' kelas aktif!');
+                return errorAlert('Tahun ajaran tidak dapat dihapus karena masih memiliki ' . $kelasCount . ' kelas aktif!', null, '#message-modal');
             }
-
             DB::table('tahun_ajaran')->where('id', $id)->delete();
-
-            return redirect('/admin/tahun-ajaran/')
-                ->with('success', 'Tahun ajaran berhasil dihapus!');
+            return successAlert('Tahun ajaran berhasil dihapus!', null, '#message-modal', '/admin/tahun-ajaran/');
+            
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return errorAlert('Terjadi kesalahan: ' . $e->getMessage(), null, '#message-modal');
         }
     }
 
-    public function patchActivate(string $id)
+    public function postActivate(string $id)
     {
         try {
+
+            if (DB::table('tahun_ajaran')->where('status', 'aktif')->count() > 0) {
+                return errorAlert('Tidak dapat mengaktifkan tahun ajaran baru karena ada tahun ajaran yang aktif!', null, '#message-modal');
+            }
+
             // Non-aktifkan semua tahun ajaran
             DB::table('tahun_ajaran')->update(['status' => 'non-aktif']);
             
@@ -143,19 +142,10 @@ class TahunAjaranController extends Controller
                 ->where('id', $id)
                 ->update(['status' => 'aktif']);
 
-            return redirect('/admin/tahun-ajaran/')
-                ->with('success', 'Tahun ajaran berhasil diaktifkan!');
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
-        }
-    }
+            return successAlert('Tahun ajaran berhasil diaktifkan!', null, '#message-modal', '/admin/tahun-ajaran/');
 
-    public function getActive()
-    {
-        $tahunAjaran = DB::table('tahun_ajaran')
-            ->where('status', 'aktif')
-            ->first();
-        return response()->json($tahunAjaran);
+        } catch (\Exception $e) {
+            return errorAlert('Terjadi kesalahan: ' . $e->getMessage(), null, '#message-modal');
+        }
     }
 }

@@ -15,10 +15,6 @@ class User extends Authenticatable
 {
     // Gunakan trait untuk Factory, Notifikasi, dan Spatie Roles
     use HasFactory, Notifiable, HasRoles;
-    
-     /**
-     * * @mixin \Spatie\Permission\Traits\HasRoles
-     */
 
     protected $fillable = [
         'nama',
@@ -64,6 +60,14 @@ class User extends Authenticatable
     public function kelasDiajar(): HasMany
     {
         return $this->hasMany(Kelas::class, 'guru_id');
+    }
+    
+    /**
+     * Relasi many-to-many ke Kelas yang diajar oleh guru
+     */
+    public function kelasYangDiajar(): BelongsToMany
+    {
+        return $this->belongsToMany(Kelas::class, 'pengajar', 'guru_id', 'kelas_id');
     }
 
     public function kelasDiikuti(): BelongsToMany

@@ -35,6 +35,7 @@
     <link rel="stylesheet" href="{{asset('admin/css/calendar.css')}}">
     <link rel="stylesheet" href="{{asset('admin/css/jquery-jvectormap-2.0.5.css')}}">
     <link rel="stylesheet" href="{{asset('admin/css/main.css')}}">
+    <link rel="stylesheet" href="{{asset('landing/css/master.css')}}">
 
     <script src="{{asset('admin/js/jquery-3.7.1.min.js')}}"></script>
     <script src="{{asset('js/main.js')}}"></script>

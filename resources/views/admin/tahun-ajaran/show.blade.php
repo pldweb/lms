@@ -3,43 +3,17 @@
 @section('title', 'Detail Tahun Ajaran')
 
 @section('content')
-<div class="container-fluid">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+<div class="container-fluid mt-10">
+    <div class="d-sm-flex align-items-center justify-content-between mb-10">
         <h1 class="h3 mb-0 text-gray-800">Detail Tahun Ajaran</h1>
-        <div>
-            <a href="/admin/tahun-ajaran/edit/{{ $tahunAjaran->id }}" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm">
-                <i class="fas fa-edit fa-sm text-white-50"></i> Edit
-            </a>
-            <a href="/admin/tahun-ajaran/" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
-            </a>
-        </div>
     </div>
-
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
 
     <div class="row">
         <!-- Detail Tahun Ajaran -->
         <div class="col-md-8">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Informasi Tahun Ajaran</h6>
+            <div class="card mb-4">
+                <div class="card-header b-title py-3 mt-10">
+                    <h5 class="m-0 font-weight-bold text-gray-300">Informasi Tahun Ajaran</h5>
                 </div>
                 <div class="card-body">
                     <table class="table table-borderless">
@@ -59,9 +33,9 @@
                             <td><strong>Status</strong></td>
                             <td>: 
                                 @if($tahunAjaran->status === 'aktif')
-                                    <span class="badge badge-success badge-lg">Aktif</span>
+                                    <span class="badge bg-success badge-lg">Aktif</span>
                                 @else
-                                    <span class="badge badge-secondary badge-lg">Non-Aktif</span>
+                                    <span class="badge bg-secondary badge-lg">Non-Aktif</span>
                                 @endif
                             </td>
                         </tr>
@@ -91,15 +65,26 @@
                             <td>: {{ date('d F Y H:i', strtotime($tahunAjaran->updated_at)) }}</td>
                         </tr>
                     </table>
+                    <div>
+                        <a href="/admin/tahun-ajaran/edit/{{ $tahunAjaran->id }}" class="d-none d-sm-inline-block btn btn-sm btn-primary">
+                            <i class="fas fa-edit fa-sm text-white-50"></i> Edit
+                        </a>
+                        <a href="/admin/tahun-ajaran/" class="d-none d-sm-inline-block btn btn-sm btn-secondary">
+                            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
+                        </a>
+                        <button class="d-none d-sm-inline-block btn btn-sm btn-danger" onclick="deleteTahunAjaran('{{ $tahunAjaran->id }}')">
+                             Hapus
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Statistik -->
         <div class="col-md-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Statistik</h6>
+            <div class="card mb-20">
+                <div class="card-header py-3 mt-10 b-title">
+                    <h5 class="m-0 font-weight-bold text-gray-300">Statistik</h5>
                 </div>
                 <div class="card-body">
                     <div class="text-center">
@@ -113,16 +98,9 @@
                         </div>
                         <hr>
                         @if($tahunAjaran->status !== 'aktif')
-                            <form action="/admin/tahun-ajaran/activate/{{ $tahunAjaran->id }}" method="POST" onsubmit="return confirm('Yakin ingin mengaktifkan tahun ajaran ini?')">
-                                @csrf
-                                @method('PATCH')
-                                <button type="submit" class="btn btn-success btn-block">
-                                    <i class="fas fa-check"></i> Aktifkan Tahun Ajaran
-                                </button>
-                            </form>
+                            <button class="btn btn-success btn-block" onclick="activateTahunAjaran('{{ $tahunAjaran->id }}')">Aktifkan Tahun Ajaran</button>
                         @else
                             <div class="alert alert-success text-center">
-                                <i class="fas fa-check-circle"></i><br>
                                 <strong>Tahun Ajaran Aktif</strong>
                             </div>
                         @endif
@@ -131,9 +109,9 @@
             </div>
 
             <!-- Timeline Status -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Timeline</h6>
+            <div class="card mb-4">
+                <div class="card-header b-title py-3 mt-10">
+                    <h6 class="m-0 font-weight-bold text-gray-300">Timeline</h6>
                 </div>
                 <div class="card-body">
                     @php
@@ -181,4 +159,18 @@
         </div>
     </div>
 </div>
+
+<script>
+    function deleteTahunAjaran(id){
+        confirmModal('Yakin ingin menghapus tahun ajaran ini?', function(){
+            ajxProcess('/admin/tahun-ajaran/delete/' + id, null, '#message-modal');
+        });
+    }
+
+    function activateTahunAjaran(id){
+        confirmModal('Yakin ingin mengaktifkan tahun ajaran ini?', function(){
+            ajxProcess('/admin/tahun-ajaran/activate/' + id, null, '#message-modal');
+        });
+    }
+</script>
 @endsection

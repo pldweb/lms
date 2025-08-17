@@ -9,7 +9,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="card-title w-content">Data {{ ucfirst($jenis) }}</h3>
                     <div class="d-flex justify-center align-items-center" style="gap: 5px;">
-                        <a href="{{ url('/admin/user/create') }}" class="btn btn-primary btn-sm btn-add" style="white-space: nowrap">
+                        <a onclick="showModal('{{ url('/admin/user/create-user') }}', 'Tambah User Baru')" class="btn btn-primary btn-sm btn-add" style="white-space: nowrap">
                             <i class="ph ph-plus"></i> Tambah {{ ucfirst($jenis) }} 
                         </a>
                         <select id="exportOptions" class="form-select w-auto mb-3 mr-2">
@@ -57,7 +57,8 @@
                                                         <span class="h6 mb-0 fw-medium text-gray-300">{{ $user->email }}</span>
                                                     </td>
                                                     <td>
-                                                        <a href="{{ url('/admin/user/detail') }}/{{ $user->id }}" class="btn btn-primary btn-add btn-sm">Detail</a>
+                                                        <button onclick="showModal('/admin/user/detail/{{ $user->id }}', 'Data Detail {{ ucfirst($jenis) }}')" class="btn btn-primary btn-add btn-sm">Detail</buttin>
+                                                        <button onclick="deleteUser('{{ $user->id }}', '{{ $jenis }}')" class="btn btn-danger btn-add btn-sm">Hapus</button>
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -75,11 +76,19 @@
 </div>
 
 <script>
-    $(document).ready(function () {
+    function deleteUser(id, jenis) {
+            confirmModal('Apakah kamu yakin ingin hapus user ini?', function (){
+                ajxProcess('/admin/user/delete-user/' + id + '/' + jenis, {
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                    }
+                }, '#message-modal')
+            });
+        }
 
+    $(document).ready(function () {
         $('#searchInput').on('keyup', function () {
             let keyword = $(this).val().toLowerCase();
-
             $('#studentTable tbody tr').filter(function () {
                 $(this).toggle($(this).text().toLowerCase().indexOf(keyword) > -1);
             });
@@ -90,7 +99,7 @@
             lengthChange: true,
             searching: false,
             ordering: false,
-            info: true,
+            info: false,
             autoWidth: true,
             responsive: true,
             columnDefs: [

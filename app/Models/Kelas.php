@@ -42,6 +42,14 @@ class Kelas extends Model
     {
         return $this->belongsTo(User::class, 'guru_id');
     }
+    
+    /**
+     * Relasi many-to-many ke User (Guru) melalui tabel pengajar
+     */
+    public function pengajar(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'pengajar', 'kelas_id', 'guru_id');
+    }
 
     /**
      * Relasi ke TahunAjaran

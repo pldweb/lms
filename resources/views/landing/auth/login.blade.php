@@ -2,7 +2,6 @@
 @section('title', 'Login')
 @section('content')
 
-    
     <div class="preloader">
         <div class="loader"></div>
     </div>
@@ -10,8 +9,10 @@
     <div class="side-overlay"></div>
 
     <section class="auth d-flex">
-        <div class="auth-left bg-main-50 flex-center p-24">
-            {{-- <img src="{{asset('admin/images/thumbs/auth-img1.png')}}" alt=""> --}}
+        <div class="auth-left p-40 d-flex flex-column align-items-start justify-content-center">
+            <img src="{{asset('landing/img/auth/fav-auth.png')}}" style="max-height: 70px; margin-bottom: 20px;" alt="">
+            <h2 class="title-auth font-white">Learning Management School <br> SMPN 20 Jakarta</h2>
+            <h4 class="subtitle-auth font-white font-medium">Sistem induk dalam pengembangan manajemen pembelajaran di SMPN 20 Jakarta</h4>
         </div>
         <div class="auth-right py-40 px-24 flex-center flex-column">
             <div class="auth-right__inner mx-auto w-100">

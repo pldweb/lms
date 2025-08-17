@@ -210,39 +210,23 @@
     });
 
     function toggleStatus(id) {
-        if (confirm('Apakah Anda yakin ingin mengubah status artikel ini?')) {
-            $.ajax({
-                url: '{{ url("/admin/artikel/toggle-status") }}/' + id,
-                type: 'POST',
+        confirmModal('Apakah Anda yakin ingin mengubah status artikel ini?', function(){
+            ajxProcess('/admin/artikel/toggle-status/' + id, {
                 data: {
                     _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    location.reload();
-                },
-                error: function() {
-                    alert('Terjadi kesalahan saat mengubah status artikel');
                 }
-            });
-        }
+            }, '#message-modal')
+        })
     }
 
     function deleteArtikel(id) {
-        if (confirm('Apakah Anda yakin ingin menghapus artikel ini? Data yang dihapus tidak dapat dikembalikan.')) {
-            $.ajax({
-                url: '{{ url("/admin/artikel/destroy") }}/' + id,
-                type: 'DELETE',
+        confirmModal('Apakah Anda yakin ingin menghapus artikel ini? Data yang dihapus tidak dapat dikembalikan.', function(){
+            ajxProcess('/admin/artikel/destroy/' + id, {
                 data: {
                     _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    location.reload();
-                },
-                error: function() {
-                    alert('Terjadi kesalahan saat menghapus artikel');
                 }
-            });
-        }
+            }, '#message-modal')
+        })
     }
 </script>
 @endsection

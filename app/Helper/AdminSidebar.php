@@ -3,8 +3,6 @@
 namespace App\Helper;
 
 use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Traits\HasRoles;
-
 
 class AdminSidebar 
 {
@@ -17,7 +15,7 @@ class AdminSidebar
             return [];
         }
 
-        if ($user->hasRole(['Admin', 'Guru'])) {
+        if ($user->hasRole('Admin') || $user->hasRole('Guru')) {
             $menu = [
                 [
                     'text' => 'Dashboard',
@@ -74,7 +72,7 @@ class AdminSidebar
                     'icon' => 'ph ph-clipboard-text',
                     'submenu' => [
                         ['text' => 'Daftar Tugas', 'link' => 'guru/tugas'],
-                        ['text' => 'Pengumpulan Siswa', 'link' => 'guru/penilaian'],
+                        ['text' => 'Daftar Nilai', 'link' => 'guru/nilai'],
                     ],
                 ],
                 ['type' => 'label', 'text' => 'Tentang Sekolah'],
@@ -115,16 +113,29 @@ class AdminSidebar
                 [
                     'text' => 'Tugas & Nilai',
                     'icon' => 'ph ph-clipboard-text',
-                    'link' => 'siswa/tugas',
+                    'submenu' => [
+                        ['text' => 'Daftar Tugas', 'link' => 'siswa/tugas'],
+                        ['text' => 'Daftar Nilai', 'link' => 'siswa/nilai'],
+                    ],
                 ],
             ];
         }
 
-        $menu[] = ['type' => 'label', 'text' => 'Akun Saya'];
+        $menu[] = ['type' => 'label', 'text' => 'Pengaturan'];
         $menu[] = [
             'text' => 'Profil Saya',
             'icon' => 'ph ph-user',
-            'link' => 'admin/profile/'
+            'link' => 'pengaturan/profile',
+        ];
+        $menu[] = [
+            'text' => 'Log Aktivitas',
+            'icon' => 'ph ph-clock',
+            'link' => 'pengaturan/log-aktivitas',
+        ];
+        $menu[] = [
+            'text' => 'Aturan Umum',
+            'icon' => 'ph ph-gear',
+            'link' => 'pengaturan/pengaturan-sistem',
         ];
 
         return $menu;

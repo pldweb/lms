@@ -12,10 +12,19 @@
     text-transform: capitalize;
 }
 
-.card-body {
+/* .card-body {
     min-height: 500px;
-}
+} */
 
 .border-1 {
     border: 1px solid #E0E0E0;
+}
+
+.sidebar-menu-wrapper {
+    max-height: calc(100vh - 100px) !important;
+}
+
+.b-title {
+    border-bottom: 1px solid #f1f1f1 !important;
+    padding-bottom: 10px !important;
 }
