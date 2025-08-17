@@ -70,7 +70,6 @@ class TugasController extends Controller
         // Data untuk dropdown
         $kelas = DB::table('kelas')
             ->leftJoin('tahun_ajaran', 'kelas.tahun_ajaran_id', '=', 'tahun_ajaran.id')
-            ->where('kelas.is_active', true)
             ->select('kelas.id', 'kelas.nama', 'kelas.jenjang', 'kelas.tingkat', 'tahun_ajaran.nama as tahun_ajaran')
             ->orderBy('kelas.jenjang')
             ->orderBy('kelas.tingkat')
@@ -144,7 +143,6 @@ class TugasController extends Controller
         // Data untuk dropdown
         $kelas = DB::table('kelas')
             ->leftJoin('tahun_ajaran', 'kelas.tahun_ajaran_id', '=', 'tahun_ajaran.id')
-            ->where('kelas.is_active', true)
             ->select('kelas.id', 'kelas.nama', 'kelas.jenjang', 'kelas.tingkat', 'tahun_ajaran.nama as tahun_ajaran')
             ->orderBy('kelas.jenjang')
             ->orderBy('kelas.tingkat')

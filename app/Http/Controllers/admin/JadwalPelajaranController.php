@@ -22,7 +22,7 @@ class JadwalPelajaranController extends Controller
                 'kelas.tingkat',
                 'mata_pelajaran.nama as mata_pelajaran_nama',
                 'mata_pelajaran.kode as mata_pelajaran_kode',
-                'users.name as guru_nama',
+                'users.nama as guru_nama',
                 'tahun_ajaran.nama as tahun_ajaran_nama'
             );
 
@@ -54,7 +54,6 @@ class JadwalPelajaranController extends Controller
 
         // Data untuk filter
         $kelas = DB::table('kelas')
-            ->where('is_active', true)
             ->select('id', 'nama', 'jenjang', 'tingkat')
             ->orderBy('jenjang')
             ->orderBy('tingkat')
@@ -80,14 +79,13 @@ class JadwalPelajaranController extends Controller
         // Data untuk dropdown
         $kelas = DB::table('kelas')
             ->join('tahun_ajaran', 'kelas.tahun_ajaran_id', '=', 'tahun_ajaran.id')
-            ->where('kelas.is_active', true)
             ->select('kelas.id', 'kelas.nama', 'kelas.jenjang', 'kelas.tingkat', 'tahun_ajaran.nama as tahun_ajaran')
             ->orderBy('kelas.jenjang')
             ->orderBy('kelas.tingkat')
             ->get();
 
         $mataPelajaran = DB::table('mata_pelajaran')
-            ->where('is_active', true)
+            ->where('aktif', true)
             ->select('id', 'kode', 'nama', 'jenjang')
             ->orderBy('jenjang')
             ->orderBy('nama')
@@ -171,7 +169,6 @@ class JadwalPelajaranController extends Controller
                 'jam_selesai' => $request->jam_selesai,
                 'ruangan' => $request->ruangan,
                 'keterangan' => $request->keterangan,
-                'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
@@ -201,7 +198,7 @@ class JadwalPelajaranController extends Controller
                 'mata_pelajaran.nama as mata_pelajaran_nama',
                 'mata_pelajaran.kode as mata_pelajaran_kode',
                 'mata_pelajaran.bobot_sks',
-                'users.name as guru_nama',
+                'users.nama as guru_nama',
                 'users.email as guru_email',
                 'tahun_ajaran.nama as tahun_ajaran_nama'
             )
@@ -233,14 +230,13 @@ class JadwalPelajaranController extends Controller
         // Data untuk dropdown
         $kelas = DB::table('kelas')
             ->join('tahun_ajaran', 'kelas.tahun_ajaran_id', '=', 'tahun_ajaran.id')
-            ->where('kelas.is_active', true)
             ->select('kelas.id', 'kelas.nama', 'kelas.jenjang', 'kelas.tingkat', 'tahun_ajaran.nama as tahun_ajaran')
             ->orderBy('kelas.jenjang')
             ->orderBy('kelas.tingkat')
             ->get();
 
         $mataPelajaran = DB::table('mata_pelajaran')
-            ->where('is_active', true)
+            ->where('aktif', true)
             ->select('id', 'kode', 'nama', 'jenjang')
             ->orderBy('jenjang')
             ->orderBy('nama')
@@ -362,19 +358,9 @@ class JadwalPelajaranController extends Controller
                 return redirect()->back()->with('error', 'Data tidak ditemukan!');
             }
 
-            $newStatus = !$jadwal->is_active;
-            
-            DB::table('jadwal_pelajaran')
-                ->where('id', $id)
-                ->update([
-                    'is_active' => $newStatus,
-                    'updated_at' => now()
-                ]);
-
-            $statusText = $newStatus ? 'diaktifkan' : 'dinonaktifkan';
-            
+            // Toggle status tidak tersedia karena menggunakan pola yang berbeda dengan tabel lain
             return redirect('/admin/jadwal-pelajaran/')
-                ->with('success', "Jadwal pelajaran berhasil {$statusText}!");
+                ->with('error', 'Fitur toggle status tidak tersedia!');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
@@ -390,12 +376,11 @@ class JadwalPelajaranController extends Controller
             ->join('mata_pelajaran', 'jadwal_pelajaran.mata_pelajaran_id', '=', 'mata_pelajaran.id')
             ->join('users', 'jadwal_pelajaran.guru_id', '=', 'users.id')
             ->where('jadwal_pelajaran.kelas_id', $kelasId)
-            ->where('jadwal_pelajaran.is_active', true)
             ->select(
                 'jadwal_pelajaran.*',
                 'mata_pelajaran.nama as mata_pelajaran_nama',
                 'mata_pelajaran.kode as mata_pelajaran_kode',
-                'users.name as guru_nama'
+                'users.nama as guru_nama'
             )
             ->orderBy('jadwal_pelajaran.hari')
             ->orderBy('jadwal_pelajaran.jam_mulai')
@@ -413,7 +398,6 @@ class JadwalPelajaranController extends Controller
             ->join('kelas', 'jadwal_pelajaran.kelas_id', '=', 'kelas.id')
             ->join('mata_pelajaran', 'jadwal_pelajaran.mata_pelajaran_id', '=', 'mata_pelajaran.id')
             ->where('jadwal_pelajaran.guru_id', $guruId)
-            ->where('jadwal_pelajaran.is_active', true)
             ->select(
                 'jadwal_pelajaran.*',
                 'kelas.nama as kelas_nama',

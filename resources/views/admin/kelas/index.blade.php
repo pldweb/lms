@@ -4,191 +4,254 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Manajemen Kelas</h1>
-        <a href="/admin/kelas/create" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Kelas
-        </a>
-    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800">Manajemen Kelas</h1>
+                </div>
+                <div>
+                    <a href="/admin/kelas/create" class="btn btn-primary btn-sm">
+                        <i class="ph ph-plus"></i> Tambah Kelas
+                    </a>
+                </div>
+            </div>
 
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
+            <div class="row">
+                <div class="col-md-12">
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="ph ph-check-circle me-2"></i>
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
 
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
+                    @if(session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="ph ph-warning-circle me-2"></i>
+                            {{ session('error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
 
-    <!-- Filter Card -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Filter & Pencarian</h6>
-        </div>
-        <div class="card-body">
-            <form method="GET" action="/admin/kelas/">
+                    <!-- Filter Card -->
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <form method="GET" action="{{ url('/admin/kelas') }}">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <input type="text" name="search" class="form-control" placeholder="Cari nama, kode kelas..." value="{{ request('search') }}">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select name="jenjang" class="form-control">
+                                            <option value="">Semua Jenjang</option>
+                                            <option value="SD" {{ request('jenjang') == 'SD' ? 'selected' : '' }}>SD</option>
+                                            <option value="SMP" {{ request('jenjang') == 'SMP' ? 'selected' : '' }}>SMP</option>
+                                            <option value="SMA" {{ request('jenjang') == 'SMA' ? 'selected' : '' }}>SMA</option>
+                                            <option value="SMK" {{ request('jenjang') == 'SMK' ? 'selected' : '' }}>SMK</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select name="semester" class="form-control">
+                                            <option value="">Semua Semester</option>
+                                            <option value="1" {{ request('semester') == '1' ? 'selected' : '' }}>Semester 1</option>
+                                            <option value="2" {{ request('semester') == '2' ? 'selected' : '' }}>Semester 2</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select name="aktif" class="form-control">
+                                            <option value="">Semua Status</option>
+                                            <option value="1" {{ request('aktif') == '1' ? 'selected' : '' }}>Aktif</option>
+                                            <option value="0" {{ request('aktif') == '0' ? 'selected' : '' }}>Non-Aktif</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="d-flex gap-2">
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                <i class="ph ph-magnifying-glass"></i> Filter
+                                            </button>
+                                            <a href="{{ url('/admin/kelas') }}" class="btn btn-secondary btn-sm">
+                                                <i class="ph ph-x"></i> Reset
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
                 <div class="row">
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="search">Pencarian</label>
-                            <input type="text" 
-                                   class="form-control" 
-                                   id="search" 
-                                   name="search" 
-                                   value="{{ request('search') }}" 
-                                   placeholder="Cari nama/kode kelas...">
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="jenjang">Jenjang</label>
-                            <select class="form-control" id="jenjang" name="jenjang">
-                                <option value="">Semua Jenjang</option>
-                                <option value="SD" {{ request('jenjang') === 'SD' ? 'selected' : '' }}>SD</option>
-                                <option value="SMP" {{ request('jenjang') === 'SMP' ? 'selected' : '' }}>SMP</option>
-                                <option value="SMA" {{ request('jenjang') === 'SMA' ? 'selected' : '' }}>SMA</option>
-                                <option value="SMK" {{ request('jenjang') === 'SMK' ? 'selected' : '' }}>SMK</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="tingkat">Tingkat</label>
-                            <select class="form-control" id="tingkat" name="tingkat">
-                                <option value="">Semua Tingkat</option>
-                                @for($i = 1; $i <= 12; $i++)
-                                    <option value="{{ $i }}" {{ request('tingkat') == $i ? 'selected' : '' }}>Kelas {{ $i }}</option>
-                                @endfor
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="tahun_ajaran_id">Tahun Ajaran</label>
-                            <select class="form-control" id="tahun_ajaran_id" name="tahun_ajaran_id">
-                                <option value="">Semua Tahun</option>
-                                @foreach($tahunAjaran as $ta)
-                                    <option value="{{ $ta->id }}" {{ request('tahun_ajaran_id') == $ta->id ? 'selected' : '' }}>
-                                        {{ $ta->nama }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>&nbsp;</label>
-                            <div>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-search"></i> Cari
-                                </button>
-                                <a href="/admin/kelas/" class="btn btn-secondary">
-                                    <i class="fas fa-redo"></i> Reset
-                                </a>
+                    <div class="col-md-12">
+                        <div class="card overflow-hidden">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover" id="table-kelas" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th class="h6 text-gray-300">No</th>
+                                                <th class="h6 text-gray-300">Kode</th>
+                                                <th class="h6 text-gray-300">Nama Kelas</th>
+                                                <th class="h6 text-gray-300">Jenjang</th>
+                                                <th class="h6 text-gray-300">Semester</th>
+                                                <th class="h6 text-gray-300">Kapasitas</th>
+                                                <th class="h6 text-gray-300">Status</th>
+                                                <th class="h6 text-gray-300">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($kelas as $index => $kls)
+                                            <tr>
+                                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ ($kelas->currentPage() - 1) * $kelas->perPage() + $index + 1 }}</span></td>
+                                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $kls->kode }}</span></td>
+                                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $kls->nama }}</span></td>
+                                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $kls->jenjang }}</span></td>
+                                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $kls->semester }}</span></td>
+                                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $kls->kapasitas }} siswa</span></td>
+                                                <td>
+                                                    @if($kls->is_active)
+                                                        <span class="badge bg-success">Aktif</span>
+                                                    @else
+                                                        <span class="badge bg-secondary">Non-Aktif</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group" role="group" aria-label="Aksi">
+                                                        {{-- Detail Kelas --}}
+                                                        <a href="/admin/kelas/show/{{ $kls->id }}" class="btn btn-primary btn-sm btn-add" title="Detail">
+                                                            <i class="ph ph-eye btn-icon"></i>
+                                                        </a>
+                                                        {{-- Edit Kelas --}}
+                                                        <a href="/admin/kelas/edit/{{ $kls->id }}" class="btn btn-warning btn-sm btn-add" title="Edit">
+                                                            <i class="ph ph-pencil btn-icon"></i>
+                                                        </a>
+
+                                                        {{-- Delete Kelas --}}
+                                                        <button type="button" class="btn btn-danger btn-sm btn-add" title="Hapus" onclick="confirmDelete({{ $kls->id }})">
+                                                            <i class="ph ph-trash btn-icon"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            @empty
+                                            <tr>
+                                                <td colspan="8" class="text-center">Tidak ada data kelas</td>
+                                            </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <!-- Pagination -->
+                                @if($kelas->hasPages())
+                                    <div class="d-flex justify-content-center mt-3">
+                                        {{ $kelas->appends(request()->query())->links() }}
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- DataTales Example -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Daftar Kelas</h6>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Kode</th>
-                            <th>Nama Kelas</th>
-                            <th>Jenjang</th>
-                            <th>Tingkat</th>
-                            <th>Tahun Ajaran</th>
-                            <th>Kapasitas</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($kelas as $index => $kls)
-                        <tr>
-                            <td>{{ ($kelas->currentPage() - 1) * $kelas->perPage() + $index + 1 }}</td>
-                            <td><code>{{ $kls->kode }}</code></td>
-                            <td>{{ $kls->nama }}</td>
-                            <td>
-                                <span class="badge badge-info">{{ $kls->jenjang }}</span>
-                            </td>
-                            <td>
-                                <span class="badge badge-secondary">Kelas {{ $kls->tingkat }}</span>
-                            </td>
-                            <td>
-                                <small>{{ $kls->tahun_ajaran_nama ?? '-' }}</small>
-                            </td>
-                            <td>
-                                <span class="badge badge-light">{{ $kls->kapasitas }} siswa</span>
-                            </td>
-                            <td>
-                                @if($kls->is_active)
-                                    <span class="badge badge-success">Aktif</span>
-                                @else
-                                    <span class="badge badge-secondary">Non-Aktif</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="btn-group" role="group" aria-label="Aksi">
-                                    <a href="/admin/kelas/show/{{ $kls->id }}" class="btn btn-info btn-sm" title="Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="/admin/kelas/edit/{{ $kls->id }}" class="btn btn-warning btn-sm" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form action="/admin/kelas/toggle-status/{{ $kls->id }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin mengubah status kelas ini?')">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit" class="btn btn-{{ $kls->is_active ? 'secondary' : 'success' }} btn-sm" title="{{ $kls->is_active ? 'Non-aktifkan' : 'Aktifkan' }}">
-                                            <i class="fas fa-{{ $kls->is_active ? 'pause' : 'play' }}"></i>
-                                        </button>
-                                    </form>
-                                    <form action="/admin/kelas/destroy/{{ $kls->id }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin menghapus kelas ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" title="Hapus">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="9" class="text-center">Tidak ada data kelas</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
             </div>
-
-            <!-- Pagination -->
-            @if($kelas->hasPages())
-                <div class="d-flex justify-content-center">
-                    {{ $kelas->appends(request()->query())->links() }}
-                </div>
-            @endif
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('#searchInput').on('keyup', function () {
+            let keyword = $(this).val().toLowerCase();
+            $('#table-kelas tbody tr').filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(keyword) > -1);
+            });
+        });
+
+        // Export Data (CSV / JSON)
+        $('#exportOptions').on('change', function () {
+            const format = $(this).val();
+            const $table = $('#table-kelas');
+            const headers = [];
+            const data = [];
+
+            // Get headers
+            $table.find('thead th').each(function () {
+                headers.push($(this).text().trim());
+            });
+
+            // Get data
+            $table.find('tbody tr').each(function () {
+                const row = [];
+                $(this).find('td').each(function () {
+                    row.push($(this).text().trim());
+                });
+                data.push(row);
+            });
+
+            if (format === 'csv') {
+                downloadCSV(headers, data, 'kelas.csv');
+            } else if (format === 'json') {
+                downloadJSON(headers, data, 'kelas.json');
+            }
+        });
+    });
+
+    function downloadCSV(headers, data, filename) {
+        let csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += headers.join(",") + "\n";
+        data.forEach(function(rowArray) {
+            let row = rowArray.join(",");
+            csvContent += row + "\n";
+        });
+        
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function downloadJSON(headers, data, filename) {
+        const jsonData = data.map(row => {
+            const obj = {};
+            headers.forEach((header, index) => {
+                obj[header] = row[index];
+            });
+            return obj;
+        });
+        
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(jsonData, null, 2));
+        const link = document.createElement("a");
+        link.setAttribute("href", dataStr);
+        link.setAttribute("download", filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function confirmDelete(id) {
+        if (confirm('Apakah Anda yakin ingin menghapus kelas ini?')) {
+            // Create form and submit
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/admin/kelas/delete/' + id;
+            
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = '{{ csrf_token() }}';
+            
+            const methodField = document.createElement('input');
+            methodField.type = 'hidden';
+            methodField.name = '_method';
+            methodField.value = 'DELETE';
+            
+            form.appendChild(csrfToken);
+            form.appendChild(methodField);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>
 @endsection

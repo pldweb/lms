@@ -91,7 +91,7 @@ class AdminSidebar
                         ['text' => "Kategori Galeri", 'link' => 'admin/galeri-kategori/'],
                         ['text' => 'Slideshow', 'link' => 'admin/slideshow/'],
                         ['text' => 'Kontak', 'link' => 'admin/kontak/'],
-                        ['text' => 'Sosial Media', 'link' => 'admin/sosial-media/'],
+                        ['text' => 'Sosial Media', 'link' => 'admin/social-media/'],
                     ],
                 ],
             ];

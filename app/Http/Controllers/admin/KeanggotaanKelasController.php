@@ -16,7 +16,7 @@ class KeanggotaanKelasController extends Controller
             ->leftJoin('tahun_ajaran', 'kelas.tahun_ajaran_id', '=', 'tahun_ajaran.id')
             ->select(
                 'keanggotaan_kelas.*',
-                'users.name as siswa_nama',
+                'users.nama as siswa_nama',
                 'users.email as siswa_email',
                 'kelas.nama as kelas_nama',
                 'kelas.jenjang',
@@ -28,7 +28,7 @@ class KeanggotaanKelasController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
-                $q->where('users.name', 'LIKE', "%{$search}%")
+                $q->where('users.nama', 'LIKE', "%{$search}%")
                   ->orWhere('users.email', 'LIKE', "%{$search}%")
                   ->orWhere('kelas.nama', 'LIKE', "%{$search}%");
             });
@@ -51,7 +51,7 @@ class KeanggotaanKelasController extends Controller
 
         $keanggotaan = $query->orderBy('kelas.jenjang')
                             ->orderBy('kelas.tingkat')
-                            ->orderBy('users.name')
+                            ->orderBy('users.nama')
                             ->paginate(20);
 
         // Data untuk filter
@@ -75,7 +75,7 @@ class KeanggotaanKelasController extends Controller
         // Data untuk dropdown
         $kelas = DB::table('kelas')
             ->leftJoin('tahun_ajaran', 'kelas.tahun_ajaran_id', '=', 'tahun_ajaran.id')
-            ->where('kelas.is_active', true)
+            
             ->select('kelas.id', 'kelas.nama', 'kelas.jenjang', 'kelas.tingkat', 'tahun_ajaran.nama as tahun_ajaran')
             ->orderBy('kelas.jenjang')
             ->orderBy('kelas.tingkat')
@@ -177,7 +177,7 @@ class KeanggotaanKelasController extends Controller
             ->leftJoin('tahun_ajaran', 'kelas.tahun_ajaran_id', '=', 'tahun_ajaran.id')
             ->select(
                 'keanggotaan_kelas.*',
-                'users.name as siswa_nama',
+                'users.nama as siswa_nama',
                 'users.email as siswa_email',
                 'kelas.nama as kelas_nama',
                 'kelas.jenjang',
@@ -289,6 +289,8 @@ class KeanggotaanKelasController extends Controller
             ->where('keanggotaan_kelas.siswa_id', $siswaId)
             ->select(
                 'keanggotaan_kelas.*',
+                'users.nama as siswa_nama',
+                'users.email as siswa_email',
                 'kelas.nama as kelas_nama',
                 'kelas.jenjang',
                 'kelas.tingkat',

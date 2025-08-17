@@ -8,12 +8,14 @@ use App\Models\Artikel;
 use App\Models\KategoriGaleri;
 use App\Models\Galeri;
 use App\Models\Kontak;
+use App\Models\SocialMedia;
 use App\Models\Slideshow;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\admin\SlideshowController;
 use App\Http\Controllers\admin\KontakController;
+use App\Http\Controllers\admin\SocialMediaController;
 
 class HomeController extends Controller
 {
@@ -31,16 +33,23 @@ class HomeController extends Controller
     }
     
     private function kontakSection(){
-        $kontak = Kontak::aktif()
-            ->urutan()
-            ->get()
-            ->toArray();
+        $kontak = Kontak::aktif()->urutan()->get()->toArray();
             
         if (empty($kontak)) {
             $kontak = KontakController::getKontak();
         }
         
         return $kontak;
+    }
+    
+    private function socialMediaSection(){
+        $socialMedia = SocialMedia::aktif()->urutan()->get()->toArray();
+            
+        if (empty($socialMedia)) {
+            $socialMedia = SocialMediaController::getSocialMedia();
+        }
+        
+        return $socialMedia;
     }
 
     public function getIndex(){
@@ -68,7 +77,8 @@ class HomeController extends Controller
             'beritaTerbaru' => $beritaTerbaru,
             'pengumumanTerbaru' => $pengumumanTerbaru,
             'galeriTerbaru' => $galeriTerbaru,
-            'kontak' => self::kontakSection()
+            'kontak' => self::kontakSection(),
+            'socialMedia' => self::socialMediaSection()
         ];
         return view('landing.index', $params);
     }

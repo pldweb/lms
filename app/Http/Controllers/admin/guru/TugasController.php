@@ -113,7 +113,7 @@ class TugasController extends Controller
                      ->where('pengajar.guru_id', '=', $guru_id);
             })
             ->leftJoin('tahun_ajaran', 'kelas.tahun_ajaran_id', '=', 'tahun_ajaran.id')
-            ->where('kelas.is_active', true)
+            
             ->select('kelas.id', 'kelas.nama', 'kelas.jenjang', 'kelas.tingkat', 'tahun_ajaran.nama as tahun_ajaran')
             ->orderBy('kelas.jenjang')
             ->orderBy('kelas.tingkat')
@@ -214,7 +214,7 @@ class TugasController extends Controller
             ->leftJoin('nilai', 'pengumpulan_tugas.id', '=', 'nilai.pengumpulan_id')
             ->select(
                 'pengumpulan_tugas.*',
-                'users.name as siswa_nama',
+                'users.nama as siswa_nama',
                 'users.email as siswa_email',
                 'nilai.skor',
                 'nilai.umpan_balik'
@@ -225,12 +225,12 @@ class TugasController extends Controller
             
         // Ambil daftar siswa yang belum mengumpulkan
         $siswa_kelas = DB::table('keanggotaan_kelas')
-            ->select('users.id', 'users.name', 'users.email')
+            ->select('users.id', 'users.nama as name', 'users.email')
             ->join('users', 'keanggotaan_kelas.user_id', '=', 'users.id')
             ->where('keanggotaan_kelas.kelas_id', $tugas->kelas_id)
             ->where('users.role', 'siswa')
             ->whereNotIn('users.id', $pengumpulan->pluck('siswa_id')->toArray())
-            ->orderBy('users.name')
+            ->orderBy('users.nama')
             ->get();
             
         // Buat pengumpulan kosong untuk siswa yang belum mengumpulkan
@@ -282,7 +282,7 @@ class TugasController extends Controller
                      ->where('pengajar.guru_id', '=', $guru_id);
             })
             ->leftJoin('tahun_ajaran', 'kelas.tahun_ajaran_id', '=', 'tahun_ajaran.id')
-            ->where('kelas.is_active', true)
+            
             ->select('kelas.id', 'kelas.nama', 'kelas.jenjang', 'kelas.tingkat', 'tahun_ajaran.nama as tahun_ajaran')
             ->orderBy('kelas.jenjang')
             ->orderBy('kelas.tingkat')
@@ -411,7 +411,7 @@ class TugasController extends Controller
             ->leftJoin('nilai', 'pengumpulan_tugas.id', '=', 'nilai.pengumpulan_id')
             ->select(
                 'pengumpulan_tugas.*',
-                'users.name as siswa_nama',
+                'users.nama as siswa_nama',
                 'users.email as siswa_email',
                 'tugas.judul as tugas_judul',
                 'tugas.kelas_id',

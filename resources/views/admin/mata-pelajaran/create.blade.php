@@ -3,28 +3,41 @@
 @section('title', 'Tambah Mata Pelajaran')
 
 @section('content')
-<div class="container-fluid">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Tambah Mata Pelajaran</h1>
-        <a href="/admin/mata-pelajaran/" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
-        </a>
-    </div>
+<div class="row mt-20">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="card-title w-content">Tambah Mata Pelajaran</h3>
+                    <div class="d-flex justify-center align-items-center" style="gap: 5px;">
+                        <a href="/admin/mata-pelajaran/" class="btn btn-secondary btn-sm btn-add" style="white-space: nowrap">
+                            <i class="ph ph-arrow-left"></i> Kembali
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" style="padding-top: 0;">
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
 
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Form Tambah Mata Pelajaran</h6>
-        </div>
-        <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card overflow-hidden">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold text-primary">Form Tambah Mata Pelajaran</h6>
+                            </div>
+                            <div class="card-body">
             <form action="/admin/mata-pelajaran/store" method="POST">
                 @csrf
 
@@ -82,33 +95,34 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="tingkat" class="form-label">Tingkat/Kelas</label>
-                            <select class="form-control @error('tingkat') is-invalid @enderror" 
-                                    id="tingkat" 
-                                    name="tingkat">
-                                <option value="">Semua Kelas</option>
+                            <label for="semester" class="form-label">Semester <span class="text-danger">*</span></label>
+                            <select class="form-control @error('semester') is-invalid @enderror" 
+                                    id="semester" 
+                                    name="semester" 
+                                    required>
+                                <option value="">Pilih Semester</option>
+                                <option value="1" {{ old('semester') === '1' ? 'selected' : '' }}>Semester 1</option>
+                                <option value="2" {{ old('semester') === '2' ? 'selected' : '' }}>Semester 2</option>
                             </select>
-                            @error('tingkat')
+                            @error('semester')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <small class="form-text text-muted">Pilih jenjang terlebih dahulu</small>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="kategori" class="form-label">Kategori <span class="text-danger">*</span></label>
-                            <select class="form-control @error('kategori') is-invalid @enderror" 
-                                    id="kategori" 
-                                    name="kategori" 
-                                    required>
-                                <option value="">Pilih Kategori</option>
-                                <option value="wajib" {{ old('kategori') === 'wajib' ? 'selected' : '' }}>Wajib</option>
-                                <option value="pilihan" {{ old('kategori') === 'pilihan' ? 'selected' : '' }}>Pilihan</option>
-                                <option value="muatan_lokal" {{ old('kategori') === 'muatan_lokal' ? 'selected' : '' }}>Muatan Lokal</option>
-                            </select>
-                            @error('kategori')
+                            <label for="urutan" class="form-label">Urutan</label>
+                            <input type="number" 
+                                   class="form-control @error('urutan') is-invalid @enderror" 
+                                   id="urutan" 
+                                   name="urutan" 
+                                   value="{{ old('urutan', 1) }}" 
+                                   min="1" 
+                                   placeholder="Urutan mata pelajaran">
+                            @error('urutan')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
+                            <small class="form-text text-muted">Urutan tampil mata pelajaran</small>
                         </div>
                     </div>
                 </div>
@@ -116,30 +130,30 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="bobot_sks" class="form-label">Bobot SKS <span class="text-danger">*</span></label>
+                            <label for="sks" class="form-label">SKS <span class="text-danger">*</span></label>
                             <input type="number" 
-                                   class="form-control @error('bobot_sks') is-invalid @enderror" 
-                                   id="bobot_sks" 
-                                   name="bobot_sks" 
-                                   value="{{ old('bobot_sks', 1) }}" 
+                                   class="form-control @error('sks') is-invalid @enderror" 
+                                   id="sks" 
+                                   name="sks" 
+                                   value="{{ old('sks', 1) }}" 
                                    min="1" 
                                    max="6"
                                    required>
-                            @error('bobot_sks')
+                            @error('sks')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="is_active" class="form-label">Status</label>
-                            <select class="form-control @error('is_active') is-invalid @enderror" 
-                                    id="is_active" 
-                                    name="is_active">
-                                <option value="1" {{ old('is_active', 1) == 1 ? 'selected' : '' }}>Aktif</option>
-                                <option value="0" {{ old('is_active') == 0 ? 'selected' : '' }}>Non-Aktif</option>
+                            <label for="aktif" class="form-label">Status</label>
+                            <select class="form-control @error('aktif') is-invalid @enderror" 
+                                    id="aktif" 
+                                    name="aktif">
+                                <option value="1" {{ old('aktif', 1) == 1 ? 'selected' : '' }}>Aktif</option>
+                                <option value="0" {{ old('aktif') == 0 ? 'selected' : '' }}>Non-Aktif</option>
                             </select>
-                            @error('is_active')
+                            @error('aktif')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -173,15 +187,20 @@
 
                 <hr>
                 
-                <div class="form-group text-right">
-                    <a href="/admin/mata-pelajaran/" class="btn btn-secondary">
-                        <i class="fas fa-times"></i> Batal
-                    </a>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Simpan
-                    </button>
+                                <div class="form-group text-right">
+                                    <a href="/admin/mata-pelajaran/" class="btn btn-secondary">
+                                        <i class="fas fa-times"></i> Batal
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Simpan
+                                    </button>
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
@@ -190,32 +209,30 @@
 @section('scripts')
 <script>
     $(document).ready(function() {
-        // Update tingkat berdasarkan jenjang
-        $('#jenjang').change(function() {
-            var jenjang = $(this).val();
-            var tingkatSelect = $('#tingkat');
+        // Auto generate urutan berdasarkan jenjang dan semester
+        $('#jenjang, #semester').change(function() {
+            var jenjang = $('#jenjang').val();
+            var semester = $('#semester').val();
             
-            tingkatSelect.empty();
-            tingkatSelect.append('<option value="">Semua Kelas</option>');
-            
-            if (jenjang) {
-                var kelas = [];
+            if (jenjang && semester) {
+                // Auto set urutan berdasarkan jenjang dan semester
+                var baseUrutan = 1;
                 switch(jenjang) {
                     case 'SD':
-                        kelas = [1, 2, 3, 4, 5, 6];
+                        baseUrutan = semester === '1' ? 1 : 10;
                         break;
                     case 'SMP':
-                        kelas = [7, 8, 9];
+                        baseUrutan = semester === '1' ? 20 : 30;
                         break;
                     case 'SMA':
                     case 'SMK':
-                        kelas = [10, 11, 12];
+                        baseUrutan = semester === '1' ? 40 : 50;
                         break;
                 }
                 
-                kelas.forEach(function(tingkat) {
-                    tingkatSelect.append('<option value="' + tingkat + '">Kelas ' + tingkat + '</option>');
-                });
+                if ($('#urutan').val() === '' || $('#urutan').val() === '1') {
+                    $('#urutan').val(baseUrutan);
+                }
             }
         });
 
@@ -223,7 +240,7 @@
         function generateKode() {
             var nama = $('#nama').val();
             var jenjang = $('#jenjang').val();
-            var kategori = $('#kategori').val();
+            var semester = $('#semester').val();
             
             if (nama && jenjang && $('#generate_kode').is(':checked')) {
                 // Ambil 3 huruf pertama dari nama
@@ -232,27 +249,16 @@
                 // Tambahkan jenjang
                 var jenjangCode = jenjang;
                 
-                // Tambahkan kategori
-                var kategoriCode = '';
-                switch(kategori) {
-                    case 'wajib':
-                        kategoriCode = 'W';
-                        break;
-                    case 'pilihan':
-                        kategoriCode = 'P';
-                        break;
-                    case 'muatan_lokal':
-                        kategoriCode = 'ML';
-                        break;
-                }
+                // Tambahkan semester
+                var semesterCode = semester ? '-' + semester : '';
                 
-                var kode = namaCode + jenjangCode + kategoriCode;
+                var kode = jenjangCode + '-' + namaCode + semesterCode;
                 $('#kode').val(kode);
             }
         }
 
         // Event listeners untuk auto generate
-        $('#nama, #jenjang, #kategori').on('input change', generateKode);
+        $('#nama, #jenjang, #semester').on('input change', generateKode);
         
         $('#generate_kode').change(function() {
             if ($(this).is(':checked')) {
@@ -262,12 +268,9 @@
             }
         });
 
-        // Trigger initial change untuk mengisi tingkat jika ada old value
-        @if(old('jenjang'))
-            $('#jenjang').trigger('change');
-            setTimeout(function() {
-                $('#tingkat').val('{{ old("tingkat") }}');
-            }, 100);
+        // Trigger initial change untuk auto generate jika ada old value
+        @if(old('jenjang') && old('semester'))
+            $('#jenjang, #semester').trigger('change');
         @endif
     });
 </script>

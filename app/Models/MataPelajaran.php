@@ -13,20 +13,23 @@ class MataPelajaran extends Model
     protected $table = 'mata_pelajaran';
 
     protected $fillable = [
-        'kode',
         'nama',
+        'kode',
         'deskripsi',
-        'kategori',
         'jenjang',
-        'tingkat',
-        'bobot_sks',
-        'is_active',
+        'semester',
+        'sks',
+        'urutan',
+        'aktif',
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
-        'bobot_sks' => 'integer',
-        'tingkat' => 'integer',
+        'aktif' => 'boolean',
+        'sks' => 'integer',
+        'semester' => 'integer',
+        'urutan' => 'integer',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     /**
@@ -42,7 +45,7 @@ class MataPelajaran extends Model
      */
     public function scopeActive($query)
     {
-        return $query->where('is_active', true);
+        return $query->where('aktif', true);
     }
 
     /**
@@ -54,19 +57,11 @@ class MataPelajaran extends Model
     }
 
     /**
-     * Scope berdasarkan tingkat
+     * Scope berdasarkan semester
      */
-    public function scopeByTingkat($query, $tingkat)
+    public function scopeBySemester($query, $semester)
     {
-        return $query->where('tingkat', $tingkat);
-    }
-
-    /**
-     * Scope berdasarkan kategori
-     */
-    public function scopeByKategori($query, $kategori)
-    {
-        return $query->where('kategori', $kategori);
+        return $query->where('semester', $semester);
     }
 
     /**
@@ -90,12 +85,12 @@ class MataPelajaran extends Model
     }
 
     /**
-     * Get label jenjang dan tingkat
+     * Get label jenjang dan semester
      */
-    public function getJenjangTingkatAttribute()
+    public function getJenjangSemesterAttribute()
     {
-        if ($this->jenjang && $this->tingkat) {
-            return $this->jenjang . ' Kelas ' . $this->tingkat;
+        if ($this->jenjang && $this->semester) {
+            return $this->jenjang . ' Semester ' . $this->semester;
         }
         return $this->jenjang ?: 'Semua Jenjang';
     }

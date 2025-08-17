@@ -1,47 +1,50 @@
 @extends('layouts.admin')
-@section('title', 'Kontak')
-@section('content')
 
+@section('title', 'Manajemen Social Media')
+
+@section('content')
 <div class="row mt-20">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="card-title w-content">Kelola Kontak</h3>
+                    <h3 class="card-title w-content">Kelola Social Media</h3>
                     <div class="d-flex justify-center align-items-center" style="gap: 5px;">
-                        <a href="{{ url('/admin/kontak/create') }}" class="btn btn-primary btn-sm btn-add" style="white-space: nowrap">
-                            <i class="ph ph-plus"></i> Tambah Kontak
+                        <a href="{{ url('/admin/social-media/create') }}" class="btn btn-primary btn-sm btn-add" style="white-space: nowrap">
+                            <i class="ph ph-plus"></i> Tambah Social Media
                         </a>
                     </div>
                 </div>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover" id="table-kontak" width="100%" cellspacing="0">
+                    <table class="table table-striped table-hover" id="table-social-media" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th class="h6 text-gray-300">No</th>
-                                <th class="h6 text-gray-300">Nama</th>
-                                <th class="h6 text-gray-300">Jabatan</th>
-                                <th class="h6 text-gray-300">Email</th>
-                                <th class="h6 text-gray-300">Telepon</th>
-                                <th class="h6 text-gray-300">Alamat</th>
+                                <th class="h6 text-gray-300">Platform</th>
                                 <th class="h6 text-gray-300">Icon</th>
+                                <th class="h6 text-gray-300">Link</th>
+                                <th class="h6 text-gray-300">Deskripsi</th>
                                 <th class="h6 text-gray-300">Urutan</th>
                                 <th class="h6 text-gray-300">Status</th>
                                 <th class="h6 text-gray-300">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($kontak as $index => $item)
+                            @forelse ($socialMedia as $index => $item)
                             <tr>
                                 <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $index + 1 }}</span></td>
                                 <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->nama }}</span></td>
-                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->jabatan }}</span></td>
-                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->email }}</span></td>
-                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->telepon }}</span></td>
-                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ Str::limit($item->alamat, 30) }}</span></td>
-                                <td><i class="{{ $item->icon }}"></i></td>
+                                <td>
+                                    <i class="{{ $item->icon }} fa-lg text-primary"></i>
+                                </td>
+                                <td>
+                                    <a href="{{ $item->link }}" target="_blank" class="text-primary">
+                                        <span class="h6 mb-0 fw-medium text-gray-300">{{ Str::limit($item->link, 30) }}</span>
+                                    </a>
+                                </td>
+                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ Str::limit($item->deskripsi ?? '-', 50) }}</span></td>
                                 <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->urutan }}</span></td>
                                 <td>
                                     @if ($item->aktif)
@@ -51,7 +54,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ url('admin/kontak/edit/' . $item->id) }}" class="btn btn-sm btn-primary btn-add">
+                                    <a href="{{ url('admin/social-media/edit/' . $item->id) }}" class="btn btn-sm btn-primary btn-add">
                                         <i class="ph ph-pencil"></i>
                                     </a>
                                     <button class="btn btn-sm btn-danger btn-add" onclick="confirmDelete({{ $item->id }})">
@@ -61,7 +64,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="10" class="text-center text-gray-300">Tidak ada data kontak</td>
+                                <td colspan="8" class="text-center text-gray-300">Tidak ada data social media</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -71,11 +74,10 @@
         </div>
     </div>
 </div>
-
 <script>
     function confirmDelete(id) {
-        confirmModal('Apakah Anda yakin ingin menghapus kontak ini?', function() {
-            ajxProcess('/admin/kontak/delete-action/' + id, '', '#message-modal');
+        confirmModal('Apakah Anda yakin ingin menghapus social media ini?', function() {
+            ajxProcess('/admin/social-media/delete-action/' + id, '', '#message-modal');
         });
     }
 </script>

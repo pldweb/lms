@@ -28,18 +28,17 @@ class MataPelajaranController extends Controller
             $query->where('jenjang', $request->jenjang);
         }
 
-        // Filter berdasarkan kategori
-        if ($request->filled('kategori')) {
-            $query->where('kategori', $request->kategori);
+        // Filter berdasarkan semester
+        if ($request->filled('semester')) {
+            $query->where('semester', $request->semester);
         }
 
-        // Filter berdasarkan status
-        if ($request->filled('status')) {
-            $status = $request->status === 'aktif' ? 1 : 0;
-            $query->where('is_active', $status);
+        // Filter berdasarkan status aktif
+        if ($request->filled('aktif')) {
+            $query->where('aktif', $request->aktif);
         }
 
-        $mataPelajaran = $query->orderBy('jenjang')
+        $mataPelajaran = $query->orderBy('urutan')
                               ->orderBy('nama')
                               ->paginate(20);
 
@@ -62,14 +61,14 @@ class MataPelajaranController extends Controller
         try {
             DB::beginTransaction();
             DB::table('mata_pelajaran')->insert([
-                'kode' => $request->kode,
                 'nama' => $request->nama,
+                'kode' => $request->kode,
                 'deskripsi' => $request->deskripsi,
-                'kategori' => $request->kategori,
                 'jenjang' => $request->jenjang,
-                'tingkat' => $request->tingkat,
-                'bobot_sks' => $request->bobot_sks,
-                'is_active' => true,
+                'semester' => $request->semester,
+                'sks' => $request->sks ?? 1,
+                'urutan' => $request->urutan ?? 0,
+                'aktif' => true,
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
@@ -116,7 +115,24 @@ class MataPelajaranController extends Controller
             return errorAlert('Data tidak ditemukan!');
         }
 
-        $params = ['mataPelajaran' => $mataPelajaran];
+        // Statistik kelas untuk mata pelajaran ini
+        $jumlahKelas = DB::table('kelas')
+            ->where('mata_pelajaran_id', $id)
+            ->count();
+
+        $kelasUsage = DB::table('kelas')
+            ->leftJoin('tahun_ajaran', 'kelas.tahun_ajaran_id', '=', 'tahun_ajaran.id')
+            ->where('kelas.mata_pelajaran_id', $id)
+            ->select('kelas.*', 'tahun_ajaran.nama as tahun_ajaran_nama')
+            ->orderBy('kelas.jenjang')
+            ->orderBy('kelas.tingkat')
+            ->get();
+
+        $params = [
+            'mataPelajaran' => $mataPelajaran,
+            'jumlahKelas' => $jumlahKelas,
+            'kelasUsage' => $kelasUsage
+        ];
         return view('admin.mata-pelajaran.edit', $params);
     }
 
@@ -126,13 +142,13 @@ class MataPelajaranController extends Controller
             DB::table('mata_pelajaran')
                 ->where('id', $id)
                 ->update([
-                    'kode' => $request->kode,
                     'nama' => $request->nama,
+                    'kode' => $request->kode,
                     'deskripsi' => $request->deskripsi,
-                    'kategori' => $request->kategori,
                     'jenjang' => $request->jenjang,
-                    'tingkat' => $request->tingkat,
-                    'bobot_sks' => $request->bobot_sks,
+                    'semester' => $request->semester,
+                    'sks' => $request->sks ?? 1,
+                    'urutan' => $request->urutan ?? 0,
                     'updated_at' => now()
                 ]);
 
@@ -162,6 +178,33 @@ class MataPelajaranController extends Controller
         }
     }
 
+    public function postDeleteAction(string $id)
+    {
+        try {
+            // Cek apakah mata pelajaran sedang digunakan
+            $kelasCount = DB::table('kelas')->where('mata_pelajaran_id', $id)->count();
+            
+            if ($kelasCount > 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Mata pelajaran tidak dapat dihapus karena masih memiliki ' . $kelasCount . ' kelas aktif!'
+                ]);
+            }
+
+            DB::table('mata_pelajaran')->where('id', $id)->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Mata pelajaran berhasil dihapus!'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ]);
+        }
+    }
+
     public function patchToggleStatus(string $id)
     {
         try {
@@ -171,12 +214,12 @@ class MataPelajaranController extends Controller
                 return redirect()->back()->with('error', 'Data tidak ditemukan!');
             }
 
-            $newStatus = !$mataPelajaran->is_active;
+            $newStatus = !$mataPelajaran->aktif;
             
             DB::table('mata_pelajaran')
                 ->where('id', $id)
                 ->update([
-                    'is_active' => $newStatus,
+                    'aktif' => $newStatus,
                     'updated_at' => now()
                 ]);
 
@@ -192,8 +235,8 @@ class MataPelajaranController extends Controller
     {
         $mataPelajaran = DB::table('mata_pelajaran')
             ->where('jenjang', $jenjang)
-            ->where('is_active', true)
-            ->select('id', 'kode', 'nama', 'bobot_sks')
+            ->where('aktif', true)
+            ->select('id', 'kode', 'nama', 'sks')
             ->orderBy('nama')
             ->get();
 

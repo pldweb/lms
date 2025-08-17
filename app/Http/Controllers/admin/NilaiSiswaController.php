@@ -17,7 +17,7 @@ class NilaiSiswaController extends Controller
             ->leftJoin('tahun_ajaran', 'kelas.tahun_ajaran_id', '=', 'tahun_ajaran.id')
             ->select(
                 'nilai_siswa.*',
-                'users.name as siswa_nama',
+                'users.nama as siswa_nama',
                 'users.email as siswa_email',
                 'kelas.nama as kelas_nama',
                 'kelas.jenjang',
@@ -31,7 +31,7 @@ class NilaiSiswaController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
-                $q->where('users.name', 'LIKE', "%{$search}%")
+                $q->where('users.nama', 'LIKE', "%{$search}%")
                   ->orWhere('mata_pelajaran.nama', 'LIKE', "%{$search}%")
                   ->orWhere('kelas.nama', 'LIKE', "%{$search}%");
             });
@@ -63,7 +63,7 @@ class NilaiSiswaController extends Controller
         }
 
         $nilaiSiswa = $query->orderBy('nilai_siswa.tanggal_nilai', 'desc')
-                           ->orderBy('users.name')
+                           ->orderBy('users.nama')
                            ->paginate(20);
 
         // Data untuk filter
@@ -92,7 +92,7 @@ class NilaiSiswaController extends Controller
         // Data untuk dropdown
         $kelas = DB::table('kelas')
             ->leftJoin('tahun_ajaran', 'kelas.tahun_ajaran_id', '=', 'tahun_ajaran.id')
-            ->where('kelas.is_active', true)
+            
             ->select('kelas.id', 'kelas.nama', 'kelas.jenjang', 'kelas.tingkat', 'tahun_ajaran.nama as tahun_ajaran')
             ->orderBy('kelas.jenjang')
             ->orderBy('kelas.tingkat')
@@ -109,8 +109,8 @@ class NilaiSiswaController extends Controller
             $siswa = DB::table('keanggotaan_kelas')
                 ->join('users', 'keanggotaan_kelas.siswa_id', '=', 'users.id')
                 ->where('keanggotaan_kelas.kelas_id', $request->kelas_id)
-                ->select('users.id', 'users.name', 'users.email')
-                ->orderBy('users.name')
+                ->select('users.id', 'users.nama', 'users.email')
+                ->orderBy('users.nama')
                 ->get();
         }
 
@@ -193,7 +193,7 @@ class NilaiSiswaController extends Controller
             ->leftJoin('tahun_ajaran', 'kelas.tahun_ajaran_id', '=', 'tahun_ajaran.id')
             ->select(
                 'nilai_siswa.*',
-                'users.name as siswa_nama',
+                'users.nama as siswa_nama',
                 'users.email as siswa_email',
                 'kelas.nama as kelas_nama',
                 'kelas.jenjang',
@@ -244,7 +244,7 @@ class NilaiSiswaController extends Controller
             ->leftJoin('tahun_ajaran', 'kelas.tahun_ajaran_id', '=', 'tahun_ajaran.id')
             ->select(
                 'nilai_siswa.*',
-                'users.name as siswa_nama',
+                'users.nama as siswa_nama',
                 'kelas.nama as kelas_nama',
                 'kelas.jenjang',
                 'kelas.tingkat',
@@ -342,8 +342,8 @@ class NilaiSiswaController extends Controller
         $siswa = DB::table('keanggotaan_kelas')
             ->join('users', 'keanggotaan_kelas.siswa_id', '=', 'users.id')
             ->where('keanggotaan_kelas.kelas_id', $kelasId)
-            ->select('users.id', 'users.name', 'users.email')
-            ->orderBy('users.name')
+            ->select('users.id', 'users.nama', 'users.email')
+            ->orderBy('users.nama')
             ->get();
 
         return response()->json($siswa);

@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             PengajarSeeder::class,
             SlideshowSeeder::class,
             KontakSeeder::class,
+            SocialMediaSeeder::class,
         ]);
     }
 }

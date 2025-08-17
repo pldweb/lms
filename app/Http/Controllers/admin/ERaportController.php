@@ -42,7 +42,7 @@ class ERaportController extends Controller
                 ->join('tahun_ajaran', 'kelas.tahun_ajaran_id', '=', 'tahun_ajaran.id')
                 ->select(
                     'users.id as siswa_id',
-                    'users.name as siswa_nama',
+                    'users.nama as siswa_nama',
                     'users.email as siswa_email',
                     'kelas.id as kelas_id',
                     'kelas.nama as kelas_nama',
@@ -54,7 +54,7 @@ class ERaportController extends Controller
                 ->where('keanggotaan_kelas.deleted_at', null)
                 ->where('users.deleted_at', null)
                 ->where('kelas.deleted_at', null)
-                ->orderBy('users.name')
+                ->orderBy('users.nama')
                 ->get();
 
             // Ambil statistik nilai per siswa
@@ -170,11 +170,11 @@ class ERaportController extends Controller
         // Ambil semua siswa dalam kelas
         $siswa_list = DB::table('keanggotaan_kelas')
             ->join('users', 'keanggotaan_kelas.siswa_id', '=', 'users.id')
-            ->select('users.id as siswa_id', 'users.name as siswa_nama')
+            ->select('users.id as siswa_id', 'users.nama as siswa_nama')
             ->where('keanggotaan_kelas.kelas_id', $kelas_id)
             ->where('keanggotaan_kelas.deleted_at', null)
             ->where('users.deleted_at', null)
-            ->orderBy('users.name')
+            ->orderBy('users.nama')
             ->get();
 
         $data = [
@@ -289,7 +289,7 @@ class ERaportController extends Controller
             ->join('tahun_ajaran', 'kelas.tahun_ajaran_id', '=', 'tahun_ajaran.id')
             ->select(
                 'users.id as siswa_id',
-                'users.name as siswa_nama',
+                'users.nama as siswa_nama',
                 'users.email as siswa_email',
                 'kelas.id as kelas_id',
                 'kelas.nama as kelas_nama',
