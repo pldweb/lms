@@ -207,25 +207,29 @@ $(document).ready(function() {
   });
 });
 
-    function ajxDropdown(url, targetSelector, placeholder, callback = null) {
-    const target = $(targetSelector);
-    target.html('<option value="">Memuat...</option>').prop('disabled', true);
-    $.ajax({
-        url: url, type: 'GET', dataType: 'json',
-        success: function(response) {
-            target.html(`<option value="">${placeholder}</option>`).prop('disabled', false);
-            $.each(response, function(key, value) {
-                target.append(`<option value="${value.kode}">${value.nama}</option>`);
-            });
-            target.select2({ theme: 'bootstrap-5' });
-            if (typeof callback === "function") callback();
-        },
-        error: function() { 
-            target.html(`<option value="">Gagal memuat</option>`).prop('disabled', true);
-            target.select2({ theme: 'bootstrap-5' });
-        }
-    });
-}
+    function ajxDropdown(url, targetSelector, placeholder, selectedValue = null, callback = null) {
+      const target = $(targetSelector);
+      target.html('<option value="">Memuat...</option>').prop('disabled', true);
+      $.ajax({
+          url: url, type: 'GET', dataType: 'json',
+          success: function(response) {
+              target.html(`<option value="">${placeholder}</option>`).prop('disabled', false);
+              $.each(response, function(key, value) {
+                  target.append(`<option value="${value.kode}">${value.nama}</option>`);
+              });
+              // Set selected value if provided
+              if (selectedValue) {
+                  target.val(selectedValue);
+              }
+              target.select2({ theme: 'bootstrap-5' });
+              if (typeof callback === "function") callback();
+          },
+          error: function() { 
+              target.html(`<option value="">Gagal memuat</option>`).prop('disabled', true);
+              target.select2({ theme: 'bootstrap-5' });
+          }
+      });
+    }
 
     function confirmModal(message, confirmCallback) {
     $('#modalTitle').text('Konfirmasi');

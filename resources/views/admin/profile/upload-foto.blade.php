@@ -1,9 +1,9 @@
 <form id="uploadFotoProfile" enctype="multipart/form-data" method="POST" onsubmit="return false;">
     @csrf
     <div class="form-group">
-        <label class="form-label" style="display: block;" for="foto_profile">Pilih Foto Profile</label>
-        <div class="col-12">
-            <input type="file" class="form-control custom-file-input" id="foto_profile" accept="image/*" name="foto_profile">
+        <div class="form-group">
+            <label for="foto_profile">Foto Profile</label>
+            <input type="file" class="form-control" name="foto_profile" id="foto_profile">
         </div>
     </div>
     <div class="mb-20 mt-20">

@@ -13,10 +13,10 @@
                         @csrf
                         <div class="row">
                             <div class="col-4">
-                            <div class="form-group">
-                                <img src="{{$user->foto_profile ? Storage::url($user->foto_profile) : asset('admin/images/thumbs/avatar-img1.png')}}" style="width: 300px; height: 300px; border-radius: 50%; object-fit: cover;" alt="avatar" class="img-fluid">
+                                <div class="form-group">
+                                    <img src="{{$user->foto_profile ? Storage::url($user->foto_profile) : asset('admin/images/thumbs/avatar.png')}}" style="width: 300px; height: 300px; border-radius: 50%; object-fit: cover;" alt="avatar" class="img-fluid">
+                                </div>
                             </div>
-                        </div>
                         <div class="col-8">
                             <div class="row">
                                 <div class="col-md-12 mt-20">
@@ -54,7 +54,7 @@
                                     <div class="form-group">
                                         <label for="provinsi">Provinsi</label>
                                         <select class="form-control" id="provinsi" name="provinsi">
-                                            <option value="{{$user->provinsi ?? ''}}">{{$user->provinsi ?? ''}}</option>
+                                            <option value="">Pilih Provinsi</option>
                                             @foreach($provinsi as $prov)
                                                 <option value="{{ $prov->kode }}" {{ ($user->provinsi == $prov->kode) ? 'selected' : '' }}>
                                                     {{ $prov->nama }}
@@ -68,7 +68,12 @@
                                     <div class="form-group">
                                         <label for="kota">Kota/Kabupaten</label>
                                         <select class="form-control" id="kota" name="kota" disabled>
-                                            <option value="{{$user->kota ?? ''}}">{{$user->kota ?? ''}}</option>
+                                            <option value="">Pilih Kota</option>
+                                            @if($user->provinsi)
+                                                @foreach(\App\Helper\LokasiHelper::getKota($user->provinsi)['data'] as $kota)
+                                                    <option value="{{$kota->kode}}" {{$user->kota == $kota->kode ? 'selected' : ''}}>{{$kota->nama}}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
@@ -77,7 +82,12 @@
                                     <div class="form-group">
                                         <label for="kecamatan">Kecamatan</label>
                                         <select class="form-control" id="kecamatan" name="kecamatan" disabled>
-                                            <option value="{{$user->kecamatan ?? ''}}">{{$user->kecamatan ?? ''}}</option>
+                                            <option value="">Pilih Kecamatan</option>
+                                            @if($user->kota)
+                                                @foreach(\App\Helper\LokasiHelper::getKecamatan($user->kota)['data'] as $kecamatan)
+                                                    <option value="{{$kecamatan->kode}}" {{$user->kecamatan == $kecamatan->kode ? 'selected' : ''}}>{{$kecamatan->nama}}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
@@ -85,7 +95,12 @@
                                     <div class="form-group">
                                         <label for="kelurahan">Kelurahan</label>
                                         <select class="form-control" id="kelurahan" name="kelurahan" disabled>
-                                            <option value="">Pilih Kecamatan Dahulu</option>
+                                            <option value="">Pilih Kelurahan</option>
+                                            @if($user->kecamatan)
+                                                @foreach(\App\Helper\LokasiHelper::getKelurahan($user->kecamatan)['data'] as $kelurahan)
+                                                    <option value="{{$kelurahan->kode}}" {{$user->kelurahan == $kelurahan->kode ? 'selected' : ''}}>{{$kelurahan->nama}}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
@@ -98,9 +113,9 @@
                             </div>
                             <input type="hidden" id="id" name="id" value="{{$user->id}}">
                             <div class="form-group mt-20 mb-20">
-                                <button type="submit" class="btn btn-primary btn-block">Update Profile</button>
-                                <button onclick="showModal('/admin/profile/upload-foto', 'Upload Foto Profile')" class="btn btn-primary btn-block">Ubah Foto Profile</button>
-                                <button onclick="showModal('/admin/profile/change-password', 'Ubah Password')" class="btn btn-primary btn-block">Ubah Password</button>
+                                <button type="submit" class="btn btn-primary btn-block btn-add">Update Profile</button>
+                                <button onclick="showModal('/admin/profile/upload-foto', 'Upload Foto Profile')" class="btn btn-primary btn-block btn-add">Ubah Foto Profile</button>
+                                <button onclick="showModal('/admin/profile/change-password', 'Ubah Password')" class="btn btn-primary btn-block btn-add">Ubah Password</button>
                             </div>
 
                         </div>
@@ -142,33 +157,23 @@
     });
 
     $(document).ready(function () {
-        let savedProvinsi = "{{ $user->provinsi ?? '' }}";
-        let savedKota = "{{ $user->kota ?? '' }}";
-        let savedKecamatan = "{{ $user->kecamatan ?? '' }}";
-        let savedKelurahan = "{{ $user->kelurahan ?? '' }}";
-
-        if (savedProvinsi) {
-            ajxDropdown("{{ url('/lokasi/kota') }}/" + savedProvinsi, '#kota', 'Pilih Kota', function () {
-                $('#kota').val(savedKota); 
-
-                if (savedKota) {
-                    ajxDropdown("{{ url('/lokasi/kecamatan') }}/" + savedKota, '#kecamatan', 'Pilih Kecamatan', function() {
-                        $('#kecamatan').val(savedKecamatan);
-
-                        if (savedKecamatan) {
-                            ajxDropdown("{{ url('/lokasi/kelurahan') }}/" + savedKecamatan, '#kelurahan', 'Pilih Kelurahan', function() {
-                                $('#kelurahan').val(savedKelurahan); 
-                            });
-                        }
-                    });
-                }
-            });
-        }
+        // Enable dropdown yang sudah memiliki data
+        @if($user->provinsi)
+            $('#kota').prop('disabled', false);
+        @endif
+        @if($user->kota)
+            $('#kecamatan').prop('disabled', false);
+        @endif
+        @if($user->kecamatan)
+            $('#kelurahan').prop('disabled', false);
+        @endif
         
         $('#provinsi').on('change', function () {
             let provinsiId = $(this).val();
             // Reset semua dropdown di bawahnya
-            $('#kota, #kecamatan, #kelurahan').html('<option value="">Pilih...</option>').prop('disabled', true);
+            $('#kota').html('<option value="">Pilih Kota</option>').prop('disabled', true);
+            $('#kecamatan').html('<option value="">Pilih Kecamatan</option>').prop('disabled', true);
+            $('#kelurahan').html('<option value="">Pilih Kelurahan</option>').prop('disabled', true);
             if (provinsiId) {
                 ajxDropdown("{{ url('/lokasi/kota') }}/" + provinsiId, '#kota', 'Pilih Kota');
             }
@@ -176,7 +181,8 @@
 
         $('#kota').on('change', function () {
             let kotaId = $(this).val();
-            $('#kecamatan, #kelurahan').html('<option value="">Pilih...</option>').prop('disabled', true);
+            $('#kecamatan').html('<option value="">Pilih Kecamatan</option>').prop('disabled', true);
+            $('#kelurahan').html('<option value="">Pilih Kelurahan</option>').prop('disabled', true);
             if (kotaId) {
                 ajxDropdown("{{ url('/lokasi/kecamatan') }}/" + kotaId, '#kecamatan', 'Pilih Kecamatan');
             }
@@ -184,7 +190,7 @@
 
         $('#kecamatan').on('change', function () {
             let kecamatanId = $(this).val();
-            $('#kelurahan').html('<option value="">Pilih...</option>').prop('disabled', true);
+            $('#kelurahan').html('<option value="">Pilih Kelurahan</option>').prop('disabled', true);
             if (kecamatanId) {
                 ajxDropdown("{{ url('/lokasi/kelurahan') }}/" + kecamatanId, '#kelurahan', 'Pilih Kelurahan');
             }

@@ -14,9 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class NilaiController extends Controller
 {
-    /**
-     * Menampilkan daftar nilai tugas
-     */
+    
     public function getIndex(Request $request)
     {
         // Mendapatkan ID guru yang sedang login

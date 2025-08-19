@@ -88,7 +88,7 @@ class AdminSidebar
                         ['text' => 'Berita', 'link' => 'admin/artikel/berita'],
                         ['text' => 'Pengumuman', 'link' => 'admin/artikel/pengumuman'],
                         ['text' => "Galeri", 'link' => 'admin/galeri/'],
-                        ['text' => "Kategori Galeri", 'link' => 'admin/galeri-kategori/'],
+                        ['text' => "Kategori Galeri", 'link' => 'admin/kategori-galeri/'],
                         ['text' => 'Slideshow', 'link' => 'admin/slideshow/'],
                         ['text' => 'Kontak', 'link' => 'admin/kontak/'],
                         ['text' => 'Sosial Media', 'link' => 'admin/social-media/'],

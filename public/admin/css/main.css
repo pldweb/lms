@@ -9563,17 +9563,3 @@ button:focus {
 /* Email Css End */
 
 /*# sourceMappingURL=main.css.map */
-
-span.select2 .selection {
-    width: 100%;
-}
-
-.form-control {
-    height: 40px;
-    display: block;
-    padding: 8px 12px;
-}
-
-.sidebar-submenu__link {
-  font-size: 15px;
-}

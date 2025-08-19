@@ -30,8 +30,8 @@
 /* ========================= Variable Css Start ======================== */
 :root {
   /* Font Family Variable */
-  --heading-font: "Urbanist", sans-serif;
-  --body-font: "Roboto", sans-serif;
+  --heading-font: "Inter", sans-serif;
+  --body-font: "Inter", sans-serif;
   /* Font Size Variable Start */
   --heading-one: clamp(2rem, -0.0733rem + 6.3692vw, 2.375rem);
   --heading-two: clamp(1.75rem, 0.7133rem + 2.8846vw, 2rem);
@@ -41,9 +41,9 @@
   --heading-six: 0.9375rem;
   /* Font Size End */
   /* template main color */
-  --main-h: 219;
-  --main-s: 94%;
-  --main-l: 61%;
+  --main-h: 213;
+  --main-s: 96%;
+  --main-l: 44%;
   --main: var(--main-h) var(--main-s) var(--main-l);
   /* template main color */
   --main-two-h: 166;
@@ -312,13 +312,6 @@
   color: hsl(var(--heading-color));
   line-height: 1;
 }
-.form-control::-moz-placeholder {
-  color: var(--gray-300);
-  -moz-transition: 0.2s linear;
-  transition: 0.2s linear;
-  font-weight: 400;
-  font-size: 0.9375rem;
-}
 .form-control::placeholder {
   color: var(--gray-300);
   transition: 0.2s linear;
@@ -328,10 +321,6 @@
 .form-control:focus {
   border-color: hsl(var(--main));
   box-shadow: none !important;
-}
-.form-control:focus::-moz-placeholder {
-  visibility: hidden;
-  opacity: 0;
 }
 .form-control:focus::placeholder {
   visibility: hidden;
@@ -344,45 +333,23 @@
   color: var(--gray-600);
 }
 
-.placeholder-12::-moz-placeholder {
-  font-size: 12px;
-}
-
 .placeholder-12::placeholder {
   font-size: 12px;
-}
-.placeholder-13::-moz-placeholder {
-  font-size: 13px;
 }
 .placeholder-13::placeholder {
   font-size: 13px;
 }
-.placeholder-14::-moz-placeholder {
-  font-size: 14px;
-}
 .placeholder-14::placeholder {
   font-size: 14px;
-}
-.placeholder-15::-moz-placeholder {
-  font-size: 15px;
 }
 .placeholder-15::placeholder {
   font-size: 15px;
 }
-.placeholder-16::-moz-placeholder {
-  font-size: 16px;
-}
 .placeholder-16::placeholder {
   font-size: 16px;
 }
-.placeholder-17::-moz-placeholder {
-  font-size: 17px;
-}
 .placeholder-17::placeholder {
   font-size: 17px;
-}
-.placeholder-18::-moz-placeholder {
-  font-size: 18px;
 }
 .placeholder-18::placeholder {
   font-size: 18px;
@@ -495,6 +462,7 @@ input[type=number] {
 .form-check.form-radio .form-check-input:checked::after {
   visibility: visible;
   opacity: 1;
+  -webkit-transform: translate(-50%, -50%) scale(1);
   transform: translate(-50%, -50%) scale(1);
 }
 .form-check.form-radio .form-check-input:checked::before {
@@ -534,6 +502,7 @@ input[type=number] {
   content: "";
   inset-block-start: 50%;
   inset-inline-start: 50%;
+  -webkit-transform: translate(-50%, -50%) scale(0.2);
   transform: translate(-50%, -50%) scale(0.2);
   width: 10px;
   height: 10px;
@@ -968,7 +937,6 @@ td.fc-header-center {
 
 .fc-header td {
   padding: 0;
-  min-width: -moz-max-content;
   min-width: max-content;
 }
 
@@ -977,7 +945,6 @@ td.fc-header-center {
 }
 
 #calendar {
-  min-width: -moz-max-content;
   min-width: max-content;
 }
 #calendar .fc-header tr {
@@ -1313,7 +1280,6 @@ td.fc-header-center {
 }
 
 .table {
-  min-width: -moz-max-content;
   min-width: max-content;
 }
 .table.style-two th {
@@ -4153,7 +4119,6 @@ button:focus {
 }
 
 .min-width-max-content {
-  min-width: -moz-max-content;
   min-width: max-content;
 }
 
@@ -4218,7 +4183,6 @@ button:focus {
 }
 
 .min-w-max-content {
-  min-width: -moz-max-content;
   min-width: max-content;
 }
 
@@ -4228,8 +4192,7 @@ button:focus {
 .cover-img {
   width: 100%;
   height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 
 /* Display Flex Css Start */
@@ -9597,4 +9560,6 @@ button:focus {
   transform: rotate(90deg);
 }
 
-/* Email Css End *//*# sourceMappingURL=main.css.map */
+/* Email Css End */
+
+/*# sourceMappingURL=main.css.map */

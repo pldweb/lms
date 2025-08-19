@@ -18,6 +18,16 @@ class Tugas extends Model
         'judul',
         'instruksi',
         'tenggat_waktu',
+        'tipe_tugas',
+        'media_type',
+        'media_url',
+        'media_deskripsi',
+        'is_kuis',
+        'kuis_id',
+        'tampilkan_nilai',
+        'waktu_mulai',
+        'waktu_selesai',
+        'durasi_menit',
     ];
 
     public function kelas(): BelongsTo
@@ -28,5 +38,15 @@ class Tugas extends Model
     public function pengumpulan(): HasMany
     {
         return $this->hasMany(PengumpulanTugas::class, 'tugas_id');
+    }
+    
+    public function kuis(): BelongsTo
+    {
+        return $this->belongsTo(Kuis::class, 'kuis_id');
+    }
+    
+    public function jawabanSiswaKuis(): HasMany
+    {
+        return $this->hasMany(JawabanSiswaKuis::class, 'tugas_id');
     }
 }

@@ -44,7 +44,9 @@ class ProfileController extends Controller
     {
         $provinsi = LokasiHelper::getProvinsi();
         $provinsi = $provinsi['data'];
-        $user = Auth::user();
+        
+        // Load user dengan relasi untuk memastikan accessor bisa bekerja
+        $user = User::with(['province', 'regency', 'district', 'village'])->find(Auth::id());
 
         $params = [
             'provinsi' => $provinsi,

@@ -149,4 +149,40 @@ class User extends Authenticatable
     {
         return $this->village?->nama;
     }
+
+    //================================================
+    // ACCESSOR UNTUK NAMA LOKASI (Laravel Accessor Pattern)
+    //================================================
+
+    /**
+     * Accessor untuk mendapatkan nama provinsi
+     */
+    public function getProvinsiNamaAttribute()
+    {
+        return $this->province?->nama;
+    }
+
+    /**
+     * Accessor untuk mendapatkan nama kota/kabupaten
+     */
+    public function getKotaNamaAttribute()
+    {
+        return $this->regency?->nama;
+    }
+
+    /**
+     * Accessor untuk mendapatkan nama kecamatan
+     */
+    public function getKecamatanNamaAttribute()
+    {
+        return $this->district?->nama;
+    }
+
+    /**
+     * Accessor untuk mendapatkan nama kelurahan
+     */
+    public function getKelurahanNamaAttribute()
+    {
+        return $this->village?->nama;
+    }
 }

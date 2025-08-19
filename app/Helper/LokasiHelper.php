@@ -16,7 +16,7 @@ class LokasiHelper
     }
 
    
-    public static function getKota($provinsiKode)
+    public static function getKota($provinsiKode = null)
     {
         // Ganti panggilan API dengan query Eloquent ke tabel 'kabupatens'
         $kabupatens = Kabupaten::where('kode_provinsi', $provinsiKode)

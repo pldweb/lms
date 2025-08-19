@@ -73,11 +73,11 @@ class KelasController extends Controller
             $query->where('kelas.tahun_ajaran_id', $request->tahun_ajaran_id);
         }
 
-        // Filter berdasarkan status - tidak tersedia karena tabel kelas tidak memiliki kolom is_active
-        // if ($request->filled('status')) {
-        //     $status = $request->status === 'aktif' ? 1 : 0;
-        //     $query->where('kelas.is_active', $status);
-        // }
+        // Filter berdasarkan status
+        if ($request->filled('status')) {
+            $status = $request->status === 'aktif' ? 1 : 0;
+            $query->where('kelas.is_active', $status);
+        }
 
         $kelas = $query->orderBy('kelas.jenjang')
                       ->orderBy('kelas.tingkat')
@@ -102,7 +102,7 @@ class KelasController extends Controller
             ->get();
 
         $mataPelajaran = DB::table('mata_pelajaran')
-            ->where('aktif', true)
+            ->where('is_active', true)
             ->select('id', 'kode', 'nama', 'jenjang')
             ->orderBy('jenjang')
             ->orderBy('nama')
@@ -128,12 +128,15 @@ class KelasController extends Controller
             $user = Auth::user();
             DB::table('kelas')->insert([
                 'nama' => $request->nama,
-                'kode_kelas' => $request->kode,
+                'kode' => $request->kode,
                 'jenjang' => $request->jenjang,
-                'tahun_ajaran' => $request->tahun_ajaran,
-                'semester' => $request->semester,
+                'tingkat' => $request->tingkat,
+                'tahun_ajaran_id' => $request->tahun_ajaran_id,
+                'mata_pelajaran_id' => $request->mata_pelajaran_id,
+                'kapasitas' => $request->kapasitas,
                 'deskripsi' => $request->deskripsi,
                 'guru_id' => $user ? $user->id : null,
+                'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
@@ -179,8 +182,8 @@ class KelasController extends Controller
         $anggotaKelas = DB::table('keanggotaan_kelas')
             ->join('users', 'keanggotaan_kelas.siswa_id', '=', 'users.id')
             ->where('keanggotaan_kelas.kelas_id', $id)
-            ->select('users.id', 'users.nama as name', 'users.email', 'keanggotaan_kelas.tanggal_bergabung')
-            ->orderBy('users.nama')
+            ->select('users.id', 'users.name', 'users.email', 'keanggotaan_kelas.tanggal_bergabung')
+            ->orderBy('users.name')
             ->get();
 
         return view('admin.kelas.show', compact('kelas', 'jumlahSiswa', 'jumlahJadwal', 'anggotaKelas'));
@@ -202,7 +205,7 @@ class KelasController extends Controller
             ->get();
 
         $mataPelajaran = DB::table('mata_pelajaran')
-            ->where('aktif', true)
+            ->where('is_active', true)
             ->select('id', 'kode', 'nama', 'jenjang')
             ->orderBy('jenjang')
             ->orderBy('nama')
@@ -286,9 +289,19 @@ class KelasController extends Controller
                 return redirect()->back()->with('error', 'Data tidak ditemukan!');
             }
 
-            // Toggle status tidak tersedia karena tabel kelas tidak memiliki kolom is_active
+            $newStatus = !$kelas->is_active;
+            
+            DB::table('kelas')
+                ->where('id', $id)
+                ->update([
+                    'is_active' => $newStatus,
+                    'updated_at' => now()
+                ]);
+
+            $statusText = $newStatus ? 'diaktifkan' : 'dinonaktifkan';
+            
             return redirect('/admin/kelas/')
-                ->with('error', 'Fitur toggle status tidak tersedia untuk kelas!');
+                ->with('success', "Kelas berhasil {$statusText}!");
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());

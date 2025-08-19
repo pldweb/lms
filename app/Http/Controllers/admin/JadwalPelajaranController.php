@@ -22,7 +22,7 @@ class JadwalPelajaranController extends Controller
                 'kelas.tingkat',
                 'mata_pelajaran.nama as mata_pelajaran_nama',
                 'mata_pelajaran.kode as mata_pelajaran_kode',
-                'users.nama as guru_nama',
+                'users.name as guru_nama',
                 'tahun_ajaran.nama as tahun_ajaran_nama'
             );
 
@@ -198,7 +198,7 @@ class JadwalPelajaranController extends Controller
                 'mata_pelajaran.nama as mata_pelajaran_nama',
                 'mata_pelajaran.kode as mata_pelajaran_kode',
                 'mata_pelajaran.bobot_sks',
-                'users.nama as guru_nama',
+                'users.name as guru_nama',
                 'users.email as guru_email',
                 'tahun_ajaran.nama as tahun_ajaran_nama'
             )
@@ -380,7 +380,7 @@ class JadwalPelajaranController extends Controller
                 'jadwal_pelajaran.*',
                 'mata_pelajaran.nama as mata_pelajaran_nama',
                 'mata_pelajaran.kode as mata_pelajaran_kode',
-                'users.nama as guru_nama'
+                'users.name as guru_nama'
             )
             ->orderBy('jadwal_pelajaran.hari')
             ->orderBy('jadwal_pelajaran.jam_mulai')

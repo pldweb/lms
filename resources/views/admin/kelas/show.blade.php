@@ -30,7 +30,7 @@
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">Informasi Kelas</h6>
             <div>
-                @if($kelas->is_active)
+                @if($kelas->status === 'aktif')
                     <span class="badge badge-success badge-lg">Aktif</span>
                 @else
                     <span class="badge badge-secondary badge-lg">Non-Aktif</span>
@@ -47,7 +47,7 @@
                         </tr>
                         <tr>
                             <td><strong>Kode</strong></td>
-                            <td>: <code>{{ $kelas->kode }}</code></td>
+                            <td>: <code>{{ $kelas->kode_kelas }}</code></td>
                         </tr>
                         <tr>
                             <td><strong>Jenjang</strong></td>
