@@ -35,7 +35,7 @@ class KategoriGaleriController extends Controller
 
         $params = ['kategoriGaleri' => $kategoriGaleri];
 
-        return view('admin.kategori-galeri.index', $params);
+        return view('admin.galeri.kategori.index', $params);
     }
 
     public function getCreate()

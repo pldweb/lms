@@ -27,14 +27,12 @@
             <div class="card-body" style="padding-top: 0;">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="card overflow-hidden">
+                        <div class="card">
                             <div class="card-body p-0 overflow-x-auto">
                                 <table id="studentTable" class="table table-striped table-hover">
                                     <thead>
                                             <tr>
-                                                <th class="fixed-width">
-                                                    <input class="form-check-input border-gray-200 rounded-4" type="checkbox" id="selectAll">
-                                                </th>
+                                                <th class="h6 text-gray-300" style="width: 5px;">No</th>
                                                 <th class="h6 text-gray-300">Nama</th>
                                                 <th class="h6 text-gray-300">Email</th>
                                                 <th class="h6 text-gray-300">Aksi</th>
@@ -43,10 +41,8 @@
                                         <tbody>
                                             @foreach ($users as $user)
                                                 <tr>
-                                                    <td class="fixed-width">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input border-gray-200 rounded-4" type="checkbox">
-                                                        </div>
+                                                    <td>
+                                                        <span class="h6 mb-0 fw-medium text-gray-300">{{ $loop->iteration }}</span>
                                                     </td>
                                                     <td>
                                                         <div class="flex-align gap-8">
@@ -95,21 +91,16 @@
         });
 
         $('#studentTable').DataTable({
-            paging: false,
+            paging: true,
             lengthChange: true,
             searching: false,
-            ordering: false,
-            info: false,
+            ordering: true,
+            info: true,
             autoWidth: true,
             responsive: true,
             columnDefs: [
-                { orderable: false, targets: [0, 3] } 
+                { orderable: false, targets: [0] } 
             ]
-        });
-
-        $('#selectAll').on('change', function () {
-            const isChecked = $(this).prop('checked');
-            $('.form-check .form-check-input').prop('checked', isChecked);
         });
 
         // Export Data (CSV / JSON)

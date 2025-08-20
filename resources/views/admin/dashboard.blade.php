@@ -5,35 +5,24 @@
 <div class="row mt-20">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header b-title d-flex justify-content-between align-items-center">
                 <h3 class="card-title">Dashboard Admin</h3>
-            </div>
-            <div class="card-body">
                 <div class="mb-3">
-                    @php
-                        $tahunAjaranAktif = DB::table('tahun_ajaran')->where('status', 'aktif')->first();
-                        $tahunAjaranNama = $tahunAjaranAktif ? $tahunAjaranAktif->nama : 'Tidak ada';
-                    @endphp
                     <p class="mb-0">Tahun Ajaran Aktif: <strong>{{ $tahunAjaranAktif ? $tahunAjaranAktif->nama : 'Tidak ada' }}</strong></p>
                 </div>
+            </div>
+            <div class="card-body">
 
                 <!-- Statistik Utama -->
                 <div class="row mb-4">
                     <!-- Total Guru -->
                     <div class="col-md-3">
-                        <div class="card border-0 shadow-sm">
+                        <div class="card border-1">
                             <div class="card-body d-flex align-items-center">
                                 <div class="icon-box bg-light-primary rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
                                     <i class="ph ph-user-list text-primary" style="font-size: 24px;"></i>
                                 </div>
                                 <div>
-                                    @php
-                                        $totalGuru = DB::table('users')
-                                            ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
-                                            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
-                                            ->where('roles.name', 'Guru')
-                                            ->count();
-                                    @endphp
                                     <h2 class="mb-0">{{ $totalGuru }}</h2>
                                     <p class="text-muted mb-0">Total Guru</p>
                                 </div>
@@ -43,19 +32,12 @@
 
                     <!-- Total Siswa -->
                     <div class="col-md-3">
-                        <div class="card border-0 shadow-sm">
+                        <div class="card border-1">
                             <div class="card-body d-flex align-items-center">
                                 <div class="icon-box bg-light-success rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
                                     <i class="ph ph-student text-success" style="font-size: 24px;"></i>
                                 </div>
                                 <div>
-                                    @php
-                                        $totalSiswa = DB::table('users')
-                                            ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
-                                            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
-                                            ->where('roles.name', 'Siswa')
-                                            ->count();
-                                    @endphp
                                     <h2 class="mb-0">{{ $totalSiswa }}</h2>
                                     <p class="text-muted mb-0">Total Siswa</p>
                                 </div>
@@ -65,15 +47,12 @@
 
                     <!-- Total Kelas -->
                     <div class="col-md-3">
-                        <div class="card border-0 shadow-sm">
+                        <div class="card border-1">
                             <div class="card-body d-flex align-items-center">
                                 <div class="icon-box bg-light-primary rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
                                     <i class="ph ph-chalkboard-teacher text-primary" style="font-size: 24px;"></i>
                                 </div>
                                 <div>
-                                    @php
-                                        $totalKelas = DB::table('kelas')->count();
-                                    @endphp
                                     <h2 class="mb-0">{{ $totalKelas }}</h2>
                                     <p class="text-muted mb-0">Total Kelas</p>
                                 </div>
@@ -83,15 +62,12 @@
 
                     <!-- Mata Pelajaran -->
                     <div class="col-md-3">
-                        <div class="card border-0 shadow-sm">
+                        <div class="card border-1">
                             <div class="card-body d-flex align-items-center">
                                 <div class="icon-box bg-light-danger rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
                                     <i class="ph ph-book-open text-danger" style="font-size: 24px;"></i>
                                 </div>
                                 <div>
-                                    @php
-                                        $totalMapel = DB::table('mata_pelajaran')->where('aktif', true)->count();
-                                    @endphp
                                     <h2 class="mb-0">{{ $totalMapel }}</h2>
                                     <p class="text-muted mb-0">Mata Pelajaran</p>
                                 </div>
@@ -101,11 +77,11 @@
                 </div>
 
                 <!-- Aksi Cepat dan Informasi Tahun Ajaran -->
-                <div class="row">
+                <div class="row mt-20">
                     <!-- Aksi Cepat -->
                     <div class="col-md-6 mb-4">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-header bg-white">
+                        <div class="card border-1">
+                            <div class="card-header">
                                 <h5 class="card-title mb-0">
                                     <i class="ph ph-lightning text-primary me-2"></i> Aksi Cepat
                                 </h5>
@@ -113,23 +89,23 @@
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <a href="{{ url('/admin/user/guru/create') }}" class="btn btn-light btn-block text-start py-2 px-3 border">
-                                            <i class="ph ph-user-plus text-primary me-2"></i> Tambah Guru Baru
+                                        <a href="{{ url('/admin/user/guru/create') }}" class="btn btn-primary btn-block text-start border">
+                                            <i class="ph ph-user-plus  me-2"></i> Tambah Guru Baru
                                         </a>
                                     </div>
                                     <div class="col-md-6">
-                                        <a href="{{ url('/admin/user/siswa/create') }}" class="btn btn-light btn-block text-start py-2 px-3 border">
-                                            <i class="ph ph-user-plus text-success me-2"></i> Tambah Siswa Baru
+                                        <a href="{{ url('/admin/user/siswa/create') }}" class="btn btn-primary btn-block text-start border">
+                                            <i class="ph ph-user-plus me-2"></i> Tambah Siswa Baru
                                         </a>
                                     </div>
                                     <div class="col-md-6">
-                                        <a href="{{ url('/admin/kelas/create') }}" class="btn btn-light btn-block text-start py-2 px-3 border">
-                                            <i class="ph ph-plus-circle text-primary me-2"></i> Buat Kelas Baru
+                                        <a href="{{ url('/admin/kelas/create') }}" class="btn btn-primary btn-block text-start border">
+                                            <i class="ph ph-plus-circle me-2"></i> Buat Kelas Baru
                                         </a>
                                     </div>
                                     <div class="col-md-6">
-                                        <a href="{{ url('/admin/tugas/create') }}" class="btn btn-light btn-block text-start py-2 px-3 border">
-                                            <i class="ph ph-note-pencil text-warning me-2"></i> Atur Penugasan
+                                        <a href="{{ url('/admin/tugas/create') }}" class="btn btn-primary btn-block text-start border">
+                                            <i class="ph ph-note-pencil me-2"></i> Atur Penugasan
                                         </a>
                                     </div>
                                 </div>
@@ -139,8 +115,8 @@
 
                     <!-- Informasi Tahun Ajaran -->
                     <div class="col-md-6 mb-4">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-header bg-white">
+                        <div class="card border-1">
+                            <div class="card-header">
                                 <h5 class="card-title mb-0">
                                     <i class="ph ph-calendar-check text-primary me-2"></i> Informasi Tahun Ajaran
                                 </h5>
@@ -217,5 +193,4 @@
         </div>
     </div>
 </div>
-
 @endsection

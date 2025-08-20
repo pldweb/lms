@@ -12,11 +12,6 @@
                         <a href="{{ url('/admin/artikel/create-' . $jenis) }}" class="btn btn-primary mb-3 btn-add" style="white-space: nowrap">
                                 <i class="ph ph-plus"></i> Tambah Artikel
                         </a>                   
-                        <select id="exportOptions" class="form-select w-auto mb-3 mr-2">
-                            <option value="">Export</option>
-                            <option value="csv">Export to CSV</option>
-                            <option value="json">Export to JSON</option>
-                        </select>
                         <div class="input-group">
                             <input type="text" id="searchInput" class="form-control w-auto mb-3" placeholder="Cari...">
                             <span class="input-group-text mb-3"><i class="ph ph-magnifying-glass"></i></span>
@@ -32,9 +27,6 @@
                                 <table id="artikelTable" class="table table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th class="fixed-width">
-                                                <input class="form-check-input border-gray-200 rounded-4" type="checkbox" id="selectAll">
-                                            </th>
                                             <th class="h6 text-gray-300">Judul</th>
                                             @if(!isset($jenis))
                                             <th class="h6 text-gray-300">Jenis</th>
@@ -152,61 +144,6 @@
                 { orderable: false, targets: [0, -1] } 
             ]
         });
-
-        $('#selectAll').on('change', function () {
-            const isChecked = $(this).prop('checked');
-            $('.form-check .form-check-input').prop('checked', isChecked);
-        });
-
-        // Export Data
-        $('#exportOptions').on('change', function () {
-            const format = $(this).val();
-            const $table = $('#artikelTable');
-            const headers = [];
-            const data = [];
-
-            $table.find('thead th').each(function () {
-                headers.push($(this).text().trim());
-            });
-
-            $table.find('tbody tr').each(function () {
-                const row = {};
-                $(this).find('td').each(function (index) {
-                    row[headers[index]] = $(this).text().trim();
-                });
-                data.push(row);
-            });
-
-            if (format === 'csv') {
-                downloadCSV(data);
-            } else if (format === 'json') {
-                downloadJSON(data);
-            }
-        });
-
-        function downloadCSV(data) {
-            const csv = data.map(row => Object.values(row).join(',')).join('\n');
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'artikel.csv';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-
-        function downloadJSON(data) {
-            const json = JSON.stringify(data, null, 2);
-            const blob = new Blob([json], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'artikel.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
     });
 
     function toggleStatus(id) {

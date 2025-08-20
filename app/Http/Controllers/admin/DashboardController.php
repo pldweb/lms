@@ -3,20 +3,23 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+
 
 class DashboardController extends Controller
 {
     public function getIndex()
     {
         $tahunAjaranAktif = DB::table('tahun_ajaran')->where('status', 'aktif')->first();
-        $totalGuru = DB::table('users')
-            ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
-            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
-            ->where('roles.name', 'Guru')
-            ->count();
+        
+        //Total Guru
+        $totalGuru = User::with('roles')->whereHas('roles', function($query) {
+            $query->where('name', 'Guru');
+        })->count();
+
         $totalSiswa = DB::table('users')
             ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
             ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
@@ -34,6 +37,7 @@ class DashboardController extends Controller
             ->orderBy('tugas.created_at', 'desc')
             ->limit(3)
             ->get();
+            
         foreach($tugasTerbaru as $tugas) {
             $aktivitas[] = [
                 'tipe' => 'tugas',
@@ -43,6 +47,7 @@ class DashboardController extends Controller
                 'color' => 'warning'
             ];
         }
+
         // Materi terbaru
         $materiTerbaru = DB::table('materi_kelas')
             ->join('kelas', 'materi_kelas.kelas_id', '=', 'kelas.id')
@@ -51,6 +56,7 @@ class DashboardController extends Controller
             ->orderBy('materi_kelas.created_at', 'desc')
             ->limit(3)
             ->get();
+
         foreach($materiTerbaru as $materi) {
             $aktivitas[] = [
                 'tipe' => 'materi',
@@ -60,6 +66,7 @@ class DashboardController extends Controller
                 'color' => 'primary'
             ];
         }
+
         // Nilai terbaru
         $nilaiTerbaru = DB::table('nilai')
             ->join('pengumpulan_tugas', 'nilai.pengumpulan_id', '=', 'pengumpulan_tugas.id')
@@ -71,6 +78,7 @@ class DashboardController extends Controller
             ->orderBy('nilai.created_at', 'desc')
             ->limit(3)
             ->get();
+
         foreach($nilaiTerbaru as $nilai) {
             $aktivitas[] = [
                 'tipe' => 'nilai',
@@ -80,20 +88,24 @@ class DashboardController extends Controller
                 'color' => 'success'
             ];
         }
+
         // Urutkan berdasarkan waktu terbaru
         usort($aktivitas, function($a, $b) {
             return strtotime($b['waktu']) - strtotime($a['waktu']);
         });
+
         // Ambil 5 aktivitas terbaru
         $aktivitas = array_slice($aktivitas, 0, 5);
 
-        return view('admin.dashboard', [
+        $params = [
             'tahunAjaranAktif' => $tahunAjaranAktif,
             'totalGuru' => $totalGuru,
             'totalSiswa' => $totalSiswa,
             'totalKelas' => $totalKelas,
             'totalMapel' => $totalMapel,
             'aktivitas' => $aktivitas,
-        ]);
+        ];
+
+        return view('admin.dashboard', $params);
     }
 }

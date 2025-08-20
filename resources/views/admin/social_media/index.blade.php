@@ -1,7 +1,5 @@
 @extends('layouts.admin')
-
 @section('title', 'Manajemen Social Media')
-
 @section('content')
 <div class="row mt-20">
     <div class="col-md-12">
@@ -80,5 +78,20 @@
             ajxProcess('/admin/social-media/delete-action/' + id, '', '#message-modal');
         });
     }
+
+    $(document).ready(function () {
+        $('#table-social-media').DataTable({
+            paging: true,
+            lengthChange: true,
+            searching: false,
+            ordering: true,
+            info: true,
+            autoWidth: true,
+            responsive: true,
+            columnDefs: [
+                { orderable: false, targets: [0, 7] } 
+            ]
+        });
+    });
 </script>
 @endsection

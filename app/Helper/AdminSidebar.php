@@ -56,25 +56,6 @@ class AdminSidebar
                     'icon' => 'ph ph-file-pdf',
                     'link' => 'admin/e-raport/',
                 ],
-                ['type' => 'label', 'text' => 'Aktivitas Mengajar'],
-                [
-                    'text' => 'Jadwal Kelas',
-                    'icon' => 'ph ph-calendar-dots',
-                    'link' => 'guru/jadwal',
-                ],
-                [
-                    'text' => 'Materi Pelajaran',
-                    'icon' => 'ph ph-bookmarks',
-                    'link' => 'guru/materi',
-                ],
-                [
-                    'text' => 'Tugas & Nilai',
-                    'icon' => 'ph ph-clipboard-text',
-                    'submenu' => [
-                        ['text' => 'Daftar Tugas', 'link' => 'guru/tugas'],
-                        ['text' => 'Daftar Nilai', 'link' => 'guru/nilai'],
-                    ],
-                ],
                 ['type' => 'label', 'text' => 'Tentang Sekolah'],
                 [
                     'text' => 'Informasi Sekolah',
@@ -123,21 +104,10 @@ class AdminSidebar
 
         $menu[] = ['type' => 'label', 'text' => 'Pengaturan'];
         $menu[] = [
-            'text' => 'Profil Saya',
-            'icon' => 'ph ph-user',
-            'link' => 'pengaturan/profile',
-        ];
-        $menu[] = [
             'text' => 'Log Aktivitas',
             'icon' => 'ph ph-clock',
-            'link' => 'pengaturan/log-aktivitas',
+            'link' => 'admin/log-aktivitas',
         ];
-        $menu[] = [
-            'text' => 'Aturan Umum',
-            'icon' => 'ph ph-gear',
-            'link' => 'pengaturan/pengaturan-sistem',
-        ];
-
         return $menu;
     }
 }

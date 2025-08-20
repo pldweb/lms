@@ -30,3 +30,19 @@ div#message-modal {
     padding-bottom: 0;
     border-bottom: 1px solid #f9f9f9;
 }
+
+input#searchInput {
+    height: 40px;
+}
+
+.sidebar-submenu__link {
+    font-size: 15px;
+}
+
+td.dt-empty {
+    color: #333333;
+}
+
+.dt-container .dt-length label[for="dt-length-0"] {
+    padding-left: 10px;
+}

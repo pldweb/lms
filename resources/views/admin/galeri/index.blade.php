@@ -31,14 +31,11 @@
             <div class="card-body" style="padding-top: 0;">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="card overflow-hidden">
+                        <div class="card">
                             <div class="card-body p-0 overflow-x-auto">
                                 <table id="galeriTable" class="table table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th class="fixed-width">
-                                                <input class="form-check-input border-gray-200 rounded-4" type="checkbox" id="selectAll">
-                                            </th>
                                             <th class="h6 text-gray-300">Preview</th>
                                             <th class="h6 text-gray-300">Judul</th>
                                             <th class="h6 text-gray-300">Kategori</th>
@@ -140,7 +137,19 @@
 </div>
 
 <script>
+        
     $(document).ready(function() {
+
+        $('#galeriTable').DataTable({
+            paging: true,
+            lengthChange: true,
+            searching: false,
+            ordering: true,
+            info: true,
+            autoWidth: true,
+            responsive: true,
+        });
+
         // Search functionality
         $('#searchInput').on('keyup', function() {
             filterTable();
@@ -161,46 +170,7 @@
                 $(this).toggle(textMatch && kategoriMatch);
             });
         }
-
-        // Select all checkbox
-        $('#selectAll').change(function() {
-            $('input[type="checkbox"]').prop('checked', $(this).prop('checked'));
-        });
     });
-
-    function deleteGaleri(id) {
-        confirmModal('Apakah Anda yakin ingin menghapus item galeri ini?', function() {
-            $.ajax({
-                url: `/admin/galeri/delete/${id}`,
-                type: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    if (response.success) {
-                        if (typeof successAlert === 'function') {
-                            $('body').append(successAlert(response.message, null, '', location.href));
-                        } else {
-                            alert(response.message);
-                            location.reload();
-                        }
-                    }
-                },
-                error: function(xhr) {
-                    let errorMessage = 'Terjadi kesalahan saat menghapus item galeri';
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    }
-                    
-                    if (typeof errorAlert === 'function') {
-                        $('body').append(errorAlert(errorMessage));
-                    } else {
-                        alert(errorMessage);
-                    }
-                }
-            });
-        });
-    }
 </script>
 
 @endsection
