@@ -19,7 +19,7 @@
                     <table class="table table-striped table-hover" id="table-social-media" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th class="h6 text-gray-300">No</th>
+                                <th class="h6 text-gray-300 fixed-width">No</th>
                                 <th class="h6 text-gray-300">Platform</th>
                                 <th class="h6 text-gray-300">Icon</th>
                                 <th class="h6 text-gray-300">Link</th>
@@ -38,8 +38,8 @@
                                     <i class="{{ $item->icon }} fa-lg text-primary"></i>
                                 </td>
                                 <td>
-                                    <a href="{{ $item->link }}" target="_blank" class="text-primary">
-                                        <span class="h6 mb-0 fw-medium text-gray-300">{{ Str::limit($item->link, 30) }}</span>
+                                    <a href="{{ $item->link }}" target="_blank" class="text-decoration-underline">
+                                        {{ Str::limit($item->link, 30) }}
                                     </a>
                                 </td>
                                 <td><span class="h6 mb-0 fw-medium text-gray-300">{{ Str::limit($item->deskripsi ?? '-', 50) }}</span></td>
@@ -82,11 +82,11 @@
     $(document).ready(function () {
         $('#table-social-media').DataTable({
             paging: true,
-            lengthChange: true,
+            lengthChange: false,
             searching: false,
             ordering: true,
             info: true,
-            autoWidth: true,
+            autoWidth: false,
             responsive: true,
             columnDefs: [
                 { orderable: false, targets: [0, 7] } 

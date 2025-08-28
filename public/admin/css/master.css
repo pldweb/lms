@@ -46,3 +46,7 @@ td.dt-empty {
 .dt-container .dt-length label[for="dt-length-0"] {
     padding-left: 10px;
 }
+
+div.dt-container div.dt-layout-row:last-child {
+    margin-top: 20px;
+}
