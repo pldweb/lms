@@ -9,6 +9,7 @@ use App\Http\Controllers\Guru\TugasController as GuruTugasController;
 use App\Http\Controllers\Siswa\TugasController as SiswaTugasController;
 use App\Http\Controllers\Guru\NilaiController as GuruNilaiController;
 use App\Http\Controllers\Siswa\NilaiController as SiswaNilaiController;
+use Telegram\Bot\Api;
 
 Route::middleware('guest')->group(function () {
     Route::controller(LoginController::class)->group(function () {
@@ -21,4 +22,23 @@ Route::middleware('guest')->group(function () {
         Route::get('/daftar', 'getIndex');
         Route::get('/user/daftar', 'getIndex');
     });
+});
+
+Route::post('/webhook', function () {
+    $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
+    $update = $telegram->getWebhookUpdate();
+    
+    // Proses pembaruan di sini
+    if ($update->getMessage()->getChat()->getType() === 'group') {
+        $chatId = $update->getMessage()->getChat()->getId();
+        $text = $update->getMessage()->getText();
+
+        // Contoh: Balas pesan
+        $telegram->sendMessage([
+            'chat_id' => $chatId,
+            'text' => "Pesan Anda diterima: {$text}"
+        ]);
+    }
+
+    return response('OK', 200);
 });
