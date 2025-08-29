@@ -24,7 +24,7 @@
 
                 <div id="message"></div>
 
-                <form method="post" id="form-login" onsubmit="return false;" >
+                <form method="post" id="form-login" enctype="multipart/form-data" onsubmit="return false;" >
                     @csrf
                     <div class="mb-24">
                         <label for="fname" class="form-label mb-8 h6">Email</label>
@@ -59,9 +59,9 @@
 
     <script>
         $(document).ready(function() {
-            $('#form-login').submit(function(){
+            $('#form-login').submit(function(e){
+                e.preventDefault();
                 let dataInput = new FormData(this);
-                console.log(dataInput);
                 ajxProcess('/auth/login/login-action', dataInput, '#message' )
             })
         })

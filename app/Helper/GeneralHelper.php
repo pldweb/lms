@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Http;
+
+
 if (!function_exists('formInput')) {
     function formInput($type, $name, $attributes = [])
     {
@@ -135,6 +138,24 @@ if (!function_exists('getNameKelurahan')) {
             }
         }
         return '-';
+    }
+}
+
+if (!function_exists('sendTelegramMessage')) {
+    function sendTelegramMessage($message)
+    {
+        $token = env('TELEGRAM_BOT_TOKEN');
+        $groupId = env('TELEGRAM_GROUP_ID');
+        $urlWeb = env('APP_NAME');
+
+        $url = "https://api.telegram.org/bot{$token}/sendMessage";
+
+        return Http::post($url, [
+            'chat_id' => $groupId,
+            'message_thread_id' => 9,
+            'text' => "$message \n\nDikirim dari $urlWeb",
+            'parse_mode' => 'HTML'
+        ]);
     }
 }
 

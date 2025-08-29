@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Redis;
 class LogoutController extends Controller
 {
     public function postLogoutAction(Request $request){
+        $nama = Auth::user()->nama;
+        sendTelegramMessage("User $nama berhasil logout");
         Auth::logout();
         return successAlert('Anda telah logout',  $redirect = '/login');
     }

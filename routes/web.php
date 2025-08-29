@@ -23,22 +23,3 @@ Route::middleware('guest')->group(function () {
         Route::get('/user/daftar', 'getIndex');
     });
 });
-
-Route::post('/webhook', function () {
-    $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
-    $update = $telegram->getWebhookUpdate();
-    
-    // Proses pembaruan di sini
-    if ($update->getMessage()->getChat()->getType() === 'group') {
-        $chatId = $update->getMessage()->getChat()->getId();
-        $text = $update->getMessage()->getText();
-
-        // Contoh: Balas pesan
-        $telegram->sendMessage([
-            'chat_id' => $chatId,
-            'text' => "Pesan Anda diterima: {$text}"
-        ]);
-    }
-
-    return response('OK', 200);
-});
