@@ -14,7 +14,6 @@ fi
 # Update repository
 echo "=== Updating repository ==="
 apt update
-apt upgrade -y
 
 # Install paket dasar yang dibutuhkan
 echo "=== Menginstall paket dasar ==="
@@ -129,8 +128,7 @@ echo "   DB_DATABASE=lms_db"
 echo "   DB_USERNAME=lms_user"
 echo "   DB_PASSWORD=lms_password"
 echo "5. Install dependensi: composer install"
-echo "6. Generate application key: php artisan key:generate"
-echo "7. Jalankan migrasi database: php artisan migrate --seed"
+echo "6. Generate application key: php artisan app:start-seeder"
 echo "8. Atur permission: chown -R www-data:www-data /var/www/lms"
 echo "9. Akses aplikasi di browser: http://smpn20.rinkwebstudio.com"
 echo "10. Untuk mengaktifkan SSL, jalankan perintah berikut:"
