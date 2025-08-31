@@ -8,28 +8,28 @@
                             <div class="icon">
                                 <i class="fas fa-user"></i>
                             </div>
-                            <h2 class="title text-capitalize mb-3">100+</h2>
+                            <h2 class="title text-capitalize">100+</h2>
                             <p class="section-subtitle">Total Siswa</p>
                         </div>
                         <div class="count">
                             <div class="icon">
                                 <i class="fas fa-chalkboard-teacher"></i>
                             </div>
-                            <h2 class="title text-capitalize mb-3">36</h2>
-                            <p class="section-subtitle">Total Guru Pengajar</p>
+                            <h2 class="title text-capitalize">36</h2>
+                            <p class="section-subtitle">Total Guru Pendidik</p>
                         </div>
                         <div class="count">
                             <div class="icon">
                                 <i class="fas fa-graduation-cap"></i>
                             </div>
-                            <h2 class="title text-capitalize mb-3">29+</h2>
-                            <p class="section-subtitle">Total Kelas yang Diadakan</p>
+                            <h2 class="title text-capitalize">29+</h2>
+                            <p class="section-subtitle">Total Kelas</p>
                         </div>
                         <div class="count">
                             <div class="icon">
                                 <i class="fas fa-trophy"></i>
                             </div>
-                            <h2 class="title text-capitalize mb-3">99+</h2>
+                            <h2 class="title text-capitalize">99+</h2>
                             <p class="section-subtitle">Total Prestasi</p>
                         </div>
                     </div>
@@ -66,5 +66,9 @@ section.count-school-area {
 
 .icon i {
     font-size: 50px;
+}
+
+.count .title {
+    margin-bottom: 0;
 }
 </style>

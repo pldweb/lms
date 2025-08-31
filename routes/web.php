@@ -6,7 +6,7 @@ use App\Http\Controllers\auth\RegisterController;
 
 Route::middleware('guest')->group(function () {
     Route::controller(LoginController::class)->group(function () {
-        Route::get('/login', 'getIndex')->name('login');
+        // Route::get('/login', 'getIndex')->name('login');
         Route::get('/user/login', 'getIndex');
         Route::post('/login', 'postLoginAction');
     });

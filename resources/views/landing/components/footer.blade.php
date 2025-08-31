@@ -6,7 +6,9 @@
                     <div class="col-md-6 col-xl-3">
                         <div class="widget footer-widget">
                             <div class="vs-widget-about">
-                                <div class="footer-logo"> <a href="index.html"><img src="{{asset('landing/img/logo-white.svg')}}" alt="logo"></a> </div>
+                                <div class="footer-logo"> 
+                                    <a href="index.html"><img src="{{asset('landing/img/logo-white.svg')}}" alt="logo"></a>
+                                </div>
                                 <p class="footer-text">Lorem ipsum dolor sit amet, conse ctet rem ipsdolor sit amet. sum do lor sit amet, consectet edolor sit amet, comod.</p>
                                 <div class="footer-media">
                                     <div class="media-icon"><i class="fas fa-file-pdf"></i></div>

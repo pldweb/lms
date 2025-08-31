@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>LMS SMP 20 Jakarta - @yield('title')</title>
+    <title>SMP 20 Jakarta - @yield('title')</title>
 
     <!-- Meta -->
     <meta charset="UTF-8">
@@ -30,22 +30,22 @@
     <meta property="twitter:description" content="@yield('description', $informasiSekolah->tagline ?? 'SMP Negeri 20 Jakarta')">
     <meta property="twitter:image" content="@yield('og_image', asset('img/' . ($informasiSekolah->logo ?? 'Logo-SMPN20.png')))">
     
-
     <link rel="shortcut icon" href="{{asset('img/favicon/smp20-icon.png')}}" type="image/x-icon">
     
     <!-- Styling -->
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="{{asset('landing/css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{asset('landing/css/fontawesome.min.css')}}">
-    <link rel="stylesheet" href="{{asset('landing/css/magnific-popup.min.css')}}">
-    <link rel="stylesheet" href="{{asset('landing/css/slick.min.css')}}">
-    <link rel="stylesheet" href="{{asset('landing/css/style.css')}}">
-    <link rel="stylesheet" href="{{asset('landing/css/master.css')}}">
-    <link rel="stylesheet" href="{{asset('landing/css/footer-custom.css')}}">
+    <link rel="stylesheet" href="{{asset('landing/css/bootstrap.min.css')}}">    
+     <link rel="stylesheet" href="{{asset('landing/css/fontawesome.min.css')}}">    
+     <link rel="stylesheet" href="{{asset('landing/css/magnific-popup.min.css')}}">    
+     <link rel="stylesheet" href="{{asset('landing/css/slick.min.css')}}">    
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">    
+     <link rel="stylesheet" href="{{asset('landing/css/style.css')}}">    
+     <link rel="stylesheet" href="{{asset('landing/css/master.css')}}">    
+     <link rel="stylesheet" href="{{asset('landing/css/footer-custom.css')}}">    
+     <link rel="stylesheet" href="{{asset('landing/css/swiper-custom.css')}}">
 
     @stack('styles')
 </head>
@@ -73,6 +73,7 @@
     <script src="{{asset('landing/js/bootstrap.min.js')}}"></script>
     <script src="{{asset('landing/js/wow.min.js')}}"></script>
     <script src="{{asset('landing/js/jquery.magnific-popup.min.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{{asset('landing/js/main.js')}}"></script>
 
 </body>

@@ -403,6 +403,18 @@ section.auth {
     border-color: transparent !important;
 }
 
+.icon i {
+    color: var(--primary-color);
+}
+
+.count {
+    width: 25%;
+}
+
+.count:not(:last-child) {
+    border-right: 1px solid #dedddd;
+}
+
 @media (max-width: 2100px) {
     .sec-title2, .sec-title {
         font-size: 38px;

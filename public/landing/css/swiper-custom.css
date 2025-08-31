@@ -1,0 +1,82 @@
+.hero-swiper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.hero-swiper .swiper-slide {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+.hero-swiper .hero-bg {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-swiper .hero-inner {
+    position: relative;
+    height: 600px;
+    display: flex;
+    align-items: center;
+}
+
+.hero-swiper .dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.hero-swiper .container {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-swiper .swiper-button-next,
+.hero-swiper .swiper-button-prev {
+    color: #fff;
+    background-color: var(--primary-color);
+    padding: 30px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.hero-swiper .swiper-button-next:hover,
+.hero-swiper .swiper-button-prev:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.hero-swiper .swiper-button-next:after,
+.hero-swiper .swiper-button-prev:after {
+    font-size: 20px;
+}
+
+.hero-swiper .swiper-pagination-bullet {
+    background: #fff;
+    opacity: 0.7;
+}
+
+.hero-swiper .swiper-pagination-bullet-active {
+    opacity: 1;
+    background: #fff;
+}
+
+.hero-inner {
+    min-height: 600px;
+}
+
+.swiper-slide .container {
+    width: 65%;
+}
