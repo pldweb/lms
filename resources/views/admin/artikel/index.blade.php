@@ -136,7 +136,7 @@
             paging: false,
             lengthChange: true,
             searching: false,
-            ordering: true,
+            ordering: false,
             info: true,
             autoWidth: true,
             responsive: true,

@@ -21,6 +21,11 @@ class DatabaseSeeder extends Seeder
             PengajarSeeder::class,
             KontakSeeder::class,
             SocialMediaSeeder::class,
+            BeritaPengumumanSeeder::class,
+            InformasiSekolahSeeder::class,
+            KategoriGaleriSeeder::class,
+            GaleriSeeder::class,
+            HalamanSeeder::class,
         ]);
     }
 }

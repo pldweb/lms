@@ -15,7 +15,7 @@ class AdminSidebar
             return [];
         }
 
-        if ($user->hasRole('Admin') || $user->hasRole('Guru')) {
+        if ($user->hasAnyRole(['Admin', 'Guru'])) {
             $menu = [
                 [
                     'text' => 'Dashboard',
@@ -60,7 +60,7 @@ class AdminSidebar
                 [
                     'text' => 'Informasi Sekolah',
                     'icon' => 'ph ph-clipboard-text',
-                    'link' => 'admin/nilai',
+                    'link' => 'admin/informasi-sekolah',
                 ],
                 [
                     'text' => 'Website Sekolah',
@@ -68,11 +68,13 @@ class AdminSidebar
                     'submenu' => [
                         ['text' => 'Berita', 'link' => 'admin/artikel/berita'],
                         ['text' => 'Pengumuman', 'link' => 'admin/artikel/pengumuman'],
+                        ['text' => 'Halaman', 'link' => 'admin/halaman/'],
                         ['text' => "Galeri", 'link' => 'admin/galeri/'],
                         ['text' => "Kategori Galeri", 'link' => 'admin/galeri/kategori'],
                         ['text' => 'Slideshow', 'link' => 'admin/slideshow/'],
                         ['text' => 'Kontak', 'link' => 'admin/kontak/'],
                         ['text' => 'Sosial Media', 'link' => 'admin/social-media/'],
+                        ['text' => 'Menu Website', 'link' => 'admin/menu/'],
                     ],
                 ],
             ];

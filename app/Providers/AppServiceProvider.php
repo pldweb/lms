@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\InformasiSekolah;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use ReflectionClass;
@@ -22,6 +24,17 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->map();
         Paginator::useBootstrapFive();
+        
+        // Share informasi sekolah dengan semua view
+        View::composer('*', function ($view) {
+            $informasiSekolah = InformasiSekolah::first();
+            $view->with('informasiSekolah', $informasiSekolah);
+        });
+        
+        // Load routes/admin.php
+        if (file_exists(base_path('routes/admin.php'))) {
+            require base_path('routes/admin.php');
+        }
     }
 
     public function map()

@@ -10,12 +10,14 @@ use App\Models\Galeri;
 use App\Models\Kontak;
 use App\Models\SocialMedia;
 use App\Models\Slideshow;
+use App\Models\Halaman;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\admin\SlideshowController;
 use App\Http\Controllers\admin\KontakController;
 use App\Http\Controllers\admin\SocialMediaController;
+
 
 class HomeController extends Controller
 {
@@ -70,6 +72,12 @@ class HomeController extends Controller
             ->latest()
             ->take(6)
             ->get();
+            
+        // Ambil data guru dan pegawai
+        $guruPegawai = \App\Models\User::role(['Guru'])
+            ->select('id', 'nama', 'foto_profile')
+            ->take(4)
+            ->get();
 
         $params = [
             'title' => 'Selamat Datang di SMP 20 Jakarta',
@@ -77,6 +85,7 @@ class HomeController extends Controller
             'beritaTerbaru' => $beritaTerbaru,
             'pengumumanTerbaru' => $pengumumanTerbaru,
             'galeriTerbaru' => $galeriTerbaru,
+            'guruPegawai' => $guruPegawai,
             'kontak' => self::kontakSection(),
             'socialMedia' => self::socialMediaSection()
         ];
@@ -151,6 +160,19 @@ class HomeController extends Controller
         ];
         return view('landing.galeri', $params);
     }
+    
+    public function getGuruPegawai()
+    {
+        $guruPegawai = \App\Models\User::role(['Guru'])
+            ->select('id', 'nama', 'foto_profile')
+            ->paginate(12);
+            
+        $params = [
+            'title' => 'Guru dan Pegawai',
+            'guruPegawai' => $guruPegawai
+        ];
+        return view('landing.guru-pegawai', $params);
+    }
 
     public function getGaleriKategori($slug)
     {
@@ -186,6 +208,15 @@ class HomeController extends Controller
             'galeriTerkait' => $galeriTerkait
         ];
         return view('landing.galeri-detail', $params);
+    }
+
+    public function getHalaman($slug){
+        $halaman = Halaman::where('slug', $slug)->published()->firstOrFail();
+        $params = [
+            'title' => $halaman->judul,
+            'halaman' => $halaman
+        ];
+        return view('landing.halaman', $params);
     }
 
 }

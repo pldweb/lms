@@ -1,5 +1,8 @@
 @extends('layouts.landing')
 @section('title', $title)
+@section('description', Str::limit(strip_tags($artikel->isi), 160))
+@section('keywords', $artikel->jenis . ', ' . $artikel->judul . ', SMP Negeri 20 Jakarta')
+@section('og_image', $artikel->gambar ? asset('storage/' . $artikel->gambar) : asset('img/' . ($informasiSekolah->logo ?? 'Logo-SMPN20.png')))
 @section('content')
 
 <!-- Page Header -->

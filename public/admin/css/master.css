@@ -50,3 +50,16 @@ td.dt-empty {
 div.dt-container div.dt-layout-row:last-child {
     margin-top: 20px;
 }
+
+input.form-control {
+    max-height: 40px;
+}
+
+input[type=file].form-control {
+    position: relative;
+    padding: 10px;
+}
+
+.dt-search {
+    display: none;
+}

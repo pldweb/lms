@@ -9,9 +9,6 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="card-title w-content">Detail {{ ucfirst($artikel->jenis) }}</h3>
                     <div class="d-flex gap-2">
-                        <a href="{{ url('/admin/artikel/edit/' . $artikel->id) }}" class="btn btn-primary btn-sm btn-add">
-                            <i class="ph ph-pencil"></i> Edit
-                        </a>
                         <a href="{{ url('/admin/artikel/' . $artikel->jenis) }}" class="btn btn-secondary btn-sm btn-add">
                             <i class="ph ph-arrow-left"></i> Kembali
                         </a>
@@ -85,21 +82,20 @@
                                     </tr>
                                 </table>
                                 <div class="card-body" style="min-height: 80px;">
-                                    <div class="d-grid gap-2">
-                                        <a href="{{ url('/admin/artikel/edit/' . $artikel->id) }}" class="btn btn-primary btn-sm">
+                                    <div class="d-flex gap-5">
+                                        <a href="{{ url('/admin/artikel/edit/' . $artikel->id) }}" class="btn btn-primary btn-add">
                                             <i class="ph ph-pencil"></i> Edit Artikel
                                         </a>
-                                        <button type="button" class="btn btn-{{ $artikel->status == 'publish' ? 'warning' : 'success' }} btn-sm" onclick="toggleStatus()">
+                                        <button type="button" class="btn btn-{{ $artikel->status == 'publish' ? 'warning' : 'success' }} btn-add" onclick="toggleStatus()">
                                             <i class="ph ph-{{ $artikel->status == 'publish' ? 'eye-slash' : 'eye' }}"></i> 
                                             {{ $artikel->status == 'publish' ? 'Jadikan Draft' : 'Publish' }}
                                         </button>
                                         @if($artikel->status == 'publish')
-                                        <a href="{{url('/artikel/' . $artikel->id)}}" target="_blank" class="btn btn-info btn-sm">
+                                        <a href="{{url('/artikel/' . $artikel->id)}}" target="_blank" class="btn btn-info btn-add">
                                             <i class="ph ph-copy"></i>Akses Artikel
                                         </a>
                                         @endif
-                                        <hr>
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="deleteArtikel()">
+                                        <button type="button" class="btn btn-danger btn-add" onclick="deleteArtikel()">
                                             <i class="ph ph-trash"></i> Hapus Artikel
                                         </button>
                                     </div>

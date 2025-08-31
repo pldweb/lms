@@ -1,5 +1,8 @@
 @extends('layouts.landing')
 @section('title', $title)
+@section('description', $galeri->deskripsi ?? 'Galeri ' . $galeri->judul . ' - ' . $galeri->kategori->nama_kategori)
+@section('keywords', 'Galeri, ' . $galeri->kategori->nama_kategori . ', ' . $galeri->judul . ', SMP Negeri 20 Jakarta')
+@section('og_image', $galeri->tipe == 'foto' ? asset('storage/' . $galeri->file_path) : $galeri->youtube_thumbnail)
 @section('content')
 
 <!-- Header Section -->

@@ -1,5 +1,8 @@
 @extends('layouts.landing')
 @section('title', $title)
+@section('description', 'Berita dan informasi terbaru dari SMP Negeri 20 Jakarta. Temukan artikel tentang kegiatan sekolah, prestasi siswa, dan pengumuman penting.')
+@section('keywords', 'Berita Sekolah, Artikel, Pengumuman, Kegiatan Sekolah, SMP Negeri 20 Jakarta')
+@section('og_image', asset('img/' . ($informasiSekolah->logo ?? 'Logo-SMPN20.png')))
 @section('content')
 
 <!-- Berita Content -->

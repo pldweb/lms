@@ -12,9 +12,24 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- SEO -->
-    <meta name="description" content="">
-    <meta name="keywords" content="">
+    <meta name="description" content="@yield('description', $informasiSekolah->tagline ?? 'SMP Negeri 20 Jakarta')">
+    <meta name="keywords" content="@yield('keywords', 'SMP Negeri 20 Jakarta, Sekolah, Pendidikan')">
     <meta name="robots" content="INDEX,FOLLOW">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="@yield('title', $informasiSekolah->nama_sekolah ?? 'SMP Negeri 20 Jakarta')">
+    <meta property="og:description" content="@yield('description', $informasiSekolah->tagline ?? 'SMP Negeri 20 Jakarta')">
+    <meta property="og:image" content="@yield('og_image', asset('img/' . ($informasiSekolah->logo ?? 'Logo-SMPN20.png')))">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ url()->current() }}">
+    <meta property="twitter:title" content="@yield('title', $informasiSekolah->nama_sekolah ?? 'SMP Negeri 20 Jakarta')">
+    <meta property="twitter:description" content="@yield('description', $informasiSekolah->tagline ?? 'SMP Negeri 20 Jakarta')">
+    <meta property="twitter:image" content="@yield('og_image', asset('img/' . ($informasiSekolah->logo ?? 'Logo-SMPN20.png')))">
+    
 
     <link rel="shortcut icon" href="{{asset('img/favicon/smp20-icon.png')}}" type="image/x-icon">
     
@@ -30,6 +45,7 @@
     <link rel="stylesheet" href="{{asset('landing/css/slick.min.css')}}">
     <link rel="stylesheet" href="{{asset('landing/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('landing/css/master.css')}}">
+    <link rel="stylesheet" href="{{asset('landing/css/footer-custom.css')}}">
 
     @stack('styles')
 </head>
@@ -49,7 +65,7 @@
         @yield('content')
     </div>
 
-    @include('landing.components.footer-1')
+    @include('landing.components.footer-new')
 
     <!-- Jquery -->
     <script src="{{asset('landing/js/vendor/jquery-3.6.0.min.js')}}"></script>

@@ -1,5 +1,8 @@
 @extends('layouts.landing')
 @section('title', $title)
+@section('description', 'Galeri foto dan video kegiatan SMP Negeri 20 Jakarta, menampilkan berbagai aktivitas sekolah, prestasi siswa, dan fasilitas sekolah.')
+@section('keywords', 'Galeri, Foto, Video, Kegiatan Sekolah, Prestasi Siswa, SMP Negeri 20 Jakarta')
+@section('og_image', asset('img/' . ($informasiSekolah->logo ?? 'Logo-SMPN20.png')))
 @section('content')
 
 <!-- Hero Section -->

@@ -146,7 +146,7 @@ if (!function_exists('sendTelegramMessage')) {
     {
         $token = env('TELEGRAM_BOT_TOKEN');
         $groupId = env('TELEGRAM_GROUP_ID');
-        $urlWeb = env('APP_NAME');
+        $urlWeb = env('APP_URL');
 
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 

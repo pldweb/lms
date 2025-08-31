@@ -1,5 +1,8 @@
 @extends('layouts.landing')
 @section('title', $title)
+@section('description', $kategori->deskripsi ?? 'Galeri ' . $kategori->nama_kategori . ' - SMP Negeri 20 Jakarta')
+@section('keywords', 'Galeri, ' . $kategori->nama_kategori . ', SMP Negeri 20 Jakarta')
+@section('og_image', $kategori->gambar_cover ? asset('storage/' . $kategori->gambar_cover) : asset('img/' . ($informasiSekolah->logo ?? 'Logo-SMPN20.png')))
 @section('content')
 
 <!-- Header Section -->

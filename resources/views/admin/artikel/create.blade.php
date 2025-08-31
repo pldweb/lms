@@ -15,7 +15,6 @@
 @endpush
 
 @section('content')
-
 <div class="row mt-20">
     <div class="col-md-12">
         <div class="card">
@@ -28,7 +27,7 @@
                             Tambah Artikel
                         @endif
                     </h3>
-                    <a href="{{ url('/admin/artikel' . (isset($jenis) ? '/' . $jenis : '')) }}" class="btn btn-secondary btn-sm">
+                    <a href="{{ url('/admin/artikel' . (isset($jenis) ? '/' . $jenis : '')) }}" class="btn btn-secondary btn-add">
                         <i class="ph ph-arrow-left"></i> Kembali
                     </a>
                 </div>
@@ -48,13 +47,13 @@
                             </div>
 
                             <!-- Ringkasan -->
-                            <div class="mb-3">
-                                <label for="ringkasan" class="form-label">Ringkasan</label>
+                            <div class="mt-20">
+                                <label for="ringkasan" class="form-label">Preview Deskripsi <span class="text-danger">*</span></label>
                                 <textarea name="ringkasan" id="ringkasan" class="form-control" style="height: auto;" rows="3" cols="6" placeholder="Ringkasan singkat artikel (opsional)">{{ old('ringkasan') }}</textarea>
                             </div>
 
                             <!-- Isi Artikel -->
-                            <div class="mb-3">
+                            <div class="mt-20">
                                 <label for="isi" class="form-label">Isi Artikel <span class="text-danger">*</span></label>
                                 <textarea name="isi" id="isi" class="form-control tinymce-editor" placeholder="Tulis isi artikel di sini...">{{ old('isi') }}</textarea>
                             </div>
@@ -79,7 +78,7 @@
                             </div>
 
                             <!-- Gambar -->
-                            <div class="mb-3">
+                            <div class="mt-20">
                                 <label for="gambar" class="form-label">Gambar Artikel</label>
                                 <input type="file" name="gambar" id="gambar" class="form-control" accept="image/*">
                                 <div class="form-text">Format: JPG, PNG, GIF. Max: 2MB</div>
@@ -91,14 +90,14 @@
                             </div>
 
                             <!-- Submit Buttons -->
-                            <div class="mb-3 d-grid gap-2">
-                                <button type="button" id="simpanDraft" class="btn btn-secondary">
+                            <div class="d-flex gap-5 mt-20">
+                                <button type="button" id="simpanDraft" class="btn btn-secondary btn-add">
                                     <i class="ph ph-floppy-disk"></i> Simpan sebagai Draft
                                 </button>
-                                <button type="button" id="publishSekarang" class="btn btn-success">
+                                <button type="button" id="publishSekarang" class="btn btn-success btn-add">
                                     <i class="ph ph-paper-plane-tilt"></i> Publish Sekarang
                                 </button>
-                                <button type="button" id="jadwalkanPublish" class="btn btn-primary" style="display: none;">
+                                <button type="button" id="jadwalkanPublish" class="btn btn-primary btn-add" style="display: none;">
                                     <i class="ph ph-clock"></i> Jadwalkan Publish
                                 </button>
                             </div>
@@ -113,85 +112,7 @@
 <script>
     $(document).ready(function() {
         // Initialize TinyMCE
-        tinymce.init({
-            selector: '.tinymce-editor',
-            height: 500,
-            menubar: true,
-            language: 'id',
-            plugins: [
-                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                'insertdatetime', 'media', 'table', 'help', 'wordcount', 'paste',
-                'textcolor', 'colorpicker', 'hr', 'pagebreak', 'nonbreaking'
-            ],
-            toolbar1: 'undo redo | cut copy paste | bold italic underline strikethrough | ' +
-                'fontfamily fontsize | forecolor backcolor | alignleft aligncenter alignright alignjustify',
-            toolbar2: 'bullist numlist | outdent indent | blockquote hr | ' +
-                'table link image media | insertdatetime charmap | ' +
-                'searchreplace | preview code fullscreen | help',
-            font_family_formats: 
-                'Arial=arial,helvetica,sans-serif; ' +
-                'Georgia=georgia,serif; ' +
-                'Helvetica=helvetica; ' +
-                'Times New Roman=times new roman,times; ' +
-                'Verdana=verdana,geneva;',
-            font_size_formats: '8px 10px 12px 14px 16px 18px 20px 24px 28px 32px 36px 48px',
-            block_formats: 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3; Header 4=h4; Header 5=h5; Header 6=h6; Preformatted=pre',
-            content_style: `
-                body { 
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 
-                    font-size: 14px; 
-                    line-height: 1.6;
-                    margin: 1rem;
-                }
-                img { max-width: 100%; height: auto; }
-                table { border-collapse: collapse; width: 100%; }
-                table td, table th { border: 1px solid #ddd; padding: 8px; }
-            `,
-            paste_as_text: false,
-            paste_auto_cleanup_on_paste: true,
-            paste_remove_styles: false,
-            paste_remove_spans: false,
-            paste_strip_class_attributes: 'all',
-            extended_valid_elements: 'img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|style]',
-            image_advtab: true,
-            image_caption: true,
-            image_title: true,
-            automatic_uploads: false,
-            setup: function (editor) {
-                editor.on('change', function () {
-                    editor.save();
-                });
-                editor.on('init', function () {
-                    console.log('TinyMCE initialized successfully');
-                });
-            },
-            file_picker_callback: function (callback, value, meta) {
-                if (meta.filetype === 'image') {
-                    const input = document.createElement('input');
-                    input.setAttribute('type', 'file');
-                    input.setAttribute('accept', 'image/*');
-                    
-                    input.onchange = function () {
-                        const file = this.files[0];
-                        if (file && file.size <= 5 * 1024 * 1024) { // Max 5MB
-                            const reader = new FileReader();
-                            reader.onload = function () {
-                                callback(reader.result, {
-                                    alt: file.name,
-                                    title: file.name
-                                });
-                            };
-                            reader.readAsDataURL(file);
-                        } else {
-                            alert('Ukuran file terlalu besar. Maksimal 5MB.');
-                        }
-                    };
-                    
-                    input.click();
-                }
-            }
-        });
+        TinyMCE('.tinymce-editor');
 
         // Handle status change untuk show/hide tanggal publish
         $('#status').change(function() {

@@ -384,3 +384,106 @@ function hideModal() {
     $('#message-modal').html('');
     $('#universalModal').find('form').trigger('reset');
 }
+
+
+function TinyMCE(selector) {
+    tinymce.init({
+            selector: `${selector}`,
+            height: 500,
+            menubar: true,
+            language: 'id',
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'help', 'wordcount', 'paste',
+                'textcolor', 'colorpicker', 'hr', 'pagebreak', 'nonbreaking'
+            ],
+            toolbar1: 'undo redo | cut copy paste | bold italic underline strikethrough | ' +
+                'fontfamily fontsize | forecolor backcolor | alignleft aligncenter alignright alignjustify',
+            toolbar2: 'bullist numlist | outdent indent | blockquote hr | ' +
+                'table link image media | insertdatetime charmap | ' +
+                'searchreplace | preview code fullscreen | help',
+            font_family_formats: 
+                'Arial=arial,helvetica,sans-serif; ' +
+                'Georgia=georgia,serif; ' +
+                'Helvetica=helvetica; ' +
+                'Times New Roman=times new roman,times; ' +
+                'Verdana=verdana,geneva;',
+            font_size_formats: '8px 10px 12px 14px 16px 18px 20px 24px 28px 32px 36px 48px',
+            block_formats: 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3; Header 4=h4; Header 5=h5; Header 6=h6; Preformatted=pre',
+            content_style: `
+                body { 
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 
+                    font-size: 14px; 
+                    line-height: 1.6;
+                    margin: 1rem;
+                }
+                img { max-width: 100%; height: auto; }
+                table { border-collapse: collapse; width: 100%; }
+                table td, table th { border: 1px solid #ddd; padding: 8px; }
+            `,
+            paste_as_text: false,
+            paste_auto_cleanup_on_paste: true,
+            paste_remove_styles: false,
+            paste_remove_spans: false,
+            paste_strip_class_attributes: 'all',
+            extended_valid_elements: 'img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|style]',
+            image_advtab: true,
+            image_caption: true,
+            image_title: true,
+            automatic_uploads: false,
+            setup: function (editor) {
+                editor.on('change', function () {
+                    editor.save();
+                });
+                editor.on('init', function () {
+                    console.log('TinyMCE initialized successfully');
+                });
+            },
+            file_picker_callback: function (callback, value, meta) {
+                if (meta.filetype === 'image') {
+                    const input = document.createElement('input');
+                    input.setAttribute('type', 'file');
+                    input.setAttribute('accept', 'image/*');
+                    
+                    input.onchange = function () {
+                        const file = this.files[0];
+                        if (file && file.size <= 5 * 1024 * 1024) { // Max 5MB
+                            const reader = new FileReader();
+                            reader.onload = function () {
+                                callback(reader.result, {
+                                    alt: file.name,
+                                    title: file.name
+                                });
+                            };
+                            reader.readAsDataURL(file);
+                        } else {
+                            alert('Ukuran file terlalu besar. Maksimal 5MB.');
+                        }
+                    };
+                    
+                    input.click();
+                }
+            }
+        });
+}
+
+
+function initDataTable(selector) {
+    var table = $(selector).DataTable({
+                    "paging": false,
+                    "lengthChange": true,
+                    "searching": true,
+                    "ordering": false,
+                    "info": true,
+                    "autoWidth": true,
+                    "responsive": true,
+                    "columnDefs": [
+                        { orderable: false, targets: [0, -1] } 
+                    ]
+            });
+
+            $('#searchInput').on('keyup', function() {
+                table.search(this.value).draw();
+            });
+}
