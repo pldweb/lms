@@ -9,9 +9,11 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="card-title w-content">Data {{ ucfirst($jenis) }}</h3>
                     <div class="d-flex justify-center align-items-center" style="gap: 5px;">
+                        @if(Auth::user()->hasRole('admin'))
                         <a onclick="showModal('{{ url('/admin/user/create-user') }}', 'Tambah User Baru')" class="btn btn-primary btn-sm btn-add" style="white-space: nowrap">
                             <i class="ph ph-plus"></i> Tambah {{ ucfirst($jenis) }} 
                         </a>
+                        @endif
                         <select id="exportOptions" class="form-select w-auto mb-3 mr-2">
                             <option value="">Export</option>
                             <option value="csv">Export to CSV</option>
@@ -35,7 +37,9 @@
                                                 <th class="h6 text-gray-300" style="width: 5px;">No</th>
                                                 <th class="h6 text-gray-300">Nama</th>
                                                 <th class="h6 text-gray-300">Email</th>
-                                                <th class="h6 text-gray-300">Aksi</th>
+                                                @if(Auth::user()->hasRole('admin'))
+                                                    <th class="h6 text-gray-300">Aksi</th>
+                                                @endif
                                             </tr>
                                     </thead>
                                         <tbody>
@@ -52,10 +56,12 @@
                                                     <td>
                                                         <span class="h6 mb-0 fw-medium text-gray-300">{{ $user->email }}</span>
                                                     </td>
-                                                    <td>
-                                                        <button onclick="showModal('/admin/user/detail/{{ $user->id }}', 'Data Detail {{ ucfirst($jenis) }}')" style="margin-right: 5px;" class="btn btn-primary btn-add btn-sm"><i class="ph ph-eye btn-icon"></i></buttin>
-                                                        <button onclick="deleteUser('{{ $user->id }}', '{{ $jenis }}')" class="btn btn-danger btn-add btn-sm"><i class="ph ph-trash btn-icon"></i></button>
-                                                    </td>
+                                                    @if(Auth::user()->hasRole('admin'))
+                                                        <td>
+                                                            <button onclick="showModal('/admin/user/detail/{{ $user->id }}', 'Data Detail {{ ucfirst($jenis) }}')" style="margin-right: 5px;" class="btn btn-primary btn-add btn-sm"><i class="ph ph-eye btn-icon"></i></buttin>
+                                                            <button onclick="deleteUser('{{ $user->id }}', '{{ $jenis }}')" class="btn btn-danger btn-add btn-sm"><i class="ph ph-trash btn-icon"></i></button>
+                                                        </td>
+                                                    @endif
                                                 </tr>
                                                 @endforeach
                                             </tbody>
@@ -83,25 +89,8 @@
         }
 
     $(document).ready(function () {
-        $('#searchInput').on('keyup', function () {
-            let keyword = $(this).val().toLowerCase();
-            $('#studentTable tbody tr').filter(function () {
-                $(this).toggle($(this).text().toLowerCase().indexOf(keyword) > -1);
-            });
-        });
 
-        $('#studentTable').DataTable({
-            paging: true,
-            lengthChange: true,
-            searching: false,
-            ordering: true,
-            info: true,
-            autoWidth: true,
-            responsive: true,
-            columnDefs: [
-                { orderable: false, targets: [0] } 
-            ]
-        });
+        initDataTable('#studentTable');
 
         // Export Data (CSV / JSON)
         $('#exportOptions').on('change', function () {

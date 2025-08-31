@@ -1,3 +1,6 @@
+:root {
+    --primary-color: #0D3D91;
+}
 .btn-add {
     position: relative;
     border-radius: 6px;
@@ -60,6 +63,10 @@ input[type=file].form-control {
     padding: 10px;
 }
 
-.dt-search {
+.dt-search, div.dt-container div.dt-layout-cell.dt-start {
     display: none;
+}
+
+.sidebar-menu:not(:hover,:focus) i {
+    color: var(--primary-color) !important;
 }

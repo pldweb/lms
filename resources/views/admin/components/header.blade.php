@@ -13,6 +13,8 @@
             </div>
 
             <div class="flex-align gap-16">
+
+                <a href="{{url('/')}}" class="btn-primary btn btn-add">Website Utama</a>
                 <div class="flex-align gap-8">
                     <!-- Notification Start -->
                     <div class="dropdown">

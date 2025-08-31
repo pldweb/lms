@@ -15,62 +15,33 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="card">
-                                <table class="table table-striped table-hover" id="table-log-aktivitas">
-                                    <thead>
-                                        <tr>
-                                            <th class="h6 text-gray-300">No</th>
-                                            <th class="h6 text-gray-300">Aktivitas</th>
-                                            <th class="h6 text-gray-300">Waktu</th>
-                                            <th class="h6 text-gray-300">User Agent</th>
-                                            <th class="h6 text-gray-300">IP Address</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($logAktivitas as $item)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $item->aktivitas }}</td>
-                                                <td>{{ $item->waktu }}</td>
-                                                <td>{{ $item->user_agent }}</td>
-                                                <td>{{ $item->ip_address }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                <div class="card-body relative overflow-x-auto">
+                    <table class="table table-striped table-hover relative" id="table-log-aktivitas">
+                        <thead>
+                            <tr>
+                                <th class="h6 text-gray-300">No</th>
+                                <th class="h6 text-gray-300">Aktivitas</th>
+                                <th class="h6 text-gray-300">Waktu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($logAktivitas as $item)
+                                <tr>
+                                    <td class="text-gray-400">{{ $item->id}}</td>
+                                    <td class="text-gray-400">{{ $item->aktivitas }}</td>
+                                    <td class="text-gray-400">{{ $item->waktu_aktivitas }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+    
     <script>
         $(document).ready(function () {
-           $('#searchInput').on('keyup', function () {
-                let keyword = $(this).val().toLowerCase();
-                $('#table-log-aktivitas tbody tr').filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(keyword) > -1);
-                });
-            });
-
-            $('#table-log-aktivitas').DataTable({
-                paging: true,
-                lengthChange: true,
-                searching: false,
-                ordering: true,
-                info: true,
-                autoWidth: true,
-                responsive: true,
-                columnDefs: [
-                    { orderable: false, targets: [0] } 
-                ]
-            });
+            initDataTable("#table-log-aktivitas");
         });
-
-        
     </script>
 @endsection

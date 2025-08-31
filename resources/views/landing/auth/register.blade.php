@@ -12,7 +12,7 @@
     <section class="auth d-flex">
         <div class="auth-left p-40 d-flex flex-column align-items-start justify-content-center">
             <img src="{{asset('landing/img/auth/fav-auth.png')}}" style="max-height: 70px; margin-bottom: 20px;" alt="">
-            <h2 class="title-auth font-white">Learning Management School <br> SMPN 20 Jakarta</h2>
+            <h2 class="title-auth font-white">Learning Management System <br> SMPN 20 Jakarta</h2>
             <h4 class="subtitle-auth font-white font-medium">Sistem induk dalam pengembangan manajemen pembelajaran di SMPN 20 Jakarta</h4>
         </div>
         <div class="auth-right py-40 px-24 flex-center flex-column">

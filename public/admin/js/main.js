@@ -471,7 +471,7 @@ function TinyMCE(selector) {
 
 function initDataTable(selector) {
     var table = $(selector).DataTable({
-                    "paging": false,
+                    "paging": true,
                     "lengthChange": true,
                     "searching": true,
                     "ordering": false,

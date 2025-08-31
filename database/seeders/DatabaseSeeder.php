@@ -26,6 +26,9 @@ class DatabaseSeeder extends Seeder
             KategoriGaleriSeeder::class,
             GaleriSeeder::class,
             HalamanSeeder::class,
+            AcaraAkademikSeeder::class,
+            KehadiranPegawaiSeeder::class,
+            LogAktivitasSeeder::class,
         ]);
     }
 }

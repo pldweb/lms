@@ -56,29 +56,10 @@ class AdminSidebar
                     'icon' => 'ph ph-file-pdf',
                     'link' => 'admin/e-raport/',
                 ],
-                ['type' => 'label', 'text' => 'Tentang Sekolah'],
-                [
-                    'text' => 'Informasi Sekolah',
-                    'icon' => 'ph ph-clipboard-text',
-                    'link' => 'admin/informasi-sekolah',
-                ],
-                [
-                    'text' => 'Website Sekolah',
-                    'icon' => 'ph ph-globe',
-                    'submenu' => [
-                        ['text' => 'Berita', 'link' => 'admin/artikel/berita'],
-                        ['text' => 'Pengumuman', 'link' => 'admin/artikel/pengumuman'],
-                        ['text' => 'Halaman', 'link' => 'admin/halaman/'],
-                        ['text' => "Galeri", 'link' => 'admin/galeri/'],
-                        ['text' => "Kategori Galeri", 'link' => 'admin/galeri/kategori'],
-                        ['text' => 'Slideshow', 'link' => 'admin/slideshow/'],
-                        ['text' => 'Kontak', 'link' => 'admin/kontak/'],
-                        ['text' => 'Sosial Media', 'link' => 'admin/social-media/'],
-                        ['text' => 'Menu Website', 'link' => 'admin/menu/'],
-                    ],
-                ],
             ];
         }
+
+        
 
         elseif ($user->hasRole('Siswa')) {
             $menu = [
@@ -103,6 +84,31 @@ class AdminSidebar
                 ],
             ];
         }
+
+        if ($user->hasRole('Admin')) {
+            $menu[] = ['type' => 'label', 'text' => 'Tentang Sekolah'];
+            $menu[] = [
+                    'text' => 'Informasi Sekolah',
+                    'icon' => 'ph ph-clipboard-text',
+                    'link' => 'admin/informasi-sekolah',
+                ];
+                
+            $menu[] = [
+                    'text' => 'Website Sekolah',
+                    'icon' => 'ph ph-globe',
+                    'submenu' => [
+                        ['text' => 'Berita', 'link' => 'admin/artikel/berita'],
+                        ['text' => 'Pengumuman', 'link' => 'admin/artikel/pengumuman'],
+                        ['text' => 'Halaman', 'link' => 'admin/halaman/'],
+                        ['text' => "Galeri", 'link' => 'admin/galeri/'],
+                        ['text' => "Kategori Galeri", 'link' => 'admin/galeri/kategori'],
+                        ['text' => 'Slideshow', 'link' => 'admin/slideshow/'],
+                        ['text' => 'Kontak', 'link' => 'admin/kontak/'],
+                        ['text' => 'Sosial Media', 'link' => 'admin/social-media/'],
+                        ['text' => 'Menu Website', 'link' => 'admin/menu/'],
+                    ],
+                ];
+            }
 
         $menu[] = ['type' => 'label', 'text' => 'Pengaturan'];
         $menu[] = [
