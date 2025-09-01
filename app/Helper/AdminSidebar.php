@@ -32,29 +32,27 @@ class AdminSidebar
                         ['text' => 'Data Siswa', 'link' => 'admin/user/siswa/'],
                     ],
                 ],
+                ['type' => 'label', 'text' => 'Akademik'],
                 [
-                    'text' => 'Akademik',
-                    'icon' => 'ph ph-books',
-                    'submenu' => [
-                        ['text' => 'Tahun Ajaran', 'link' => 'admin/tahun-ajaran/'],
-                        ['text' => 'Mata Pelajaran', 'link' => 'admin/mata-pelajaran/'],
-                        ['text' => 'Daftar Kelas', 'link' => 'admin/kelas/'],
-                    ],
+                    'text' => 'Kelola Kelas',
+                    'icon' => 'ph ph-graduation-cap',
+                    'link' => 'admin/kelas',
                 ],
                 [
-                    'text' => 'Pembelajaran',
+                    'text' => 'Tahun Ajaran',
                     'icon' => 'ph ph-graduation-cap',
-                    'submenu' => [
-                        ['text' => 'Jadwal Pelajaran', 'link' => 'admin/jadwal-pelajaran/'],
-                        ['text' => 'Keanggotaan Kelas', 'link' => 'admin/keanggotaan-kelas/'],
-                        ['text' => 'Nilai Siswa', 'link' => 'admin/nilai-siswa/'],
-                    ],
+                    'link' => 'admin/tahun-ajaran',
+                ],
+                [
+                    'text' => 'Mata Pelajaran',
+                    'icon' => 'ph ph-graduation-cap',
+                    'link' => 'admin/mata-pelajaran',
                 ],
                 ['type' => 'label', 'text' => 'Laporan & Raport'],
                 [
                     'text' => 'E-Raport',
                     'icon' => 'ph ph-file-pdf',
-                    'link' => 'admin/e-raport/',
+                    'link' => 'admin/e-raport',
                 ],
             ];
         }

@@ -35,12 +35,12 @@ class AdminHeader
                 'url' => '/admin/profile',
                 'class' => '',
             ],
-            [
-                'icon' => 'ph ph-chart-line-up',
-                'text' => 'Daily Activity',
-                'url' => '/admin/daily-aktivitas',
-                'class' => '',
-            ],
+            // [
+            //     'icon' => 'ph ph-chart-line-up',
+            //     'text' => 'Daily Activity',
+            //     'url' => '/admin/daily-aktivitas',
+            //     'class' => '',
+            // ],
         ];
     return $data;
 

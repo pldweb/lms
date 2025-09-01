@@ -90,7 +90,11 @@ class KelasController extends Controller
             ->orderBy('tanggal_mulai', 'desc')
             ->get();
 
-        return view('admin.kelas.index', compact('kelas', 'tahunAjaran'));
+        $params = [
+            'tahun_ajaran' => $tahunAjaran,
+            'kelas' => $kelas
+        ];
+        return view('admin.kelas.index', $params);
     }
 
     public function getCreate()
@@ -102,27 +106,22 @@ class KelasController extends Controller
             ->get();
 
         $mataPelajaran = DB::table('mata_pelajaran')
-            ->where('is_active', true)
+            ->where('status', 'aktif')
             ->select('id', 'kode', 'nama', 'jenjang')
             ->orderBy('jenjang')
             ->orderBy('nama')
             ->get();
 
-        return view('admin.kelas.create', compact('tahunAjaran', 'mataPelajaran'));
+        $params = [
+            'tahun_ajaran' => $tahunAjaran,
+            'mata_pelajaran' => $mataPelajaran
+        ];
+
+        return view('admin.kelas.create', $params);
     }
 
     public function postStore(Request $request)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'kode' => 'required|string|max:20|unique:kelas,kode',
-            'jenjang' => 'required|in:SD,SMP,SMA,SMK',
-            'tingkat' => 'required|integer|between:1,12',
-            'tahun_ajaran_id' => 'required|exists:tahun_ajaran,id',
-            'mata_pelajaran_id' => 'nullable|exists:mata_pelajaran,id',
-            'kapasitas' => 'required|integer|min:1|max:50',
-            'deskripsi' => 'nullable|string|max:1000'
-        ]);
 
         try {
             $user = Auth::user();

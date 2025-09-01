@@ -1,12 +1,20 @@
 @extends('layouts.admin')
-
 @section('title', 'Tambah Mata Pelajaran')
-
+@push('styles')
+<style>
+.form-group.row {
+    margin-bottom: 1.5rem;
+}
+.col-form-label {
+    font-weight: 500;
+}
+</style>
+@endpush
 @section('content')
 <div class="row mt-20">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header b-title">
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="card-title w-content">Tambah Mata Pelajaran</h3>
                     <div class="d-flex justify-center align-items-center" style="gap: 5px;">
@@ -17,67 +25,43 @@
                 </div>
             </div>
             <div class="card-body" style="padding-top: 0;">
-                @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-                
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card overflow-hidden">
-                            <div class="card-header">
-                                <h6 class="m-0 font-weight-bold text-primary">Form Tambah Mata Pelajaran</h6>
-                            </div>
-                            <div class="card-body">
-            <form action="/admin/mata-pelajaran/store" method="POST">
+                <form action="/admin/mata-pelajaran/store" method="POST">
                 @csrf
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="nama" class="form-label">Nama Mata Pelajaran <span class="text-danger">*</span></label>
+                    <div class="form-group row">
+                        <label for="nama" class="col-sm-2 col-form-label">Nama Mata Pelajaran <span class="text-danger">*</span></label>
+                        <div class="col-sm-10">
                             <input type="text" 
-                                   class="form-control @error('nama') is-invalid @enderror" 
-                                   id="nama" 
-                                   name="nama" 
-                                   value="{{ old('nama') }}" 
-                                   placeholder="Contoh: Matematika"
-                                   required>
+                                class="form-control @error('nama') is-invalid @enderror" 
+                                id="nama" 
+                                name="nama" 
+                                value="{{ old('nama') }}" 
+                                placeholder="Contoh: Matematika"
+                                required>
                             @error('nama')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="kode" class="form-label">Kode Mata Pelajaran</label>
+                    
+                    <div class="form-group row">
+                        <label for="kode" class="col-sm-2 col-form-label">Kode Mata Pelajaran</label>
+                        <div class="col-sm-10">
                             <input type="text" 
-                                   class="form-control @error('kode') is-invalid @enderror" 
-                                   id="kode" 
-                                   name="kode" 
-                                   value="{{ old('kode') }}" 
-                                   placeholder="Otomatis jika kosong">
+                                class="form-control @error('kode') is-invalid @enderror" 
+                                id="kode" 
+                                name="kode" 
+                                value="{{ old('kode') }}" 
+                                placeholder="Otomatis jika kosong">
                             @error('kode')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                             <small class="form-text text-muted">Kosongkan untuk otomatis generate</small>
                         </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="jenjang" class="form-label">Jenjang <span class="text-danger">*</span></label>
+                    <div class="form-group row">
+                        <label for="jenjang" class="col-sm-2 col-form-label">Jenjang <span class="text-danger">*</span></label>
+                        <div class="col-sm-10">
                             <select class="form-control @error('jenjang') is-invalid @enderror" 
                                     id="jenjang" 
                                     name="jenjang" 
@@ -93,9 +77,10 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="semester" class="form-label">Semester <span class="text-danger">*</span></label>
+                    
+                    <div class="form-group row">
+                        <label for="semester" class="col-sm-2 col-form-label">Semester <span class="text-danger">*</span></label>
+                        <div class="col-sm-10">
                             <select class="form-control @error('semester') is-invalid @enderror" 
                                     id="semester" 
                                     name="semester" 
@@ -109,44 +94,44 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="urutan" class="form-label">Urutan</label>
+                    
+                    <div class="form-group row">
+                        <label for="urutan" class="col-sm-2 col-form-label">Urutan</label>
+                        <div class="col-sm-10">
                             <input type="number" 
-                                   class="form-control @error('urutan') is-invalid @enderror" 
-                                   id="urutan" 
-                                   name="urutan" 
-                                   value="{{ old('urutan', 1) }}" 
-                                   min="1" 
-                                   placeholder="Urutan mata pelajaran">
+                                class="form-control @error('urutan') is-invalid @enderror" 
+                                id="urutan" 
+                                name="urutan" 
+                                value="{{ old('urutan', 1) }}" 
+                                min="1" 
+                                placeholder="Urutan mata pelajaran">
                             @error('urutan')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                             <small class="form-text text-muted">Urutan tampil mata pelajaran</small>
                         </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="sks" class="form-label">SKS <span class="text-danger">*</span></label>
+                    <div class="form-group row">
+                        <label for="sks" class="col-sm-2 col-form-label">SKS <span class="text-danger">*</span></label>
+                        <div class="col-sm-10">
                             <input type="number" 
-                                   class="form-control @error('sks') is-invalid @enderror" 
-                                   id="sks" 
-                                   name="sks" 
-                                   value="{{ old('sks', 1) }}" 
-                                   min="1" 
-                                   max="6"
-                                   required>
+                                class="form-control @error('sks') is-invalid @enderror" 
+                                id="sks" 
+                                name="sks" 
+                                value="{{ old('sks', 1) }}" 
+                                min="1" 
+                                max="6"
+                                required>
                             @error('sks')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="aktif" class="form-label">Status</label>
+                    
+                    <div class="form-group row">
+                        <label for="aktif" class="col-sm-2 col-form-label">Status</label>
+                        <div class="col-sm-10">
                             <select class="form-control @error('aktif') is-invalid @enderror" 
                                     id="aktif" 
                                     name="aktif">
@@ -158,48 +143,48 @@
                             @enderror
                         </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="deskripsi" class="form-label">Deskripsi</label>
-                    <textarea class="form-control @error('deskripsi') is-invalid @enderror" 
-                              id="deskripsi" 
-                              name="deskripsi" 
-                              rows="4" 
-                              placeholder="Deskripsi mata pelajaran...">{{ old('deskripsi') }}</textarea>
-                    @error('deskripsi')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <div class="form-check">
-                        <input class="form-check-input" 
-                               type="checkbox" 
-                               id="generate_kode" 
-                               name="generate_kode" 
-                               {{ old('generate_kode', true) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="generate_kode">
-                            Generate kode otomatis dari nama mata pelajaran
-                        </label>
+                    <div class="form-group row">
+                        <label for="deskripsi" class="col-sm-2 col-form-label">Deskripsi</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control @error('deskripsi') is-invalid @enderror" 
+                                    id="deskripsi" 
+                                    name="deskripsi" 
+                                    rows="4" 
+                                    placeholder="Deskripsi mata pelajaran...">{{ old('deskripsi') }}</textarea>
+                            @error('deskripsi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
-                </div>
 
-                <hr>
-                
-                                <div class="form-group text-right">
-                                    <a href="/admin/mata-pelajaran/" class="btn btn-secondary">
-                                        <i class="fas fa-times"></i> Batal
-                                    </a>
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save"></i> Simpan
-                                    </button>
-                                </div>
-                            </form>
+                    <div class="form-group row">
+                        <div class="col-sm-10 offset-sm-2">
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                    type="checkbox" 
+                                    id="generate_kode" 
+                                    name="generate_kode" 
+                                    {{ old('generate_kode', true) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="generate_kode">
+                                    Generate kode otomatis dari nama mata pelajaran
+                                </label>
                             </div>
                         </div>
                     </div>
-                </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-10 offset-sm-2">
+                            <a href="/admin/mata-pelajaran/" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Batal
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Simpan
+                            </button>
+                        </div>
+                    </div>
+                    </div>
+
             </div>
         </div>
     </div>
