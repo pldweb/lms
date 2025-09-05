@@ -1,107 +1,83 @@
 @extends('layouts.admin')
 @section('title', 'Menu Management')
 @section('content')
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Menu Management</h1>
-    <a href="{{ url('/admin/menu/create') }}" class="btn btn-primary btn-sm btn-add" style="white-space: nowrap">
-        <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Menu
-    </a>
-</div>
 
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Daftar Menu</h6>
-    </div>
-    <div class="card-body">
-        @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        @endif
-
-        @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        @endif
-
-        <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Judul</th>
-                        <th>URL</th>
-                        <th>Icon</th>
-                        <th>Parent</th>
-                        <th>Urutan</th>
-                        <th>Status</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php $no = 1; @endphp
-                    @foreach($menus as $menu)
-                    <tr>
-                        <td>{{ $no++ }}</td>
-                        <td>{{ $menu->title }}</td>
-                        <td>{{ $menu->url }}</td>
-                        <td><i class="{{ $menu->icon }}"></i> {{ $menu->icon }}</td>
-                        <td>-</td>
-                        <td>{{ $menu->order }}</td>
-                        <td>
-                            <span class="badge {{ $menu->active ? 'bg-success' : 'bg-danger' }}">
-                                {{ $menu->active ? 'Aktif' : 'Tidak Aktif' }}
-                            </span>
-                        </td>
-                        <td>
-                            <a href="{{ url('/admin/menu/edit/' . $menu->id) }}" class="btn btn-primary btn-sm btn-add">
-                                <i class="fas fa-edit"></i> Edit
-                            </a>
-                            <a href="{{ url('/admin/menu/delete/' . $menu->id) }}" class="btn btn-danger btn-sm btn-add" onclick="return confirm('Apakah Anda yakin ingin menghapus menu ini?')">
-                                <i class="fas fa-trash"></i> Hapus
-                            </a>
-                        </td>
-                    </tr>
-                    @if($menu->children->count() > 0)
-                        @foreach($menu->children as $child)
-                        <tr>
-                            <td>{{ $no++ }}</td>
-                            <td>— {{ $child->title }}</td>
-                            <td>{{ $child->url }}</td>
-                            <td><i class="{{ $child->icon }}"></i> {{ $child->icon }}</td>
-                            <td>{{ $menu->title }}</td>
-                            <td>{{ $child->order }}</td>
-                            <td>
-                                <span class="badge {{ $child->active ? 'bg-success' : 'bg-danger' }}">
-                                    {{ $child->active ? 'Aktif' : 'Tidak Aktif' }}
-                                </span>
-                            </td>
-                            <td>
-                                <a href="{{ url('/admin/menu/edit/' . $child->id) }}" class="btn btn-primary btn-sm btn-add">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                <a href="{{ url('/admin/menu/delete/' . $child->id) }}" class="btn btn-danger btn-sm btn-add" onclick="return confirm('Apakah Anda yakin ingin menghapus menu ini?')">
-                                    <i class="fas fa-trash"></i> Hapus
-                                </a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    @endif
-                    @endforeach
-                </tbody>
-            </table>
+<div class="row mt-20">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header b-title">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="card-title w-content">Kelola Menu</h3>
+                    <div class="d-flex justify-center align-items-center" style="gap: 5px;">
+                        <a href="{{ url('/admin/menu/create') }}" class="btn btn-primary btn-sm btn-add" style="white-space: nowrap">
+                            <i class="ph ph-plus"></i> Tambah Menu
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                @if($menu->isEmpty())
+                    {!! alert('Belum ada menu', 'warning') !!}
+                @else
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover" id="table-menu" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th class="h6 text-gray-300">No</th>
+                                <th class="h6 text-gray-300">Judul</th>
+                                <th class="h6 text-gray-300">Url</th>
+                                <th class="h6 text-gray-300">Icon</th>
+                                <th class="h6 text-gray-300">Parent</th>
+                                <th class="h6 text-gray-300">Urutan</th>
+                                <th class="h6 text-gray-300">Status</th>
+                                <th class="h6 text-gray-300">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($menu as $index => $item)
+                            <tr>
+                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $index + 1 }}</span></td>
+                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->judul }}</span></td>
+                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->url }}</span></td>
+                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->icon }}</span></td>
+                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->parent }}</span></td>
+                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->urutan }}</span></td>
+                                <td>
+                                    @if ($item->aktif)
+                                        <span class="badge bg-success">Aktif</span>
+                                    @else
+                                        <span class="badge bg-danger">Tidak Aktif</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <a href="{{ url('admin/kontak/edit/' . $item->id) }}" class="btn btn-sm btn-primary btn-add">
+                                        <i class="ph ph-pencil"></i>
+                                    </a>
+                                    <button class="btn btn-sm btn-danger btn-add" onclick="confirmDelete({{ $item->id }})">
+                                        <i class="ph ph-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            @empty
+                           {!! alert('Belum ada menu', 'warning') !!}
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                @endif
+            </div>
         </div>
     </div>
 </div>
-@endsection
-
-@section('scripts')
 <script>
+    function confirmDelete(id) {
+        confirmModal('Apakah Anda yakin ingin menghapus menu ini?', function() {
+            ajxProcess('/admin/menu/delete-action/' + id, '', '#message-modal');
+        });
+    }
+
     $(document).ready(function() {
-        $('#dataTable').DataTable();
+        initDataTable("#table-menu");
     });
 </script>
 @endsection

@@ -5,7 +5,7 @@
 <div class="row mt-20">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header b-title">
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="card-title w-content">Kelola Kontak</h3>
                     <div class="d-flex justify-center align-items-center" style="gap: 5px;">
@@ -16,6 +16,9 @@
                 </div>
             </div>
             <div class="card-body">
+                @if($kontak->isEmpty())
+                    {!! alert('Belum ada kontak', 'warning') !!}
+                @else
                 <div class="table-responsive">
                     <table class="table table-striped table-hover" id="table-kontak" width="100%" cellspacing="0">
                         <thead>
@@ -67,6 +70,7 @@
                         </tbody>
                     </table>
                 </div>
+                @endif
             </div>
         </div>
     </div>

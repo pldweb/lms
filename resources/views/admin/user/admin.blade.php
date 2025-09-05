@@ -9,7 +9,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="card-title w-content">Data {{ ucfirst($jenis) }}</h3>
                     <div class="d-flex justify-center align-items-center" style="gap: 5px;">
-                        @if(Auth::user()->hasRole('admin'))
+                        @if(Auth::user()->hasRole('Admin'))
                         <a onclick="showModal('{{ url('/admin/user/create-user') }}', 'Tambah User Baru')" class="btn btn-primary btn-sm btn-add" style="white-space: nowrap">
                             <i class="ph ph-plus"></i> Tambah {{ ucfirst($jenis) }} 
                         </a>
@@ -37,7 +37,7 @@
                                                 <th class="h6 text-gray-300" style="width: 5px;">No</th>
                                                 <th class="h6 text-gray-300">Nama</th>
                                                 <th class="h6 text-gray-300">Email</th>
-                                                @if(Auth::user()->hasRole('admin'))
+                                                @if(Auth::user()->hasRole('Admin'))
                                                     <th class="h6 text-gray-300">Aksi</th>
                                                 @endif
                                             </tr>
@@ -56,7 +56,7 @@
                                                     <td>
                                                         <span class="h6 mb-0 fw-medium text-gray-300">{{ $user->email }}</span>
                                                     </td>
-                                                    @if(Auth::user()->hasRole('admin'))
+                                                    @if(Auth::user()->hasRole('Admin'))
                                                         <td>
                                                             <button onclick="showModal('/admin/user/detail/{{ $user->id }}', 'Data Detail {{ ucfirst($jenis) }}')" style="margin-right: 5px;" class="btn btn-primary btn-add btn-sm"><i class="ph ph-eye btn-icon"></i></buttin>
                                                             <button onclick="deleteUser('{{ $user->id }}', '{{ $jenis }}')" class="btn btn-danger btn-add btn-sm"><i class="ph ph-trash btn-icon"></i></button>

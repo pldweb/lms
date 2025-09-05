@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('informasi_sekolah', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_sekolah');
-            $table->text('alamat');
+            $table->string('nama_sekolah')->nullable();
+            $table->text('alamat')->nullable();
             $table->string('nomor_telepon')->nullable();
             $table->string('email')->nullable();
             $table->string('nomor_handphone')->nullable();

@@ -4,7 +4,7 @@
     <div class="row mt-20">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header b-title">
                     <div class="d-flex justify-content-between align-items-center">
                         <h3 class="card-title w-content">Data Log Aktivitas</h3>
                         <div class="d-flex justify-center align-items-center" style="gap: 5px;">
@@ -16,6 +16,9 @@
                     </div>
                 </div>
                 <div class="card-body relative overflow-x-auto">
+                    @if($logAktivitas->isEmpty())
+                        {!! alert('Belum ada log aktivitas', 'warning') !!}
+                    @else
                     <table class="table table-striped table-hover relative" id="table-log-aktivitas">
                         <thead>
                             <tr>
@@ -26,14 +29,15 @@
                         </thead>
                         <tbody>
                             @foreach ($logAktivitas as $item)
-                                <tr>
-                                    <td class="text-gray-400">{{ $item->id}}</td>
-                                    <td class="text-gray-400">{{ $item->aktivitas }}</td>
-                                    <td class="text-gray-400">{{ $item->waktu_aktivitas }}</td>
-                                </tr>
+                                    <tr>
+                                        <td class="text-gray-400">{{ $item->id}}</td>
+                                        <td class="text-gray-400">{{ $item->aktivitas }}</td>
+                                        <td class="text-gray-400">{{ $item->waktu_aktivitas }} WIB</td>
+                                    </tr>
                             @endforeach
                         </tbody>
                     </table>
+                    @endif
                 </div>
             </div>
         </div>

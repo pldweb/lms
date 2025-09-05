@@ -159,3 +159,8 @@ if (!function_exists('sendTelegramMessage')) {
     }
 }
 
+if(!function_exists('alert')){
+    function alert($msg = null, $type = 'success'){
+        return "<div class='alert alert-{$type} alert-dismissible'>$msg</div>";
+    }
+}

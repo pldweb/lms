@@ -29,9 +29,10 @@
                 </div>
             </div>
             <div class="card-body" style="padding-top: 0;">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
+                @if($galeri->isEmpty())
+                    {!! alert("Belum ada galeri", 'warning') !!}
+                @else
+                <div class="card overflow-hidden">
                             <div class="card-body p-0 overflow-x-auto">
                                 <table id="galeriTable" class="table table-striped table-hover">
                                     <thead>
@@ -129,7 +130,7 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
+                        @endif
                 </div>
             </div>
         </div>

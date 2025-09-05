@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Helper\CatatLogAktivitas;
 use App\Http\Controllers\Controller;
 use App\Models\InformasiSekolah;
 use Illuminate\Http\Request;
@@ -74,11 +75,10 @@ class InformasiSekolahController extends Controller
                 $request->favicon->move(public_path('img'), $faviconName);
                 $informasiSekolah->favicon = $faviconName;
             }
-
-           
             
             $informasiSekolah->save();
             DB::commit();
+            CatatLogAktivitas::catatAktivitas('memperbarui informasi sekolah');
             return successAlert('Berhasil memperbarui informasi sekolah', null, '#message-modal', '/admin/informasi-sekolah');
         } catch (\Exception $e) {
             DB::rollBack();

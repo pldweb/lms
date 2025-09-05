@@ -22,9 +22,9 @@ class AdminSidebar
                     'icon' => 'ph ph-squares-four',
                     'link' => 'admin/dashboard/',
                 ],
-                ['type' => 'label', 'text' => 'Manajemen'],
+                ['type' => 'label', 'text' => 'Manajemen Pengguna'],
                 [
-                    'text' => 'Pengguna',
+                    'text' => 'Data User',
                     'icon' => 'ph ph-users-three',
                     'submenu' => [
                         ['text' => 'Data Admin', 'link' => 'admin/user/admin/'],
@@ -32,28 +32,28 @@ class AdminSidebar
                         ['text' => 'Data Siswa', 'link' => 'admin/user/siswa/'],
                     ],
                 ],
-                ['type' => 'label', 'text' => 'Akademik'],
-                [
-                    'text' => 'Kelola Kelas',
-                    'icon' => 'ph ph-graduation-cap',
-                    'link' => 'admin/kelas',
-                ],
-                [
-                    'text' => 'Tahun Ajaran',
-                    'icon' => 'ph ph-graduation-cap',
-                    'link' => 'admin/tahun-ajaran',
-                ],
-                [
-                    'text' => 'Mata Pelajaran',
-                    'icon' => 'ph ph-graduation-cap',
-                    'link' => 'admin/mata-pelajaran',
-                ],
-                ['type' => 'label', 'text' => 'Laporan & Raport'],
-                [
-                    'text' => 'E-Raport',
-                    'icon' => 'ph ph-file-pdf',
-                    'link' => 'admin/e-raport',
-                ],
+                // ['type' => 'label', 'text' => 'Akademik'],
+                // [
+                //     'text' => 'Kelola Kelas',
+                //     'icon' => 'ph ph-graduation-cap',
+                //     'link' => 'admin/kelas',
+                // ],
+                // [
+                //     'text' => 'Tahun Ajaran',
+                //     'icon' => 'ph ph-graduation-cap',
+                //     'link' => 'admin/tahun-ajaran',
+                // ],
+                // [
+                //     'text' => 'Mata Pelajaran',
+                //     'icon' => 'ph ph-graduation-cap',
+                //     'link' => 'admin/mata-pelajaran',
+                // ],
+                // ['type' => 'label', 'text' => 'Laporan & Raport'],
+                // [
+                //     'text' => 'E-Raport',
+                //     'icon' => 'ph ph-file-pdf',
+                //     'link' => 'admin/e-raport',
+                // ],
             ];
         }
 

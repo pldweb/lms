@@ -9,19 +9,24 @@
     <meta name="Author" content="Muhammad Rivaldi Fanani">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    @php
+    $informasi_sekolah = App\Models\InformasiSekolah::first();
+    @endphp
     <!-- SEO -->
-    <link rel="shortcut icon" href="{{asset('img/favicon/smp20-icon.png')}}" type="image/x-icon">
+    @if ($informasi_sekolah->favicon)
+    <link rel="shortcut icon" href="{{asset('storage/' . $informasi_sekolah->favicon)}}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{asset('admin/images/favicon.ico')}}" type="image/x-icon">
+    @endif
 
     <!-- Styling -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     
-    <link rel="shortcut icon" href="{{asset('img/favicon/smp20-icon.png')}}" type="image/x-icon">
     <link rel="stylesheet" href="{{asset('admin/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('admin/css/file-upload.css')}}">
     <link rel="stylesheet" href="{{asset('admin/css/plyr.css')}}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="{{asset('css/dataTables.dataTables.min.css')}}">
     <link rel="stylesheet" href="{{asset('admin/css/full-calendar.css')}}">
     <link rel="stylesheet" href="{{asset('admin/css/jquery-ui.css')}}">
     <link rel="stylesheet" href="{{asset('admin/css/editor-quill.css')}}">
@@ -29,14 +34,14 @@
     <link rel="stylesheet" href="{{asset('admin/css/calendar.css')}}">
     <link rel="stylesheet" href="{{asset('admin/css/jquery-jvectormap-2.0.5.css')}}">
 
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <link href="{{asset('css/select2.min.css')}}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{asset('css/select2-bootstrap-5-theme.min.css')}}" />
 
     <link rel="stylesheet" href="{{asset('admin/css/main.css')}}">
     <link rel="stylesheet" href="{{asset('admin/css/master.css')}}">
 
     <script src="{{asset('admin/js/jquery-3.7.1.min.js')}}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="{{asset('js/select2.min.js')}}"></script>
     <script src="{{asset('admin/js/main.js')}}"></script>
 
     @stack('styles')
@@ -51,7 +56,6 @@
                 @yield('content')
             </div>
         </div>
-        {{-- @include('admin.components.footer') --}}
     </div>
 
     @include('admin.components.modal')
@@ -61,7 +65,7 @@
     <script src="{{asset('admin/js/phosphor-icon.js')}}"></script>
     <script src="{{asset('admin/js/file-upload.js')}}"></script>
     <script src="{{asset('admin/js/plyr.js')}}"></script>
-    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="{{asset('js/dataTables.min.js')}}"></script>
     <script src="{{asset('admin/js/full-calendar.js')}}"></script>
     <script src="{{asset('admin/js/jquery-ui.js')}}"></script>
     <script src="{{asset('admin/js/editor-quill.js')}}"></script>
@@ -71,6 +75,5 @@
     <script src="{{asset('admin/js/jquery-jvectormap-world-mill-en.js')}}"></script>
     <!-- main js -->
 
-    
 </body>
 </html>

@@ -5,18 +5,13 @@
 <div class="row mt-20">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header b-title">
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="card-title w-content">Data Kategori Galeri</h3>
                     <div class="d-flex justify-center align-items-center" style="gap: 5px;">
                         <a href="{{ url('/admin/galeri/kategori-create') }}" class="btn btn-primary mb-3 btn-add" style="white-space: nowrap">
                             <i class="ph ph-plus"></i> Tambah Kategori
                         </a>                   
-                        <select id="exportOptions" class="form-select w-auto mb-3 mr-2">
-                            <option value="">Export</option>
-                            <option value="csv">Export to CSV</option>
-                            <option value="json">Export to JSON</option>
-                        </select>
                         <div class="input-group">
                             <input type="text" id="searchInput" class="form-control w-auto mb-3" placeholder="Cari...">
                             <span class="input-group-text mb-3"><i class="ph ph-magnifying-glass"></i></span>
@@ -24,17 +19,13 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body" style="padding-top: 0;">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card overflow-hidden">
-                            <div class="card-body p-0 overflow-x-auto">
-                                <table id="kategoriTable" class="table table-striped table-hover">
+            <div class="card-body">
+                @if($kategori->isEmpty())
+                    {!! alert("Belum ada kategori", 'warning') !!}
+                @else
+                <table id="kategoriTable" class="table table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th class="fixed-width">
-                                                <input class="form-check-input border-gray-200 rounded-4" type="checkbox" id="selectAll">
-                                            </th>
                                             <th class="h6 text-gray-300">Nama Kategori</th>
                                             <th class="h6 text-gray-300">Cover</th>
                                             <th class="h6 text-gray-300">Status</th>
@@ -46,11 +37,6 @@
                                     <tbody>
                                         @foreach ($kategori as $item)
                                             <tr>
-                                                <td class="fixed-width">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input border-gray-200 rounded-4" type="checkbox">
-                                                    </div>
-                                                </td>
                                                 <td>
                                                     <div>
                                                         <span class="h6 mb-0 fw-medium text-gray-300">{{ $item->nama_kategori }}</span>
@@ -99,10 +85,7 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                @endif
             </div>
         </div>
     </div>

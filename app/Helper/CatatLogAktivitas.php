@@ -12,7 +12,7 @@ class CatatLogAktivitas
         $user = Auth::user()->nama;
         try {
             LogAktivitas::create([
-                'aktivitas' => $aktivitas . ' ' . $user,
+                'aktivitas' => $user . ' ' . $aktivitas,
                 'waktu' => now(),
                 'ip_address' => request()->ip(),
                 'user_agent' => request()->header('User-Agent'),

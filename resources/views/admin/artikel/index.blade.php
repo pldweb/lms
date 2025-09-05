@@ -5,7 +5,7 @@
 <div class="row mt-20">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header b-title">
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="card-title w-content">Data {{ ucfirst($jenis) }}</h3>
                     <div class="d-flex justify-center align-items-center" style="gap: 5px;">
@@ -19,10 +19,11 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body" style="padding-top: 0;">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card overflow-hidden">
+            <div class="card-body">
+                @if($artikel->isEmpty())
+                    {!! alert("Belum ada $jenis", 'warning') !!}
+                @else
+                <div class="card overflow-hidden">
                             <div class="card-body p-0 overflow-x-auto">
                                 <table id="artikelTable" class="table table-striped table-hover">
                                     <thead>
@@ -116,7 +117,7 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
+                        @endif
                 </div>
             </div>
         </div>
@@ -125,25 +126,7 @@
 
 <script>
     $(document).ready(function () {
-        $('#searchInput').on('keyup', function () {
-            let keyword = $(this).val().toLowerCase();
-            $('#artikelTable tbody tr').filter(function () {
-                $(this).toggle($(this).text().toLowerCase().indexOf(keyword) > -1);
-            });
-        });
-
-        $('#artikelTable').DataTable({
-            paging: false,
-            lengthChange: true,
-            searching: false,
-            ordering: false,
-            info: true,
-            autoWidth: true,
-            responsive: true,
-            columnDefs: [
-                { orderable: false, targets: [0, -1] } 
-            ]
-        });
+        initDataTable('#artikelTable');
     });
 
     function toggleStatus(id) {

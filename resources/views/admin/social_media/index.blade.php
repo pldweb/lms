@@ -4,7 +4,7 @@
 <div class="row mt-20">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header b-title">
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="card-title w-content">Kelola Social Media</h3>
                     <div class="d-flex justify-center align-items-center" style="gap: 5px;">
@@ -15,6 +15,9 @@
                 </div>
             </div>
             <div class="card-body">
+                @if($socialMedia->isEmpty())
+                    {!! alert('Belum ada social media', 'warning') !!}
+                @else
                 <div class="table-responsive">
                     <table class="table table-striped table-hover" id="table-social-media" width="100%" cellspacing="0">
                         <thead>
@@ -30,7 +33,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($socialMedia as $index => $item)
+                            @foreach ($socialMedia as $index => $item)
                             <tr>
                                 <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $index + 1 }}</span></td>
                                 <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->nama }}</span></td>
@@ -60,14 +63,11 @@
                                     </button>
                                 </td>
                             </tr>
-                            @empty
-                            <tr>
-                                <td colspan="8" class="text-center text-gray-300">Tidak ada data social media</td>
-                            </tr>
-                            @endforelse
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
+                @endif
             </div>
         </div>
     </div>
@@ -80,18 +80,7 @@
     }
 
     $(document).ready(function () {
-        $('#table-social-media').DataTable({
-            paging: true,
-            lengthChange: false,
-            searching: false,
-            ordering: true,
-            info: true,
-            autoWidth: false,
-            responsive: true,
-            columnDefs: [
-                { orderable: false, targets: [0, 7] } 
-            ]
-        });
+        initDataTable("#table-social-media");
     });
 </script>
 @endsection

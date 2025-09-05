@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -12,9 +12,6 @@ class MenuController extends Controller
 {
     public array $roles = ['Admin'];
 
-    /**
-     * Display a listing of the resource.
-     */
     public function getIndex()
     {
         $menus = Menu::whereNull('parent_id')
@@ -22,21 +19,18 @@ class MenuController extends Controller
             ->orderBy('order')
             ->get();
 
-        return view('admin.menu.index', compact('menus'));
+        $params = [
+            'menu' => $menus,
+        ];
+        return view('admin.menu.index', $params);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function getCreate()
     {
         $parentMenus = Menu::whereNull('parent_id')->orderBy('order')->get();
         return view('admin.menu.create', compact('parentMenus'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function postStore(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -65,9 +59,6 @@ class MenuController extends Controller
         return redirect('/admin/menu')->with('success', 'Menu berhasil ditambahkan');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function getEdit(string $id)
     {
         $menu = Menu::findOrFail($id);
@@ -79,9 +70,6 @@ class MenuController extends Controller
         return view('admin.menu.edit', compact('menu', 'parentMenus'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function postUpdate(Request $request, string $id)
     {
         $validator = Validator::make($request->all(), [
@@ -119,9 +107,6 @@ class MenuController extends Controller
         return redirect('/admin/menu')->with('success', 'Menu berhasil diperbarui');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function getDelete(string $id)
     {
         $menu = Menu::findOrFail($id);
@@ -136,9 +121,6 @@ class MenuController extends Controller
         return redirect('/admin/menu')->with('success', 'Menu berhasil dihapus');
     }
     
-    /**
-     * Update menu order via AJAX
-     */
     public function postUpdateOrder(Request $request)
     {
         $menuItems = $request->input('menu', []);
