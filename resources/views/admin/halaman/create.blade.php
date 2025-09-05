@@ -17,9 +17,6 @@
 .tox .tox-toolbar {
     background-color: #f8f9fa !important;
 }
-.form-group.row {
-    margin-bottom: 1.5rem;
-}
 .col-form-label {
     font-weight: 500;
 }

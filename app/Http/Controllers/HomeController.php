@@ -11,6 +11,7 @@ use App\Models\Kontak;
 use App\Models\SocialMedia;
 use App\Models\Slideshow;
 use App\Models\Halaman;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -74,7 +75,7 @@ class HomeController extends Controller
             ->get();
             
         // Ambil data guru dan pegawai
-        $guruPegawai = \App\Models\User::role(['Guru'])
+        $guruPegawai = User::role(['Guru'])
             ->select('id', 'nama', 'foto_profile')
             ->take(4)
             ->get();

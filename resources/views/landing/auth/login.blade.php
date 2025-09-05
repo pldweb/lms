@@ -43,8 +43,8 @@
                     </div>
                     <div class="mb-32 flex-between flex-wrap gap-8">
                         <div class="form-check mb-0 flex-shrink-0">
-                            <input class="form-check-input flex-shrink-0 rounded-4" name="remember" type="checkbox" value="" id="remember">
-                            <label class="form-check-label text-15 flex-grow-1" for="remember">Ingat Saya </label>
+                            {{-- <input class="form-check-input flex-shrink-0 rounded-4" name="remember" type="checkbox" value="" id="remember"> --}}
+                            {{-- <label class="form-check-label text-15 flex-grow-1" for="remember">Ingat Saya </label> --}}
                         </div>
                         <a href="{{url('reset-password')}}" class="text-main-600 hover-text-decoration-underline text-15 fw-medium">Lupa Password?</a>
                     </div>

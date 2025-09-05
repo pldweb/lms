@@ -8,7 +8,7 @@
                 <div class="col-md-4">
                     <div class="widget footer-widget">
                         <div class="mb-2">
-                            <img src="{{ asset('img/' . ($informasiSekolah->logo ?? 'Logo-SMPN20.png')) }}" alt="Logo Sekolah" class="footer-logo me-3 mb-15" style="width: 200px; height: auto;">
+                            <img src="{{ asset('img/Logo-SMPN20-white.png') }}" alt="Logo Sekolah" class="footer-logo me-3 mb-15" style="width: 200px; height: auto;">
                         </div>
                         <p class="footer-text text-white">{{ $informasiSekolah->tagline ?? '' }}</p>
                         <div class="social-links mt-4">

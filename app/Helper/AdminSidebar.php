@@ -57,8 +57,6 @@ class AdminSidebar
             ];
         }
 
-        
-
         elseif ($user->hasRole('Siswa')) {
             $menu = [
                 [
@@ -92,19 +90,45 @@ class AdminSidebar
                 ];
                 
             $menu[] = [
-                    'text' => 'Website Sekolah',
+                    'text' => 'Artikel',
                     'icon' => 'ph ph-globe',
                     'submenu' => [
                         ['text' => 'Berita', 'link' => 'admin/artikel/berita'],
                         ['text' => 'Pengumuman', 'link' => 'admin/artikel/pengumuman'],
-                        ['text' => 'Halaman', 'link' => 'admin/halaman/'],
-                        ['text' => "Galeri", 'link' => 'admin/galeri/'],
-                        ['text' => "Kategori Galeri", 'link' => 'admin/galeri/kategori'],
-                        ['text' => 'Slideshow', 'link' => 'admin/slideshow/'],
-                        ['text' => 'Kontak', 'link' => 'admin/kontak/'],
-                        ['text' => 'Sosial Media', 'link' => 'admin/social-media/'],
-                        ['text' => 'Menu Website', 'link' => 'admin/menu/'],
                     ],
+                ];
+
+                $menu[] = [
+                    'text' => 'Galeri',
+                    'icon' => 'ph ph-image',
+                    'submenu' => [
+                        ['text' => 'Galeri', 'link' => 'admin/galeri'],
+                        ['text' => 'Kategori Galeri', 'link' => 'admin/galeri/kategori'],
+                    ],
+                ];
+
+                $menu[] = [
+                    'text' => 'Slideshow',
+                    'icon' => 'ph ph-image',
+                    'link' => 'admin/slideshow',
+                ];
+
+                $menu[] = [
+                    'text' => 'Kontak',
+                    'icon' => 'ph ph-clipboard-text',
+                    'link' => 'admin/kontak',
+                ];
+
+                $menu[] = [
+                    'text' => 'Sosial Media',
+                    'icon' => 'ph ph-gear',
+                    'link' => 'admin/social-media',
+                ];
+
+                $menu[] = [
+                    'text' => 'Menu Website',
+                    'icon' => 'ph ph-gear',
+                    'link' => 'admin/menu',
                 ];
             }
 

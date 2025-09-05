@@ -14,7 +14,7 @@ class InformasiSekolahController extends Controller
     {
         $informasiSekolah = InformasiSekolah::first();
         $params = [
-            'informasiSekolah' => $informasiSekolah
+            'data' => $informasiSekolah
         ];
         return view('admin.informasi-sekolah.index', $params);
     }
@@ -60,6 +60,22 @@ class InformasiSekolahController extends Controller
                 $request->logo->move(public_path('img'), $logoName);
                 $informasiSekolah->logo = $logoName;
             }
+
+            if ($request->hasFile('favicon')) {
+                // Delete old favicon if exists
+                if ($informasiSekolah->favicon && $informasiSekolah->favicon != 'favicon.png') {
+                    if (file_exists(public_path('img/' . $informasiSekolah->favicon))) {
+                        unlink(public_path('img/' . $informasiSekolah->favicon));
+                    }
+                }
+
+                // Upload new favicon
+                $faviconName = time() . '.' . $request->favicon->extension();
+                $request->favicon->move(public_path('img'), $faviconName);
+                $informasiSekolah->favicon = $faviconName;
+            }
+
+           
             
             $informasiSekolah->save();
             DB::commit();

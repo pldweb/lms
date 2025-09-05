@@ -48,6 +48,8 @@
         @yield('content')
     </div>
 
+    @include('admin.components.modal')
+
     <!-- Jquery -->
     <script src="{{asset('admin/js/boostrap.bundle.min.js')}}"></script>
     <script src="{{asset('admin/js/phosphor-icon.js')}}"></script>
