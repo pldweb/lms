@@ -35,18 +35,29 @@
                             <!-- Jenis Artikel -->
                             <div class="mb-5">
                                 <label for="jenis" class="form-label">Jenis Artikel <span class="text-danger">*</span></label>
-                                <select name="jenis" id="jenis" class="form-select">
+                                <select name="jenis" id="jenis" class="form-select select2">
                                     <option value="berita" {{ $artikel->jenis == 'berita' ? 'selected' : '' }}>Berita</option>
                                     <option value="pengumuman" {{ $artikel->jenis == 'pengumuman' ? 'selected' : '' }}>Pengumuman</option>
                                 </select>
                             </div>
 
-                            <div class="mb-5">
+                            <!-- Kategori -->
+                            <div class="mt-20">
+                                <label for="kategori" class="form-label">Kategori</label>
+                                <select name="kategori_id" id="kategori" class="form-select select2">
+                                    <option value="{{$artikel->kategori->id ?? 'Pilih Kategori'}}">{{$artikel->kategori->nama ?? 'Pilih Kategori'}}</option>
+                                    @foreach($kategori as $item)
+                                        <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="mt-20">
                                 <label for="judul" class="form-label">Judul <span class="text-danger">*</span></label>
                                 <input type="text" name="judul" id="judul" class="form-control" value="{{ old('judul', $artikel->judul) }}" placeholder="Masukkan judul artikel">
                             </div>
 
-                            <div class="mb-5">
+                            <div class="mt-20">
                                 <label for="isi" class="form-label">Isi Artikel <span class="text-danger">*</span></label>
                                 <textarea name="isi" id="isi" class="form-control tinymce-editor" placeholder="Tulis isi artikel di sini...">{{ old('isi', $artikel->isi) }}</textarea>
                             </div>
@@ -104,6 +115,9 @@
 
 <script>
     $(document).ready(function() {
+
+        initSelect2('.select2');
+
         // Initialize TinyMCE
         tinymce.init({
             selector: '.tinymce-editor',

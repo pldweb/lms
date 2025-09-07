@@ -22,13 +22,27 @@ class Artikel extends Model
         'gambar',
         'status',
         'tanggal_publish',
-        'views'
+        'views',
+        'kategori_id'
     ];
 
     protected $casts = [
         'tanggal_publish' => 'datetime',
         'views' => 'integer'
     ];
+
+    /**
+     * Get the category associated with the article.
+     * 
+     * Usage example:
+     * $article = Artikel::find(1);
+     * $category = $article->kategori;
+     * echo $category->name;
+     */
+    public function kategori()
+    {
+        return $this->belongsTo(KategoriArtikel::class, 'kategori_id');
+    }
 
     public function penulis(): BelongsTo
     {

@@ -487,3 +487,11 @@ function initDataTable(selector) {
                 table.search(this.value).draw();
             });
 }
+
+function initSelect2(selector){
+    $(selector).select2({
+        placeholder: 'Pilih Kategori',
+        allowClear: true,
+        width: '100%'
+    });
+}

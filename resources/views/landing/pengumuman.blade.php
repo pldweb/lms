@@ -24,43 +24,37 @@
         <div class="row">
             @foreach($pengumuman as $item)
             <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card blog-card h-100 border-0 shadow-sm">
-                    @if($item->gambar)
-                    <div class="blog-img">
-                        <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->judul }}" class="card-img-top" style="height: 250px; object-fit: cover;">
-                    </div>
-                    @endif
-                    <div class="card-body d-flex flex-column">
-                        <div class="blog-meta mb-3">
-                            <div class="text-muted small">
-                                <i class="fas fa-user me-1"></i>{{ $item->penulis->nama }}
-                            </div>
-                            <div class="text-muted small">
-                                <i class="fas fa-calendar me-1"></i>{{ $item->tanggal_publish->format('d F Y') }}
+                    <div class="blog-card">
+                        @if($item->gambar)
+                        <div class="blog-img">
+                            <img src="{{ asset('img/artikel/' . $item->gambar) }}" alt="{{ $item->judul }}">
+                            <div class="blog-date">
+                                <span class="day">{{ $item->tanggal_publish->format('d') }}</span>
+                                <span class="month">{{ $item->tanggal_publish->format('M') }}</span>
                             </div>
                         </div>
-                        <h5 class="card-title">
-                            <a href="{{ url('/artikel/' . $item->id) }}" class="text-decoration-none text-dark">
-                                {{ $item->judul }}
-                            </a>
-                        </h5>
-                        @if($item->ringkasan)
-                        <p class="card-text text-muted flex-grow-1">
-                            {{ Str::limit($item->ringkasan, 120) }}
-                        </p>
-                        @else
-                        <p class="card-text text-muted flex-grow-1">
-                            {{ Str::limit(strip_tags($item->isi), 120) }}
-                        </p>
                         @endif
-                        <div class="mt-auto">
-                            <a href="{{ url('/artikel/' . $item->id) }}" class="btn btn-primary btn-sm">
-                                Baca Selengkapnya <i class="fas fa-arrow-right ms-1"></i>
+                        <div class="blog-content">
+                            <div class="blog-meta">
+                                <span><i class="fas fa-user"></i> {{ $item->penulis->nama }}</span>
+                                <span><i class="fas fa-eye"></i> {{ number_format($item->views) }}</span>
+                            </div>
+                            <h3 class="blog-title">
+                                <a href="{{ url('/artikel/' . $item->slug) }}">
+                                    {{ Str::limit($item->judul, 55) }}
+                                </a>
+                            </h3>
+                            @if($item->ringkasan)
+                            <p class="blog-text">
+                                {{ Str::limit($item->ringkasan, 90) }}
+                            </p>
+                            @endif
+                            <a href="{{ url('/artikel/' . $item->slug) }}" class="read-more-btn">
+                                Baca Selengkapnya <i class="fas fa-arrow-right"></i>
                             </a>
                         </div>
                     </div>
                 </div>
-            </div>
             @endforeach
         </div>
 

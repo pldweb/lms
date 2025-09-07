@@ -49,7 +49,7 @@ class ArtikelController extends Controller
 
     public function getCreateBerita()
     {
-        $kategori = ['nama' => 'Pilih Kategori'];
+        $kategori = KategoriArtikel::all();
         $params = ['jenis' => 'berita', 'kategori' => $kategori];
         return view('admin.artikel.create', $params);
     }
@@ -80,6 +80,10 @@ class ArtikelController extends Controller
                 'slug' => Str::slug($request->judul),
                 'tanggal_publish' => null
             ];
+
+                if ($request->kategori_id) {
+                    $data['kategori_id'] = $request->kategori_id;
+                }
 
             // Handle tanggal publish untuk artikel scheduled
             if ($request->status === 'scheduled') {
@@ -135,45 +139,57 @@ class ArtikelController extends Controller
     public function getEdit($id)
     {
         $artikel = Artikel::findOrFail($id);
-        $params = ['artikel' => $artikel];
+        $kategori = KategoriArtikel::all();
+        $params = ['artikel' => $artikel, 'kategori' => $kategori];
         return view('admin.artikel.edit', $params);
     }
 
     // Update artikel
     public function postUpdate(Request $request, $id)
     {
-        $artikel = Artikel::findOrFail($id);
-        $ringkasan = strip_tags($request->isi);
-        $ringkasan = html_entity_decode($ringkasan);
-        $ringkasan = Str::limit($ringkasan, 150); 
-        $ringkasan = Str::of($ringkasan)->replaceLast('...', '');
+        try {
+            DB::beginTransaction();
 
-        $data = [
-            'jenis' => $request->jenis,
-            'judul' => $request->judul,
-            'ringkasan' => $ringkasan,
-            'isi' => $request->isi,
-            'status' => $request->status,
-        ];
+            $artikel = Artikel::findOrFail($id);
+            $ringkasan = strip_tags($request->isi);
+            $ringkasan = html_entity_decode($ringkasan);
+            $ringkasan = Str::limit($ringkasan, 150); 
+            $ringkasan = Str::of($ringkasan)->replaceLast('...', '');
 
-        if ($request->status === 'publish' && $artikel->status === 'draft') {
-            $data['tanggal_publish'] = now();
-        }
+            $data = [
+                'jenis' => $request->jenis,
+                'judul' => $request->judul,
+                'ringkasan' => $ringkasan,
+                'isi' => $request->isi,
+                'status' => $request->status,
+                'kategori_id' => $request->kategori_id ?? null
+            ];
 
-        if ($request->hasFile('gambar')) {
-            if ($artikel->gambar && file_exists(public_path('img/artikel/' . $artikel->gambar))) {
-                unlink(public_path('img/artikel/' . $artikel->gambar));
+            if ($request->status === 'publish' && $artikel->status === 'draft') {
+                $data['tanggal_publish'] = now();
             }
-            $file = $request->file('gambar');
-            $filename = 'artikel-' . time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('img/artikel'), $filename);
-            $data['gambar'] = $filename;
+
+            if ($request->hasFile('gambar')) {
+                if ($artikel->gambar && file_exists(public_path('img/artikel/' . $artikel->gambar))) {
+                    unlink(public_path('img/artikel/' . $artikel->gambar));
+                }
+                $file = $request->file('gambar');
+                $filename = 'artikel-' . time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('img/artikel'), $filename);
+                $data['gambar'] = $filename;
+            }
+
+            $artikel->update($data);
+
+            DB::commit();
+
+            $redirectURL = url('/admin/artikel/' . $artikel->jenis);
+            return successAlert('Artikel berhasil diupdate', null, '', $redirectURL);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return errorAlert('Terjadi kesalahan saat mengupdate artikel: ' . $e->getMessage());
         }
-
-        $artikel->update($data);
-
-        $redirectURL = url('/admin/artikel/' . $artikel->jenis);
-        return successAlert('Artikel berhasil diupdate', null, '', $redirectURL);
     }
 
     public function postDestroy($id)

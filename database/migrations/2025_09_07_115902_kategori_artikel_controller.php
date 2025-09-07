@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('slug')->nullable();
             $table->timestamps();
         });
+
+        Schema::table('artikel', function (Blueprint $table) {
+            $table->foreignId('kategori_id')->nullable()->constrained('kategori_artikel')->onUpdate('cascade')->onDelete('cascade');
+        });
     }
 
     /**

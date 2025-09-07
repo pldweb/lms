@@ -17,5 +17,9 @@ class KategoriArtikel extends Model
         'slug'
     ];
 
+    public function artikel()
+    {
+        return $this->hasMany(Artikel::class);
+    }
 
 }

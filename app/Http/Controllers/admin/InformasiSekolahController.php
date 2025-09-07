@@ -14,9 +14,7 @@ class InformasiSekolahController extends Controller
     public function getIndex()
     {
         $informasiSekolah = InformasiSekolah::first();
-        $params = [
-            'data' => $informasiSekolah
-        ];
+        $params = ['data' => $informasiSekolah];
         return view('admin.informasi-sekolah.index', $params);
     }
 
@@ -79,6 +77,7 @@ class InformasiSekolahController extends Controller
             $informasiSekolah->save();
             DB::commit();
             CatatLogAktivitas::catatAktivitas('memperbarui informasi sekolah');
+            sendTelegramMessage('Memperbarui informasi sekolah');
             return successAlert('Berhasil memperbarui informasi sekolah', null, '#message-modal', '/admin/informasi-sekolah');
         } catch (\Exception $e) {
             DB::rollBack();

@@ -26,7 +26,6 @@
                                 <th class="h6 text-gray-300">No</th>
                                 <th class="h6 text-gray-300">Judul</th>
                                 <th class="h6 text-gray-300">Url</th>
-                                <th class="h6 text-gray-300">Icon</th>
                                 <th class="h6 text-gray-300">Parent</th>
                                 <th class="h6 text-gray-300">Urutan</th>
                                 <th class="h6 text-gray-300">Status</th>
@@ -37,20 +36,19 @@
                             @forelse ($menu as $index => $item)
                             <tr>
                                 <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $index + 1 }}</span></td>
-                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->judul }}</span></td>
+                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->title }}</span></td>
                                 <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->url }}</span></td>
-                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->icon }}</span></td>
-                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->parent }}</span></td>
-                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->urutan }}</span></td>
+                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->parent ? $item->parent->title : '-' }}</span></td>
+                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->order }}</span></td>
                                 <td>
-                                    @if ($item->aktif)
+                                    @if ($item->active)
                                         <span class="badge bg-success">Aktif</span>
                                     @else
                                         <span class="badge bg-danger">Tidak Aktif</span>
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ url('admin/kontak/edit/' . $item->id) }}" class="btn btn-sm btn-primary btn-add">
+                                    <a href="{{ url('admin/menu/detail/' . $item->id) }}" class="btn btn-sm btn-primary btn-add">
                                         <i class="ph ph-pencil"></i>
                                     </a>
                                     <button class="btn btn-sm btn-danger btn-add" onclick="confirmDelete({{ $item->id }})">

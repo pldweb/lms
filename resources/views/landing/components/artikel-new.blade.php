@@ -97,7 +97,7 @@
                                 {{ Str::limit($pengumuman->ringkasan, 100) }}
                             </p>
                             @endif
-                            <a href="{{ url('/artikel/' . $pengumuman->id) }}" class="read-more-btn">
+                            <a href="{{ url('/artikel/' . $pengumuman->slug) }}" class="read-more-btn">
                                 Baca Selengkapnya <i class="fas fa-arrow-right"></i>
                             </a>
                         </div>

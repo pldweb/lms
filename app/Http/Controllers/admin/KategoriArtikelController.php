@@ -13,13 +13,15 @@ class KategoriArtikelController extends Controller
     public function getIndex()
     {
         $kategori = KategoriArtikel::all();
-        return view('admin.kategori-artikel.index', compact('kategori'));
+        $params = ['kategori' => $kategori];
+        return view('admin.kategori-artikel.index', $params);
     }
 
     public function getCreate(Request $request)
     {
         $data = KategoriArtikel::find($request->id);
-        return view('admin.kategori-artikel.create', compact('data'));
+        $params = ['data' => $data];
+        return view('admin.kategori-artikel.create', $params);
     }
 
     public function postStore(Request $request)
@@ -58,7 +60,6 @@ class KategoriArtikelController extends Controller
             CatatLogAktivitas::catatAktivitas('Kategori artikel berhasil dihapus');
             return successAlert('Kategori artikel berhasil dihapus');
         } catch (\Throwable $th) {
-            //throw $th;
             DB::rollBack();
             return errorAlert('Kategori artikel gagal dihapus');
         }
@@ -67,7 +68,8 @@ class KategoriArtikelController extends Controller
     public function getDetail($id)
     {
         $data = KategoriArtikel::find($id);
-        return view('admin.kategori-artikel.create', compact('data'));
+        $params = ['data' => $data];
+        return view('admin.kategori-artikel.create', $params);
     }
 
     public function getSelect2(Request $request)

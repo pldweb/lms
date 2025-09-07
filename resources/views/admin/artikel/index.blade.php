@@ -29,10 +29,11 @@
                                         <tr>
                                             <th style="width: 8%;" class="h6 text-gray-300">Gambar</th>
                                             <th style="width: 30%;" class="h6 text-gray-300">Judul</th>
-                                            <th style="width: 10%;" class="h6 text-gray-300">Status</th>
+                                            <th style="width: 15%;" class="h6 text-gray-300">Kategori</th>
+                                            <th style="width: 5%;" class="h6 text-gray-300">Status</th>
                                             <th style="width: 15%;" class="h6 text-gray-300">Tanggal Publish</th>
-                                            <th style="width: 5%;" class="h6 text-gray-300">Views</th>
-                                            <th style="width: 12%;" class="h6 text-gray-300">Aksi</th>
+                                            <th style="width: 8%;" class="h6 text-gray-300">Views</th>
+                                            <th style="width: 15%;" class="h6 text-gray-300">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -45,6 +46,9 @@
                                                 </td>
                                                 <td>
                                                     <span class="h6 mb-0 fw-medium text-gray-300">{{ $item->judul }}</span>
+                                                </td>
+                                                <td>
+                                                    <span class="h6 mb-0 fw-medium text-gray-300">{{ $item->kategori->nama ?? '-' }}</span>
                                                 </td>
                                                 <td>
                                                     @if($item->status == 'publish')
@@ -64,7 +68,7 @@
                                                     <span class="h6 mb-0 fw-medium text-gray-300">{{ number_format($item->views) }}</span>
                                                 </td>
                                                 <td>
-                                                    <a href="{{ url('/admin/artikel/detail/' . $item->slug) }}" alt="{{ $item->judul }}" class="btn btn-sm btn-add btn-success" target="_blank">
+                                                    <a href="{{ url('/admin/artikel/detail/' . $item->slug) }}" alt="{{ $item->judul }}" class="btn btn-sm btn-add btn-success">
                                                         <i class="ph ph-pencil"></i>
                                                     </a>
                                                     <button type="button" class="btn btn-sm btn-add btn-{{ $item->status == 'publish' ? 'warning' : 'primary' }}" onclick="toggleStatus({{ $item->id }})" alt="{{ $item->judul }}">

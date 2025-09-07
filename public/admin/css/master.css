@@ -71,9 +71,49 @@ input.form-control {
 
 input[type=file].form-control {
     position: relative;
-    padding: 10px;
+    padding: 9px;
 }
 
 .dt-search, div.dt-container div.dt-layout-cell.dt-start {
     display: none;
 }
+
+.select2 span.selection {
+    width: 100%;
+}
+
+span#select2-kategori-container {
+        height: 40px;
+    padding-top: 5px;
+    padding-left: 13px;
+    border-color: #D5DBE7;
+    font-size: 14px;
+}
+
+.select2-container--default .select2-selection--single {
+    border-color: #D5DBE7;
+    border-radius: 8px;
+}
+
+.select2-selection__clear span {
+    display: none;
+}
+
+span.select2-selection {
+    height: 40px !important;
+}
+
+.select2-container {
+    height: 38px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 6px;
+    right: 12px;
+}
+
+span#select2-jenis-container {
+    padding-top: 5px;
+    padding-left: 12px;
+}
+

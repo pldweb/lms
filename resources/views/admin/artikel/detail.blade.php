@@ -1,11 +1,15 @@
 @extends('layouts.admin')
 @section('title', 'Detail ' . ucfirst($artikel->jenis))
 @section('content')
-
+<style>
+    .artikel-content ul {
+        list-style: auto;
+}
+</style>
 <div class="row mt-20">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header b-title">
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="card-title w-content">Detail {{ ucfirst($artikel->jenis) }}</h3>
                     <div class="d-flex gap-2">

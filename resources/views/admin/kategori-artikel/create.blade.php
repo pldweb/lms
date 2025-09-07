@@ -3,19 +3,20 @@
         pointer-events: none;
         opacity: 0.5;
         background-color: #f5f5f5 !important;
+        color: #888;
     }
 </style>
 
 <form id="kategori" enctype="multipart/form-data" method="POST" onsubmit="return false;">
     @csrf
-    <div class="form-group">
-        <label class="form-label" style="display: block;" for="foto_profile">Nama</label>
+    <div class="form-group mb-10 row">
+        <label class="form-label" for="foto_profile">Nama</label>
         <div class="col-12">
             <input type="text" class="form-control" id="inputName" name="nama" value="{{$data->nama ?? ''}}">
         </div>
     </div>
-    <div class="form-group">
-        <label class="form-label" style="display: block;" for="foto_profile">Slug</label>
+    <div class="form-group row">
+        <label class="form-label" for="foto_profile">Slug</label>
         <div class="col-12">
             <input type="text" class="form-control disabled" id="inputSlug" disabled name="slug" value="{{$data->slug ?? ''}}">
         </div>

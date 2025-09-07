@@ -1,36 +1,15 @@
 @extends('layouts.admin')
 @section('title', 'Edit Menu')
 @section('content')
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Edit Menu</h1>
-    <a href="{{ url('/admin/menu') }}" class="btn btn-secondary btn-sm btn-add">
-        <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
-    </a>
-</div>
 
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Form Edit Menu</h6>
-    </div>
-    <div class="card-body">
-        @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul class="mb-0">
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
-
-        @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        @endif
-
-        <form action="{{ url('/admin/menu/update/' . $menu->id) }}" method="POST">
+<div class="row mt-20">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header b-title">
+                <h3 class="card-title">Edit Menu</h3>
+            </div>
+            <div class="card-body">
+                <form action="{{ url('/admin/menu/update/' . $menu->id) }}" method="POST">
             @csrf
             <div class="row mb-3">
                 <div class="col-md-6">
@@ -92,14 +71,8 @@
                 <a href="{{ url('/admin/menu') }}" class="btn btn-secondary btn-add">Batal</a>
             </div>
         </form>
+            </div>
+        </div>
     </div>
 </div>
-@endsection
-
-@section('scripts')
-<script>
-    $(document).ready(function() {
-        // Tambahkan script tambahan jika diperlukan
-    });
-</script>
 @endsection

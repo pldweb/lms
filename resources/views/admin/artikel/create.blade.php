@@ -41,9 +41,10 @@
                             <input type="hidden" name="jenis" id="jenis" class="form-control" value="{{ $jenis }}">
 
                             <!-- Kategori -->
-                            <div class="mb-3">
-                                <label for="kategori" class="form-label">Kategori <span class="text-danger">*</span></label>
-                                <select name="kategori" id="kategori" class="form-select">
+                            <div class="mt-20">
+                                <label for="kategori" class="form-label">Kategori</label>
+                                <select name="kategori" id="kategori" class="form-select select2">
+                                    <option value="">Pilih Kategori</option>
                                     @foreach($kategori as $item)
                                         <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                     @endforeach
@@ -51,7 +52,7 @@
                             </div>
 
                             <!-- Judul -->
-                            <div class="mb-3">
+                            <div class="mt-20">
                                 <label for="judul" class="form-label">Judul <span class="text-danger">*</span></label>
                                 <input type="text" name="judul" id="judul" class="form-control" value="{{ old('judul') }}" placeholder="Masukkan judul artikel">
                             </div>
@@ -85,7 +86,7 @@
                             <div class="mt-20">
                                 <label for="gambar" class="form-label">Gambar Artikel</label>
                                 <input type="file" name="gambar" id="gambar" class="form-control" accept="image/*">
-                                <div class="form-text">Format: JPG, PNG, GIF. Max: 2MB</div>
+                                <div class="form-text">Format: JPG, PNG. Max: 1MB</div>
                                 
                                 <!-- Preview Image -->
                                 <div id="imagePreview" class="mt-3" style="display: none;">
@@ -115,8 +116,9 @@
 
 <script>
     $(document).ready(function() {
+
         // Initialize TinyMCE
-        TinyMCE('.tinymce-editor');
+        initTinyMCE('.tinymce-editor');
 
         // Handle status change untuk show/hide tanggal publish
         $('#status').change(function() {
