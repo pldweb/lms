@@ -21,12 +21,12 @@
                         <!-- Gambar Artikel -->
                         @if($artikel->gambar)
                             <div class="mb-4">
-                                <img src="{{ asset('storage/' . $artikel->gambar) }}" alt="{{ $artikel->judul }}" class="img-fluid rounded" style="max-height: 400px; width: 100%; object-fit: cover;">
+                                <img src="{{ asset('img/artikel/' . $artikel->gambar) }}" alt="{{ $artikel->judul }}" class="img-fluid rounded" style="max-height: 800px; width: 100%; object-fit: cover;">
                             </div>
                         @endif
 
                         <!-- Judul -->
-                        <h2 class="mb-3">{{ $artikel->judul }}</h2>
+                        <h2 class="mb-3" style="margin-top: 50px;">{{ $artikel->judul }}</h2>
 
                         <!-- Isi Artikel -->
                         <div class="artikel-content">
@@ -37,8 +37,8 @@
                     <div class="col-md-4">
                         <!-- Info Artikel -->
                         <div class="card border-1">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Informasi Artikel</h5>
+                            <div class="card-header b-title">
+                                <h5 class="card-title">Informasi Artikel</h5>
                             </div>
                             <div class="card-body">
                                 <table class="table table-borderless">
@@ -64,16 +64,16 @@
                                     </tr>
                                     <tr>
                                         <td><strong>Dibuat:</strong></td>
-                                        <td>{{ $artikel->created_at->format('d/m/Y H:i') }}</td>
+                                        <td>{{ $artikel->created_at->format('d/m/Y H:i') }} WIB</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Diupdate:</strong></td>
-                                        <td>{{ $artikel->updated_at->format('d/m/Y H:i') }}</td>
+                                        <td>{{ $artikel->updated_at->format('d/m/Y H:i') }} WIB</td>
                                     </tr>
                                     @if($artikel->tanggal_publish)
                                     <tr>
                                         <td><strong>Dipublish:</strong></td>
-                                        <td>{{ $artikel->tanggal_publish->format('d/m/Y H:i') }}</td>
+                                        <td>{{ $artikel->tanggal_publish->format('d/m/Y H:i') }} WIB</td>
                                     </tr>
                                     @endif
                                     <tr>
@@ -81,23 +81,16 @@
                                         <td>{{ number_format($artikel->views) }}</td>
                                     </tr>
                                 </table>
-                                <div class="card-body" style="min-height: 80px;">
+                                <div class="card-body" style="min-height: 80px; padding: 0;">
                                     <div class="d-flex gap-5">
                                         <a href="{{ url('/admin/artikel/edit/' . $artikel->id) }}" class="btn btn-primary btn-add">
-                                            <i class="ph ph-pencil"></i> Edit Artikel
+                                            Edit Data
                                         </a>
-                                        <button type="button" class="btn btn-{{ $artikel->status == 'publish' ? 'warning' : 'success' }} btn-add" onclick="toggleStatus()">
-                                            <i class="ph ph-{{ $artikel->status == 'publish' ? 'eye-slash' : 'eye' }}"></i> 
-                                            {{ $artikel->status == 'publish' ? 'Jadikan Draft' : 'Publish' }}
-                                        </button>
                                         @if($artikel->status == 'publish')
-                                        <a href="{{url('/artikel/' . $artikel->id)}}" target="_blank" class="btn btn-info btn-add">
-                                            <i class="ph ph-copy"></i>Akses Artikel
+                                        <a href="{{url('/artikel/' . $artikel->slug)}}" target="_blank" class="btn btn-success btn-add">
+                                            Lihat Artikel
                                         </a>
                                         @endif
-                                        <button type="button" class="btn btn-danger btn-add" onclick="deleteArtikel()">
-                                            <i class="ph ph-trash"></i> Hapus Artikel
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -134,7 +127,7 @@
 <style>
 .artikel-content {
     font-size: 16px;
-    line-height: 1.6;
+    line-height: 1.8;
     text-align: justify;
 }
 
@@ -206,5 +199,14 @@
 .artikel-content a:hover {
     text-decoration: underline;
 }
+.artikel-content ol {
+    list-style: decimal;
+}
+
+.artikel-content ul {
+    list-style: disc;
+}
+
+
 </style>
 @endsection

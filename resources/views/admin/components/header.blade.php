@@ -15,7 +15,7 @@
             <div class="flex-align gap-16">
 
                 <a href="{{url('/')}}" class="btn-primary btn btn-add">Website Utama</a>
-                <div class="flex-align gap-8">
+                {{-- <div class="flex-align gap-8">
                     <!-- Notification Start -->
                     <div class="dropdown">
                         <button class="dropdown-btn shaking-animation text-gray-500 w-40 h-40 bg-main-50 hover-bg-main-100 transition-2 rounded-circle text-xl flex-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <!-- Notification Start -->
-                </div>
+                </div> --}}
 
                 <!-- User Profile Start -->
                 <div class="dropdown">

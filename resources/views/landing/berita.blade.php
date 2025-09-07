@@ -27,7 +27,7 @@
                 <div class="card blog-card h-100 border-0 shadow-sm">
                     @if($item->gambar)
                     <div class="blog-img">
-                        <img src="{{asset('storage/' . $item->gambar)}}" alt="{{ $item->judul }}" class="card-img-top" style="height: 250px; object-fit: cover;">
+                        <img src="{{asset('img/artikel/' . $item->gambar)}}" alt="{{ $item->judul }}" class="card-img-top" style="height: 250px; object-fit: cover;">
                     </div>
                     @endif
                     <div class="card-body d-flex flex-column">
@@ -46,11 +46,7 @@
                         </h5>
                         @if($item->ringkasan)
                         <p class="card-text text-muted flex-grow-1">
-                            {{ Str::limit($item->ringkasan, 120) }}
-                        </p>
-                        @else
-                        <p class="card-text text-muted flex-grow-1">
-                            {{ Str::limit(strip_tags($item->isi), 120) }}
+                           {!!$item->ringkasan !!}
                         </p>
                         @endif
                         <div class="mt-auto">

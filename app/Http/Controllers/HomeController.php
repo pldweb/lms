@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\admin\SlideshowController;
 use App\Http\Controllers\admin\KontakController;
 use App\Http\Controllers\admin\SocialMediaController;
-
+use App\Models\InformasiSekolah;
 
 class HomeController extends Controller
 {
@@ -88,7 +88,8 @@ class HomeController extends Controller
             'galeriTerbaru' => $galeriTerbaru,
             'guruPegawai' => $guruPegawai,
             'kontak' => self::kontakSection(),
-            'socialMedia' => self::socialMediaSection()
+            'socialMedia' => self::socialMediaSection(),
+            'informasi' => InformasiSekolah::first()
         ];
         return view('landing.index', $params);
     }
@@ -121,8 +122,8 @@ class HomeController extends Controller
         return view('landing.pengumuman', $params);
     }
 
-    public function getArtikel($id){
-        $artikel = Artikel::published()->with('penulis')->findOrFail($id);
+    public function getArtikel($slug){
+        $artikel = Artikel::published()->with('penulis')->where('slug', $slug)->firstOrFail();
         
         $artikel->increment('views');
 

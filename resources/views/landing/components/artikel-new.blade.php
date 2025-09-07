@@ -1,9 +1,11 @@
 <section class="blog-area section-padding bg-white mt-12 mb-12" >
     <div class="container">
 
+        {{-- Daftar Berita --}}
         <div class="row">
             <div class="col-md-12">
                 <div class="title-area text-center wow fadeInUp" data-wow-delay="0.3s">
+                    <img src="{{ asset('img/' . $informasi->favicon) }}" style="max-height: 50px; margin-bottom: 20px;" alt="">
                     <h2 class="sec-title">Berita Terbaru</h2>
                     <p class="sec-text">Daftar Berita di SMP Negeri 20 Jakarta Timur</p>
                 </div>
@@ -17,7 +19,7 @@
                     <div class="blog-card">
                         @if($berita->gambar)
                         <div class="blog-img">
-                            <img src="{{ asset('storage/' . $berita->gambar) }}" alt="{{ $berita->judul }}">
+                            <img src="{{ asset('img/artikel/' . $berita->gambar) }}" alt="{{ $berita->judul }}">
                             <div class="blog-date">
                                 <span class="day">{{ $berita->tanggal_publish->format('d') }}</span>
                                 <span class="month">{{ $berita->tanggal_publish->format('M') }}</span>
@@ -30,17 +32,17 @@
                                 <span><i class="fas fa-eye"></i> {{ number_format($berita->views) }}</span>
                             </div>
                             <h3 class="blog-title">
-                                <a href="{{ url('/artikel/' . $berita->id) }}">
-                                    {{ $berita->judul }}
+                                <a href="{{ url('/artikel/' . $berita->slug) }}">
+                                    {{ Str::limit($berita->judul, 55) }}
                                 </a>
                             </h3>
                             @if($berita->ringkasan)
                             <p class="blog-text">
-                                {{ Str::limit($berita->ringkasan, 100) }}
+                                {{ Str::limit($berita->ringkasan, 90) }}
                             </p>
                             @endif
-                            <a href="{{ url('/artikel/' . $berita->id) }}" class="read-more-btn">
-                                Read More <i class="fas fa-arrow-right"></i>
+                            <a href="{{ url('/artikel/' . $berita->slug) }}" class="read-more-btn">
+                                Baca Selengkapnya <i class="fas fa-arrow-right"></i>
                             </a>
                         </div>
                     </div>
@@ -56,6 +58,7 @@
             @endif
         </div>
 
+        {{-- Pengumuman --}}
         <div class="row mb-9">
             <div class="col-md-12">
                 <div class="text-center wow fadeInUp" style="margin-top: 50px;" data-wow-delay="0.3s">
@@ -72,7 +75,7 @@
                     <div class="blog-card">
                         @if($pengumuman->gambar)
                         <div class="blog-img">
-                            <img src="{{ asset('storage/' . $pengumuman->gambar) }}" alt="{{ $pengumuman->judul }}">
+                            <img src="{{ asset('img/artikel/' . $pengumuman->gambar) }}" alt="{{ $pengumuman->judul }}">
                             <div class="blog-date">
                                 <span class="day">{{ $pengumuman->tanggal_publish->format('d') }}</span>
                                 <span class="month">{{ $pengumuman->tanggal_publish->format('M') }}</span>
@@ -85,7 +88,7 @@
                                 <span><i class="fas fa-eye"></i> {{ number_format($pengumuman->views) }}</span>
                             </div>
                             <h3 class="blog-title">
-                                <a href="{{ url('/artikel/' . $pengumuman->id) }}">
+                                <a href="{{ url('/artikel/' . $pengumuman->slug) }}">
                                     {{ $pengumuman->judul }}
                                 </a>
                             </h3>
@@ -95,7 +98,7 @@
                             </p>
                             @endif
                             <a href="{{ url('/artikel/' . $pengumuman->id) }}" class="read-more-btn">
-                                Read More <i class="fas fa-arrow-right"></i>
+                                Baca Selengkapnya <i class="fas fa-arrow-right"></i>
                             </a>
                         </div>
                     </div>

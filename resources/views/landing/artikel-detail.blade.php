@@ -5,25 +5,6 @@
 @section('og_image', $artikel->gambar ? asset('storage/' . $artikel->gambar) : asset('img/' . ($informasiSekolah->logo ?? 'Logo-SMPN20.png')))
 @section('content')
 
-<!-- Page Header -->
-{{-- <section class="page-header bg-{{ $artikel->jenis == 'berita' ? 'primary' : 'info' }} text-white py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <span class="badge bg-light text-dark mb-3 fs-6">{{ ucfirst($artikel->jenis) }}</span>
-                <h1 class="display-5 mb-3">{{ $artikel->judul }}</h1>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb justify-content-center bg-transparent">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-white">Beranda</a></li>
-                        <li class="breadcrumb-item"><a href="{{ url('/' . $artikel->jenis) }}" class="text-white">{{ ucfirst($artikel->jenis) }}</a></li>
-                        <li class="breadcrumb-item active text-white" aria-current="page">Detail</li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
-    </div>
-</section> --}}
-
 <!-- Artikel Content -->
 <section class="artikel-detail section-padding mt-4">
     <div class="container">
@@ -49,32 +30,32 @@
                     <!-- Gambar Artikel -->
                     @if($artikel->gambar)
                     <div class="artikel-image mb-4">
-                        <img src="{{ asset('storage/' . $artikel->gambar) }}" alt="{{ $artikel->judul }}" class="img-fluid rounded shadow-sm w-100" style="max-height: 400px; object-fit: cover;">
+                        <img src="{{ asset('img/artikel/' . $artikel->gambar) }}" alt="{{ $artikel->judul }}" class="img-fluid rounded shadow-sm w-100" style="max-height: 700px; object-fit: cover;">
                     </div>
                     @endif
 
                     <!-- Isi Artikel -->
                     <div class="artikel-body">
-                        <h2 class="mb-3">{{ $artikel->judul }}</h2>
+                        <h4 class="mb-3">{{ $artikel->judul }}</h4>
                         <div class="content-text">
                             {!! $artikel->isi !!}
                         </div>
                     </div>
 
                     <!-- Share Buttons -->
-                    <div class="artikel-share mt-5 mb-5 p-3 pl-0 rounded">
+                    <div class="artikel-share mt-5 mb-5 p-3 rounded" style="padding-left: 0 !important;">
                         <h6 class="mb-3"><i class="fas fa-share-alt me-2"></i>Bagikan Artikel</h6>
                         <div class="share-buttons">
-                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->fullUrl()) }}" target="_blank" class="btn btn-primary btn-sm me-2">
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->fullUrl()) }}" target="_blank" class="btn btn-primary btn-sosmed btn-add">
                                 <i class="fab fa-facebook-f me-1"></i> Facebook
                             </a>
-                            <a href="https://twitter.com/intent/tweet?url={{ urlencode(request()->fullUrl()) }}&text={{ urlencode($artikel->judul) }}" target="_blank" class="btn btn-info btn-sm me-2">
+                            <a href="https://twitter.com/intent/tweet?url={{ urlencode(request()->fullUrl()) }}&text={{ urlencode($artikel->judul) }}" target="_blank" class="btn btn-info btn-sosmed btn-add">
                                 <i class="fab fa-twitter me-1"></i> Twitter
                             </a>
-                            <a href="https://wa.me/?text={{ urlencode($artikel->judul . ' - ' . request()->fullUrl()) }}" target="_blank" class="btn btn-success btn-sm me-2">
+                            <a href="https://wa.me/?text={{ urlencode($artikel->judul . ' - ' . request()->fullUrl()) }}" target="_blank" class="btn btn-success btn-sosmed btn-add">
                                 <i class="fab fa-whatsapp me-1"></i> WhatsApp
                             </a>
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="copyUrl()">
+                            <button type="button" class="btn btn-secondary btn-sosmed btn-add" onclick="copyUrl()">
                                 <i class="fas fa-copy me-1"></i> Copy Link
                             </button>
                         </div>
@@ -94,15 +75,18 @@
                         @foreach($artikelTerkait as $terkait)
                         <div class="related-article mb-3 p-3 border rounded">
                             @if($terkait->gambar)
-                            <div class="related-image mb-2">
-                                <img src="{{ asset('storage/' . $terkait->gambar) }}" alt="{{ $terkait->judul }}" class="img-fluid rounded" style="width: 100%; height: 120px; object-fit: cover;">
+                            <div class="related-image mb-10">
+                                <img src="{{ asset('img/artikel/' . $terkait->gambar) }}" alt="{{ $terkait->judul }}" class="img-fluid rounded" style="width: 100%; height: 120px; object-fit: cover;">
                             </div>
                             @endif
                             <h6>
-                                <a href="{{ url('/artikel/' . $terkait->id) }}" class="text-decoration-none text-dark">
-                                    {{ Str::limit($terkait->judul, 60) }}
+                                <a href="{{ url('/artikel/' . $terkait->slug) }}" class="text-decoration-none text-dark">
+                                    {{ Str::limit($terkait->judul, 40) }}
                                 </a>
                             </h6>
+                            <p>
+                                {{ Str::limit($terkait->ringkasan, 80) }}
+                            </p>
                             <small class="text-muted">
                                 <i class="fas fa-calendar me-1"></i>{{ $terkait->tanggal_publish->format('d M Y') }}
                                 <span class="ms-2"><i class="fas fa-eye me-1"></i>{{ number_format($terkait->views) }}</span>

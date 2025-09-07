@@ -23,49 +23,29 @@
                 @if($artikel->isEmpty())
                     {!! alert("Belum ada $jenis", 'warning') !!}
                 @else
-                <div class="card overflow-hidden">
-                            <div class="card-body p-0 overflow-x-auto">
-                                <table id="artikelTable" class="table table-striped table-hover">
-                                    <thead>
+                <div id="table-responsive" class="overflow-x-auto">
+                    <table id="artikelTable" class="table table-striped table-hover" width="100%" cellspacing="0">
+                        <thead>
                                         <tr>
-                                            <th class="h6 text-gray-300">Judul</th>
-                                            @if(!isset($jenis))
-                                            <th class="h6 text-gray-300">Jenis</th>
-                                            @endif
-                                            <th class="h6 text-gray-300">Status</th>
-                                            <th class="h6 text-gray-300">Tanggal Publish</th>
-                                            <th class="h6 text-gray-300">Views</th>
-                                            <th class="h6 text-gray-300">Aksi</th>
+                                            <th style="width: 8%;" class="h6 text-gray-300">Gambar</th>
+                                            <th style="width: 30%;" class="h6 text-gray-300">Judul</th>
+                                            <th style="width: 10%;" class="h6 text-gray-300">Status</th>
+                                            <th style="width: 15%;" class="h6 text-gray-300">Tanggal Publish</th>
+                                            <th style="width: 5%;" class="h6 text-gray-300">Views</th>
+                                            <th style="width: 12%;" class="h6 text-gray-300">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($artikel as $item)
                                             <tr>
-                                                <td class="fixed-width">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input border-gray-200 rounded-4" type="checkbox">
-                                                    </div>
+                                                <td>
+                                                    @if($item->gambar)
+                                                        <img src="{{ asset('img/artikel/' . $item->gambar) }}" alt="Gambar" class="w-50 h-40 rounded object-fit-cover">
+                                                    @endif
                                                 </td>
                                                 <td>
-                                                    <div class="flex-align gap-8">
-                                                        @if($item->gambar)
-                                                            <img src="{{ asset('storage/' . $item->gambar) }}" alt="Gambar" class="w-40 h-40 rounded object-fit-cover">
-                                                        @endif
-                                                        <div>
-                                                            <span class="h6 mb-0 fw-medium text-gray-300">{{ $item->judul }}</span>
-                                                            @if($item->ringkasan)
-                                                                <p class="text-sm text-gray-500 mb-0">{{ Str::limit($item->ringkasan, 50) }}</p>
-                                                            @endif
-                                                        </div>
-                                                    </div>
+                                                    <span class="h6 mb-0 fw-medium text-gray-300">{{ $item->judul }}</span>
                                                 </td>
-                                                @if(!isset($jenis))
-                                                <td>
-                                                    <span class="badge bg-{{ $item->jenis == 'berita' ? 'primary' : 'info' }}">
-                                                        {{ ucfirst($item->jenis) }}
-                                                    </span>
-                                                </td>
-                                                @endif
                                                 <td>
                                                     @if($item->status == 'publish')
                                                         <span class="badge bg-success">Publish</span>
@@ -84,40 +64,22 @@
                                                     <span class="h6 mb-0 fw-medium text-gray-300">{{ number_format($item->views) }}</span>
                                                 </td>
                                                 <td>
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-sm btn-add btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                                            Aksi
-                                                        </button>
-                                                        <ul class="dropdown-menu">
-                                                            <li><a class="dropdown-item" href="{{ url('/admin/artikel/detail/' . $item->id) }}">
-                                                                <i class="ph ph-eye"></i> Detail
-                                                            </a></li>
-                                                            <li><a class="dropdown-item" href="{{ url('/admin/artikel/edit/' . $item->id) }}">
-                                                                <i class="ph ph-pencil"></i> Edit
-                                                            </a></li>
-                                                            <li><hr class="dropdown-divider"></li>
-                                                            <li>
-                                                                <a class="dropdown-item" href="#" onclick="toggleStatus({{ $item->id }})">
-                                                                    <i class="ph ph-{{ $item->status == 'publish' ? 'eye-slash' : 'eye' }}"></i> 
-                                                                    {{ $item->status == 'publish' ? 'Jadikan Draft' : 'Publish' }}
-                                                                </a>
-                                                            </li>
-                                                            <li><hr class="dropdown-divider"></li>
-                                                            <li>
-                                                                <a class="dropdown-item text-danger" href="#" onclick="deleteArtikel({{ $item->id }})">
-                                                                    <i class="ph ph-trash"></i> Hapus
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                                    <a href="{{ url('/admin/artikel/detail/' . $item->slug) }}" alt="{{ $item->judul }}" class="btn btn-sm btn-add btn-success" target="_blank">
+                                                        <i class="ph ph-pencil"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-sm btn-add btn-{{ $item->status == 'publish' ? 'warning' : 'primary' }}" onclick="toggleStatus({{ $item->id }})" alt="{{ $item->judul }}">
+                                                        <i class="ph ph-{{ $item->status == 'publish' ? 'eye-slash' : 'eye' }}"></i> 
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-add btn-danger" onclick="deleteArtikel({{ $item->id }})" alt="{{ $item->judul }}">
+                                                        <i class="ph ph-trash"></i>
+                                                    </button>
                                                 </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
-                        @endif
+                </div>
+                @endif
                 </div>
             </div>
         </div>

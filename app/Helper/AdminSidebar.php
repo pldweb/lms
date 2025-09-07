@@ -95,6 +95,7 @@ class AdminSidebar
                     'submenu' => [
                         ['text' => 'Berita', 'link' => 'admin/artikel/berita'],
                         ['text' => 'Pengumuman', 'link' => 'admin/artikel/pengumuman'],
+                        ['text' => 'Kategori Artikel', 'link' => 'admin/kategori-artikel'],
                     ],
                 ];
 

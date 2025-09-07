@@ -5,7 +5,7 @@
 <div class="row mt-20">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header b-title">
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="card-title w-content">Data Galeri</h3>
                     <div class="d-flex justify-center align-items-center" style="gap: 5px;">
@@ -28,7 +28,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body" style="padding-top: 0;">
+            <div class="card-body">
                 @if($galeri->isEmpty())
                     {!! alert("Belum ada galeri", 'warning') !!}
                 @else

@@ -8,12 +8,12 @@
     </a>
 
     <div class="sidebar-menu-wrapper overflow-y-auto scroll-sm">
-        <div class="p-20 pt-10">
+        <div class="p-15 pt-10">
             <ul class="sidebar-menu">
                 @foreach (App\Helper\AdminSidebar::setSidebarMenu() as $item)
                     @if(isset($item['type']) && $item['type'] === 'label')
                         <li class="sidebar-menu__item">
-                            <span class="text-gray-300 text-sm px-20 pt-20 fw-semibold border-top border-gray-100 d-block text-uppercase">
+                            <span class="text-gray-300 text-sm px-10 pt-20 fw-semibold border-top border-gray-100 d-block text-uppercase">
                                 {{ $item['text'] }}
                             </span>
                         </li>

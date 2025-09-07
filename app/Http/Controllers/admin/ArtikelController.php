@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\KategoriArtikel;
 
 use function Laravel\Prompts\error;
 
@@ -48,7 +49,8 @@ class ArtikelController extends Controller
 
     public function getCreateBerita()
     {
-        $params = ['jenis' => 'berita'];
+        $kategori = ['nama' => 'Pilih Kategori'];
+        $params = ['jenis' => 'berita', 'kategori' => $kategori];
         return view('admin.artikel.create', $params);
     }
 
@@ -60,15 +62,22 @@ class ArtikelController extends Controller
 
     public function postStore(Request $request)
     {
+        $ringkasan = strip_tags($request->isi);
+        $ringkasan = html_entity_decode($ringkasan);
+        $ringkasan = Str::limit($ringkasan, 150); 
+        $ringkasan = Str::of($ringkasan)->replaceLast('...', '');
+
         try {
             DB::beginTransaction();
 
             $data = [
                 'jenis' => $request->jenis,
                 'judul' => $request->judul,
+                'ringkasan' => $ringkasan,
                 'isi' => $request->isi,
                 'status' => $request->status,
                 'penulis_id' => Auth::id(),
+                'slug' => Str::slug($request->judul),
                 'tanggal_publish' => null
             ];
 
@@ -116,9 +125,9 @@ class ArtikelController extends Controller
         }
     }
 
-    public function getDetail($id)
+    public function getDetail($slug)
     {
-        $artikel = Artikel::with('penulis')->findOrFail($id);
+        $artikel = Artikel::where('slug', $slug)->firstOrFail();
         $params = ['artikel' => $artikel];
         return view('admin.artikel.detail', $params);
     }
@@ -134,22 +143,31 @@ class ArtikelController extends Controller
     public function postUpdate(Request $request, $id)
     {
         $artikel = Artikel::findOrFail($id);
+        $ringkasan = strip_tags($request->isi);
+        $ringkasan = html_entity_decode($ringkasan);
+        $ringkasan = Str::limit($ringkasan, 150); 
+        $ringkasan = Str::of($ringkasan)->replaceLast('...', '');
 
-        $data = $request->only(['jenis', 'judul', 'ringkasan', 'isi', 'status']);
+        $data = [
+            'jenis' => $request->jenis,
+            'judul' => $request->judul,
+            'ringkasan' => $ringkasan,
+            'isi' => $request->isi,
+            'status' => $request->status,
+        ];
 
         if ($request->status === 'publish' && $artikel->status === 'draft') {
             $data['tanggal_publish'] = now();
         }
 
         if ($request->hasFile('gambar')) {
-            if ($artikel->gambar && Storage::disk('public')->exists($artikel->gambar)) {
-                Storage::disk('public')->delete($artikel->gambar);
+            if ($artikel->gambar && file_exists(public_path('img/artikel/' . $artikel->gambar))) {
+                unlink(public_path('img/artikel/' . $artikel->gambar));
             }
-
             $file = $request->file('gambar');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('artikel', $fileName, 'public');
-            $data['gambar'] = $filePath;
+            $filename = 'artikel-' . time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('img/artikel'), $filename);
+            $data['gambar'] = $filename;
         }
 
         $artikel->update($data);
@@ -158,12 +176,12 @@ class ArtikelController extends Controller
         return successAlert('Artikel berhasil diupdate', null, '', $redirectURL);
     }
 
-    public function deleteDestroy($id)
+    public function postDestroy($id)
     {
         $artikel = Artikel::findOrFail($id);
         
-        if ($artikel->gambar && Storage::disk('public')->exists($artikel->gambar)) {
-            Storage::disk('public')->delete($artikel->gambar);
+        if ($artikel->gambar && file_exists(public_path('img/artikel/' . $artikel->gambar))) {  
+            unlink(public_path('img/artikel/' . $artikel->gambar));
         }
 
         $jenis = $artikel->jenis;

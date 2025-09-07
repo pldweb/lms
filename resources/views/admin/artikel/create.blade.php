@@ -40,16 +40,20 @@
                             <!-- Jenis Artikel -->
                             <input type="hidden" name="jenis" id="jenis" class="form-control" value="{{ $jenis }}">
 
+                            <!-- Kategori -->
+                            <div class="mb-3">
+                                <label for="kategori" class="form-label">Kategori <span class="text-danger">*</span></label>
+                                <select name="kategori" id="kategori" class="form-select">
+                                    @foreach($kategori as $item)
+                                        <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                             <!-- Judul -->
                             <div class="mb-3">
                                 <label for="judul" class="form-label">Judul <span class="text-danger">*</span></label>
                                 <input type="text" name="judul" id="judul" class="form-control" value="{{ old('judul') }}" placeholder="Masukkan judul artikel">
-                            </div>
-
-                            <!-- Ringkasan -->
-                            <div class="mt-20">
-                                <label for="ringkasan" class="form-label">Preview Deskripsi <span class="text-danger">*</span></label>
-                                <textarea name="ringkasan" id="ringkasan" class="form-control" style="height: auto;" rows="3" cols="6" placeholder="Ringkasan singkat artikel (opsional)">{{ old('ringkasan') }}</textarea>
                             </div>
 
                             <!-- Isi Artikel -->

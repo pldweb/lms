@@ -47,12 +47,6 @@
                             </div>
 
                             <div class="mb-5">
-                                <label for="ringkasan" class="form-label">Ringkasan</label>
-                                <textarea name="ringkasan" id="ringkasan" class="form-control" style="height: auto;" rows="3" cols="6" placeholder="Ringkasan singkat artikel (opsional)">{{ old('ringkasan', $artikel->ringkasan) }}</textarea>
-                                
-                            </div>
-
-                            <div class="mb-5">
                                 <label for="isi" class="form-label">Isi Artikel <span class="text-danger">*</span></label>
                                 <textarea name="isi" id="isi" class="form-control tinymce-editor" placeholder="Tulis isi artikel di sini...">{{ old('isi', $artikel->isi) }}</textarea>
                             </div>
@@ -72,16 +66,13 @@
                                 <label for="gambar" class="form-label">Gambar Artikel</label>
                                 @if($artikel->gambar)
                                     <div class="mb-2">
-                                        <img src="{{ asset('storage/' . $artikel->gambar) }}" alt="Gambar Saat Ini" class="img-thumbnail" style="max-width: 100%; max-height: 200px;">
+                                        <img src="{{ asset('img/artikel/' . $artikel->gambar) }}" alt="Gambar Saat Ini" class="img-thumbnail" style="max-width: 100%; max-height: 200px;">
                                         <p class="text-muted small mt-1">Gambar saat ini</p>
                                     </div>
                                 @endif
                                 
                                 <input type="file" name="gambar" id="gambar" class="form-control" accept="image/*">
                                 <div class="form-text">Format: JPG, PNG, GIF. Max: 2MB. Kosongkan jika tidak ingin mengubah gambar.</div>
-                                @error('gambar')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
                                 
                                 <!-- Preview Image -->
                                 <div id="imagePreview" class="mt-3" style="display: none;">
@@ -91,15 +82,15 @@
 
                             <!-- Submit Buttons -->
                             <div class="mb-3 d-grid gap-2">
-                                <button type="submit" name="action" value="save" class="btn btn-primary">
+                                <button type="submit" name="action" value="save" class="btn btn-primary btn-add">
                                     <i class="ph ph-floppy-disk"></i> Update
                                 </button>
                                 @if($artikel->status == 'draft')
-                                    <button type="submit" name="action" value="save_and_publish" class="btn btn-success">
+                                    <button type="submit" name="action" value="save_and_publish" class="btn btn-success btn-add">
                                         <i class="ph ph-paper-plane-tilt"></i> Update & Publish
                                     </button>
                                 @endif
-                                <a href="{{ url('/admin/artikel/' . $artikel->jenis) }}" class="btn btn-secondary">
+                                <a href="{{ url('/admin/artikel/' . $artikel->jenis) }}" class="btn btn-secondary btn-add">
                                     <i class="ph ph-x"></i> Batal
                                 </a>
                             </div>
