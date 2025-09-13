@@ -13,10 +13,9 @@
     $informasi_sekolah = App\Models\InformasiSekolah::first();
     @endphp
     <!-- SEO -->
-    @if ($informasi_sekolah->favicon)
-    <link rel="shortcut icon" href="{{asset('storage/' . $informasi_sekolah->favicon)}}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{asset('admin/images/favicon.ico')}}" type="image/x-icon">
-    @endif
+    {{-- @if ($informasi_sekolah->favicon) --}}
+    <link rel="shortcut icon" href="{{asset('img/favicon/smp20-icon.png')}}" type="image/x-icon">
+    {{-- @endif --}}
 
     <!-- Styling -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

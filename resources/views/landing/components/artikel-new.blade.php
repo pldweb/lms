@@ -32,7 +32,7 @@
                                 <span><i class="fas fa-eye"></i> {{ number_format($berita->views) }}</span>
                             </div>
                             <h3 class="blog-title">
-                                <a href="{{ url('/artikel/' . $berita->slug) }}">
+                                <a href="{{ url('/artikel/' . $berita->jenis . '/' . ($berita->kategori ? $berita->kategori->slug : 'tanpa-kategori') . '/' . $berita->slug) }}">
                                     {{ Str::limit($berita->judul, 55) }}
                                 </a>
                             </h3>
@@ -41,7 +41,7 @@
                                 {{ Str::limit($berita->ringkasan, 90) }}
                             </p>
                             @endif
-                            <a href="{{ url('/artikel/' . $berita->slug) }}" class="read-more-btn">
+                            <a href="{{ url('/artikel/' . $berita->jenis . '/' . ($berita->kategori ? $berita->kategori->slug : 'tanpa-kategori') . '/' . $berita->slug) }}" class="read-more-btn">
                                 Baca Selengkapnya <i class="fas fa-arrow-right"></i>
                             </a>
                         </div>
@@ -88,7 +88,7 @@
                                 <span><i class="fas fa-eye"></i> {{ number_format($pengumuman->views) }}</span>
                             </div>
                             <h3 class="blog-title">
-                                <a href="{{ url('/artikel/' . $pengumuman->slug) }}">
+                                <a href="{{ url('/artikel/' . $pengumuman->jenis . '/' . ($pengumuman->kategori ? $pengumuman->kategori->slug : 'tanpa-kategori') . '/' . $pengumuman->slug) }}">
                                     {{ $pengumuman->judul }}
                                 </a>
                             </h3>
@@ -97,7 +97,7 @@
                                 {{ Str::limit($pengumuman->ringkasan, 100) }}
                             </p>
                             @endif
-                            <a href="{{ url('/artikel/' . $pengumuman->slug) }}" class="read-more-btn">
+                            <a href="{{ url('/artikel/' . $pengumuman->jenis . '/' . ($pengumuman->kategori ? $pengumuman->kategori->slug : 'tanpa-kategori') . '/' . $pengumuman->slug) }}" class="read-more-btn">
                                 Baca Selengkapnya <i class="fas fa-arrow-right"></i>
                             </a>
                         </div>

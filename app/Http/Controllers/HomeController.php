@@ -122,8 +122,8 @@ class HomeController extends Controller
         return view('landing.pengumuman', $params);
     }
 
-    public function getArtikel($slug){
-        $artikel = Artikel::published()->with('penulis')->where('slug', $slug)->firstOrFail();
+    public function getArtikel($jenis = null, $kategori = null, $slug){
+        $artikel = Artikel::published()->with(['penulis', 'kategori'])->where('slug', $slug)->firstOrFail();
         
         $artikel->increment('views');
 

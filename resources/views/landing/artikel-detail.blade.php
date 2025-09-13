@@ -80,7 +80,7 @@
                             </div>
                             @endif
                             <h6>
-                                <a href="{{ url('/artikel/' . $terkait->slug) }}" class="text-decoration-none text-dark">
+                                <a href="{{ url('/artikel/' . $terkait->jenis . '/' . ($terkait->kategori ? $terkait->kategori->slug : 'tanpa-kategori') . '/' . $terkait->slug) }}" class="text-decoration-none text-dark">
                                     {{ Str::limit($terkait->judul, 40) }}
                                 </a>
                             </h6>

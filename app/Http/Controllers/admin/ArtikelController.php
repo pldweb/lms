@@ -56,7 +56,8 @@ class ArtikelController extends Controller
 
     public function getCreatePengumuman()
     {
-        $params = ['jenis' => 'pengumuman'];
+        $kategori = KategoriArtikel::all();
+        $params = ['jenis' => 'pengumuman', 'kategori' => $kategori];
         return view('admin.artikel.create', $params);
     }
 

@@ -41,9 +41,9 @@
                             <input type="hidden" name="jenis" id="jenis" class="form-control" value="{{ $jenis }}">
 
                             <!-- Kategori -->
-                            <div class="mt-20">
+                            <div class="">
                                 <label for="kategori" class="form-label">Kategori</label>
-                                <select name="kategori" id="kategori" class="form-select select2">
+                                <select name="kategori_id" id="kategori" class="form-select select2">
                                     <option value="">Pilih Kategori</option>
                                     @foreach($kategori as $item)
                                         <option value="{{ $item->id }}">{{ $item->nama }}</option>
@@ -94,10 +94,10 @@
                                 </div>
                             </div>
 
-                            <!-- Submit Buttons -->
+                            <!-- Submit Button -->
                             <div class="d-flex gap-5 mt-20">
                                 <button type="button" id="simpanDraft" class="btn btn-secondary btn-add">
-                                    <i class="ph ph-floppy-disk"></i> Simpan sebagai Draft
+                                    <i class="ph ph-floppy-disk"></i> Draft
                                 </button>
                                 <button type="button" id="publishSekarang" class="btn btn-success btn-add">
                                     <i class="ph ph-paper-plane-tilt"></i> Publish Sekarang
@@ -118,7 +118,9 @@
     $(document).ready(function() {
 
         // Initialize TinyMCE
-        initTinyMCE('.tinymce-editor');
+        TinyMCE('.tinymce-editor');
+
+        initSelect2('.select2');
 
         // Handle status change untuk show/hide tanggal publish
         $('#status').change(function() {

@@ -31,17 +31,9 @@ class Artikel extends Model
         'views' => 'integer'
     ];
 
-    /**
-     * Get the category associated with the article.
-     * 
-     * Usage example:
-     * $article = Artikel::find(1);
-     * $category = $article->kategori;
-     * echo $category->name;
-     */
     public function kategori()
     {
-        return $this->belongsTo(KategoriArtikel::class, 'kategori_id');
+        return $this->hasOne(KategoriArtikel::class, 'id', 'kategori_id');
     }
 
     public function penulis(): BelongsTo

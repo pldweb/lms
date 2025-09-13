@@ -91,7 +91,7 @@
                                             Edit Data
                                         </a>
                                         @if($artikel->status == 'publish')
-                                        <a href="{{url('/artikel/' . $artikel->slug)}}" target="_blank" class="btn btn-success btn-add">
+                                        <a href="{{url("/artikel/$artikel->jenis/" . ($artikel->kategori ? $artikel->kategori->slug : 'tanpa-kategori') . "/$artikel->slug")}}" target="_blank" class="btn btn-success btn-add">
                                             Lihat Artikel
                                         </a>
                                         @endif
