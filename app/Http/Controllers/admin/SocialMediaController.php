@@ -2,177 +2,165 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Helper\CatatLogAktivitas;
 use App\Http\Controllers\Controller;
 use App\Models\SocialMedia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class SocialMediaController extends Controller
 {
-    /**
-     * Method untuk mendapatkan data social media dengan fallback
-     */
+    public array $roles = ['Admin'];
+   
     public static function getSocialMedia()
     {
-        return [
-            [
-                'nama' => 'Facebook',
-                'icon' => 'fab fa-facebook-f',
-                'link' => 'https://facebook.com/sekolah',
-                'deskripsi' => 'Halaman Facebook Sekolah',
-                'urutan' => 1,
-                'aktif' => true
-            ],
-            [
-                'nama' => 'Instagram',
-                'icon' => 'fab fa-instagram',
-                'link' => 'https://instagram.com/sekolah',
-                'deskripsi' => 'Instagram Sekolah',
-                'urutan' => 2,
-                'aktif' => true
-            ],
-            [
-                'nama' => 'YouTube',
-                'icon' => 'fab fa-youtube',
-                'link' => 'https://youtube.com/sekolah',
-                'deskripsi' => 'Channel YouTube Sekolah',
-                'urutan' => 3,
-                'aktif' => true
-            ]
-        ];
+        $socialMedia = SocialMedia::aktif()->urutan()->get();
+        
+        if ($socialMedia->isEmpty()) {
+            return [
+                [
+                    'nama' => 'Facebook',
+                    'icon' => '',
+                    'link' => 'https://facebook.com/sekolah',
+                    'deskripsi' => 'Halaman Facebook Sekolah',
+                    'urutan' => 1,
+                    'aktif' => true
+                ],
+                [
+                    'nama' => 'Instagram',
+                    'icon' => '',
+                    'link' => 'https://instagram.com/sekolah',
+                    'deskripsi' => 'Instagram Sekolah',
+                    'urutan' => 2,
+                    'aktif' => true
+                ],
+                [
+                    'nama' => 'YouTube',
+                    'icon' => '',
+                    'link' => 'https://youtube.com/sekolah',
+                    'deskripsi' => 'Channel YouTube Sekolah',
+                    'urutan' => 3,
+                    'aktif' => true
+                ]
+            ];
+        }
+        
+        return $socialMedia;
     }
 
-    /**
-     * Menampilkan halaman index social media
-     */
     public function getIndex()
     {
         $socialMedia = SocialMedia::orderBy('urutan', 'asc')->get();
-        
-        return view('admin.social_media.index', [
+        $params = [
             'socialMedia' => $socialMedia
-        ]);
+        ];
+        return view('admin.social_media.index', $params);
     }
 
-    /**
-     * Menampilkan halaman create social media
-     */
-    public function getCreate()
+    public function getCreate(Request $request)
     {
-        return view('admin.social_media.detail', [
-            'socialMedia' => null
-        ]);
+        $data = SocialMedia::find($request->id);
+        $params = ['socialMedia' => $data];
+        return view('admin.social_media.create', $params);
     }
 
-    /**
-     * Menampilkan halaman edit social media
-     */
     public function getEdit($id)
+    {
+        $data = SocialMedia::find($id);
+        $params = ['socialMedia' => $data];
+        return view('admin.social_media.create', $params);
+    }
+
+
+    public function postStore(Request $request)
+    {
+        
+        $id = $request->id;
+        $socialMedia = $id ? SocialMedia::find($id) : new SocialMedia;
+        
+        try {
+            DB::beginTransaction();
+            
+            $socialMedia->nama = $request->nama;
+            $socialMedia->link = $request->link;
+            $socialMedia->urutan = $request->urutan;
+            $socialMedia->aktif = $request->has('aktif') ? true : false;
+            
+            // Handle icon upload
+            if ($request->hasFile('icon')) {
+                if ($socialMedia->icon && Storage::disk('public')->exists($socialMedia->icon)) {
+                    Storage::disk('public')->delete($socialMedia->icon);
+                }
+                
+                $iconFile = $request->file('icon');
+                $iconName = time() . '_' . str_replace(' ', '_', $iconFile->getClientOriginalName());
+                $socialMedia->icon = $iconFile->storeAs('social_media', $iconName, 'public');
+
+            } elseif ($request->icon && !$request->hasFile('icon')) {
+                $socialMedia->icon = $request->icon;
+            }
+            
+            $socialMedia->save();
+            DB::commit();
+            
+            if($id){
+                sendTelegramMessage('Social Media berhasil diupdate');
+                CatatLogAktivitas::catatAktivitas('Social Media berhasil diupdate');
+                return successAlert('Social Media berhasil diupdate', null, '', '/admin/social-media');
+            } else {
+                sendTelegramMessage('Social Media berhasil ditambahkan');
+                CatatLogAktivitas::catatAktivitas('Social Media berhasil ditambahkan');
+                return successAlert('Social Media berhasil ditambahkan', null, '', '/admin/social-media');
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return errorAlert('Social Media gagal ' . ($id ? 'diupdate' : 'ditambahkan'), $th->getMessage());
+        }
+    }
+
+    public function postDelete($id)
     {
         $socialMedia = SocialMedia::find($id);
         
-        if (!$socialMedia) {
-            return redirect()->route('admin.social_media')->with('error', 'Social Media tidak ditemukan');
-        }
-        
-        return view('admin.social_media.detail', [
-            'socialMedia' => $socialMedia
-        ]);
-    }
-
-    /**
-     * Menyimpan atau mengupdate data social media
-     */
-    public function postStore(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'icon' => 'required|string|max:255',
-            'link' => 'required|url|max:255',
-            'deskripsi' => 'nullable|string',
-            'urutan' => 'required|integer|min:0',
-            'aktif' => 'boolean'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validasi gagal',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
         try {
             DB::beginTransaction();
-
-            $data = [
-                'nama' => $request->nama,
-                'icon' => $request->icon,
-                'link' => $request->link,
-                'deskripsi' => $request->deskripsi,
-                'urutan' => $request->urutan,
-                'aktif' => $request->has('aktif') ? true : false
-            ];
-
-            if ($request->id) {
-                // Update existing social media
-                $socialMedia = SocialMedia::find($request->id);
-                if (!$socialMedia) {
-                    throw new \Exception('Social Media tidak ditemukan');
-                }
-                $socialMedia->update($data);
-                $message = 'Social Media berhasil diupdate';
-            } else {
-                // Create new social media
-                SocialMedia::create($data);
-                $message = 'Social Media berhasil ditambahkan';
+            
+            // Delete icon file if exists
+            if ($socialMedia->icon && Storage::exists('public/social_media/' . $socialMedia->icon)) {
+                Storage::delete('public/social_media/' . $socialMedia->icon);
             }
-
+            
+            $socialMedia->delete();
             DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => $message,
-                'redirect' => route('admin.social_media')
-            ]);
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-            ], 500);
+            
+            sendTelegramMessage('Social Media berhasil dihapus');
+            CatatLogAktivitas::catatAktivitas('Social Media berhasil dihapus');
+            return successAlert('Social Media berhasil dihapus', null, '', '/admin/social_media');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return errorAlert('Social Media gagal dihapus', $th->getMessage());
         }
     }
-
-    /**
-     * Menghapus social media
-     */
-    public function postDeleteAction($id)
+    
+    public function postToggleStatus($id)
     {
+        $socialMedia = SocialMedia::find($id);
+        
         try {
-            $socialMedia = SocialMedia::find($id);
+            DB::beginTransaction();
+            $socialMedia->aktif = !$socialMedia->aktif;
+            $socialMedia->save();
+            DB::commit();
             
-            if (!$socialMedia) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Social Media tidak ditemukan'
-                ], 404);
-            }
-
-            $socialMedia->delete();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Social Media berhasil dihapus'
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-            ], 500);
+            $status = $socialMedia->aktif ? 'diaktifkan' : 'dinonaktifkan';
+            sendTelegramMessage('Social Media berhasil ' . $status);
+            CatatLogAktivitas::catatAktivitas('Social Media berhasil ' . $status);
+            return successAlert('Social Media berhasil ' . $status);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return errorAlert('Social Media gagal diupdate', $th->getMessage());
         }
     }
 }

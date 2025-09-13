@@ -17,7 +17,6 @@ class Kontak extends Model
         'email',
         'telepon',
         'alamat',
-        'icon',
         'urutan',
         'aktif'
     ];

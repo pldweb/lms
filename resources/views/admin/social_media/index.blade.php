@@ -1,71 +1,78 @@
 @extends('layouts.admin')
-@section('title', 'Manajemen Social Media')
+@section('title', 'Menu Management')
 @section('content')
+
 <div class="row mt-20">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header b-title">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="card-title w-content">Kelola Social Media</h3>
+                    <h3 class="card-title w-content">Kelola Menu</h3>
                     <div class="d-flex justify-center align-items-center" style="gap: 5px;">
-                        <a href="{{ url('/admin/social-media/create') }}" class="btn btn-primary btn-sm btn-add" style="white-space: nowrap">
-                            <i class="ph ph-plus"></i> Tambah Social Media
+                        <div class="input-group">
+                            <input type="text" id="searchInput" class="form-control w-auto mb-3" placeholder="Cari...">
+                            <span class="input-group-text mb-3"><i class="ph ph-magnifying-glass"></i></span>
+                        </div>
+                        @if(Auth::user()->hasRole('Admin'))
+                        <a onclick="showModal('/admin/social-media/create', 'Tambah Media Sosial')" class="btn btn-primary btn-sm btn-add" style="white-space: nowrap">
+                            <i class="ph ph-plus"></i> Tambah Media Sosial
                         </a>
+                        @endif
                     </div>
                 </div>
             </div>
             <div class="card-body">
-                @if($socialMedia->isEmpty())
-                    {!! alert('Belum ada social media', 'warning') !!}
+                @if($socialMedia->count() == 0)
+                    {!! alert('Belum ada menu', 'warning') !!}
                 @else
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover" id="table-social-media" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th class="h6 text-gray-300 fixed-width">No</th>
-                                <th class="h6 text-gray-300">Platform</th>
-                                <th class="h6 text-gray-300">Icon</th>
-                                <th class="h6 text-gray-300">Link</th>
-                                <th class="h6 text-gray-300">Deskripsi</th>
-                                <th class="h6 text-gray-300">Urutan</th>
-                                <th class="h6 text-gray-300">Status</th>
-                                <th class="h6 text-gray-300">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($socialMedia as $index => $item)
-                            <tr>
-                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $index + 1 }}</span></td>
-                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->nama }}</span></td>
-                                <td>
-                                    <i class="{{ $item->icon }} fa-lg text-primary"></i>
-                                </td>
-                                <td>
-                                    <a href="{{ $item->link }}" target="_blank" class="text-decoration-underline">
-                                        {{ Str::limit($item->link, 30) }}
-                                    </a>
-                                </td>
-                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ Str::limit($item->deskripsi ?? '-', 50) }}</span></td>
-                                <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->urutan }}</span></td>
-                                <td>
-                                    @if ($item->aktif)
-                                        <span class="badge bg-success">Aktif</span>
-                                    @else
-                                        <span class="badge bg-danger">Tidak Aktif</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <a href="{{ url('admin/social-media/edit/' . $item->id) }}" class="btn btn-sm btn-primary btn-add">
-                                        <i class="ph ph-pencil"></i>
-                                    </a>
-                                    <button class="btn btn-sm btn-danger btn-add" onclick="confirmDelete({{ $item->id }})">
-                                        <i class="ph ph-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body p-0 overflow-x-auto">
+                                <table id="socialMediaTable" class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="h6 text-gray-300">Media Sosial</th>
+                                            <th class="h6 text-gray-300">Icon</th>
+                                            <th class="h6 text-gray-300">URL</th>
+                                            <th class="h6 text-gray-300">Urutan</th>
+                                            <th class="h6 text-gray-300">Status</th>
+                                            @if(Auth::user()->hasRole('Admin'))
+                                            <th class="h6 text-gray-300">Aksi</th>
+                                            @endif
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($socialMedia as $index => $item)
+                                        <tr>
+                                            <td>
+                                                <div class="flex-align gap-8">
+                                                    <span class="h6 mb-0 fw-medium text-gray-300">{{ $item->nama }}</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <img class="" style="max-height: 25px;" src="{{$item->icon ? Storage::url($item->icon) : ''}}" alt="{{ $item->nama }}"></img>
+                                            </td>
+                                            <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->link }}</span></td>
+                                            <td><span class="h6 mb-0 fw-medium text-gray-300">{{ $item->urutan }}</span></td>
+                                            <td>
+                                                <span class="badge bg-{{ $item->aktif ? 'success' : 'danger' }} text-{{ $item->aktif ? 'success' : 'danger' }}-soft text-sm" onclick="toggleStatus({{ $item->id }})">
+                                                    {{ $item->aktif ? 'Aktif' : 'Tidak Aktif' }}
+                                                </span>
+                                            </td>
+                                            @if(Auth::user()->hasRole('Admin'))
+                                            <td>
+                                                <button onclick="showModal('/admin/social-media/edit/{{ $item->id }}', 'Data Sosial Media')" style="margin-right: 5px;" class="btn btn-primary btn-add btn-sm"><i class="ph ph-pencil"></i></button>
+                                                <button onclick="confirmDelete({{ $item->id }})" class="btn btn-danger btn-add btn-sm"><i class="ph ph-trash btn-icon"></i></button>
+                                            </td>
+                                            @endif
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 @endif
             </div>
@@ -73,14 +80,20 @@
     </div>
 </div>
 <script>
+    $(document).ready(function() {
+        initDataTable("#socialMediaTable");
+    });
+
     function confirmDelete(id) {
-        confirmModal('Apakah Anda yakin ingin menghapus social media ini?', function() {
-            ajxProcess('/admin/social-media/delete-action/' + id, '', '#message-modal');
+        confirmModal('Apakah Anda yakin ingin menghapus menu ini?', function() {
+            ajxProcess('/admin/menu/delete/' + id, '', '#message-modal');
         });
     }
-
-    $(document).ready(function () {
-        initDataTable("#table-social-media");
-    });
+    
+    function toggleStatus(id) {
+        confirmModal('Apakah Anda yakin ingin mengubah status menu ini?', function() {
+            ajxProcess('/admin/menu/toggle-status/' + id, '', '#message-modal');
+        });
+    }
 </script>
 @endsection

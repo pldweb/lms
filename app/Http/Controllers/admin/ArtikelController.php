@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Helper\CatatLogAktivitas;
 use App\Http\Controllers\Controller;
 use App\Models\Artikel;
 use Carbon\Carbon;
@@ -113,6 +114,8 @@ class ArtikelController extends Controller
             $artikel = Artikel::create($data);
 
             DB::commit();
+            CatatLogAktivitas::catatAktivitas("$request->judul berhasil disimpan");
+            sendTelegramMessage("Artikel $request->judul berhasil disimpan");
 
             $statusMessage = [
                 'draft' => 'Artikel berhasil disimpan sebagai draft',
@@ -184,6 +187,9 @@ class ArtikelController extends Controller
 
             DB::commit();
 
+            CatatLogAktivitas::catatAktivitas("$request->judul berhasil diupdate");
+            sendTelegramMessage("Artikel $request->judul berhasil diupdate");
+
             $redirectURL = url('/admin/artikel/' . $artikel->jenis);
             return successAlert('Artikel berhasil diupdate', null, '', $redirectURL);
 
@@ -200,6 +206,9 @@ class ArtikelController extends Controller
         if ($artikel->gambar && file_exists(public_path('img/artikel/' . $artikel->gambar))) {  
             unlink(public_path('img/artikel/' . $artikel->gambar));
         }
+
+        CatatLogAktivitas::catatAktivitas("$artikel->judul berhasil dihapus");
+        sendTelegramMessage("Artikel $artikel->judul berhasil dihapus");
 
         $jenis = $artikel->jenis;
         $artikel->delete();
@@ -218,6 +227,8 @@ class ArtikelController extends Controller
                 'status' => 'publish',
                 'tanggal_publish' => Carbon::now()->format('Y-m-d H:i:s')
             ]);
+            CatatLogAktivitas::catatAktivitas("$artikel->judul berhasil dipublish");
+            sendTelegramMessage("Artikel $artikel->judul berhasil dipublish");
             $message = 'Artikel berhasil dipublish';
         } else {
             $artikel->update([
@@ -225,6 +236,8 @@ class ArtikelController extends Controller
                 'tanggal_publish' => null
             ]);
             $message = 'Artikel berhasil dijadikan draft';
+            CatatLogAktivitas::catatAktivitas("$artikel->judul berhasil dijadikan draft");
+            sendTelegramMessage("Artikel $artikel->judul berhasil dijadikan draft");
         }
         return successAlert($message, null, '', url('/admin/artikel/' . $artikel->jenis));
     }

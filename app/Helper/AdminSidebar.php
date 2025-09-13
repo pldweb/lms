@@ -99,6 +99,12 @@ class AdminSidebar
                     ],
                 ];
 
+                // $menu[] = [
+                //     'text' => 'Halaman',
+                //     'icon' => 'ph ph-clock',
+                //     'link' => 'admin/halaman',
+                // ];
+
                 $menu[] = [
                     'text' => 'Galeri',
                     'icon' => 'ph ph-image',

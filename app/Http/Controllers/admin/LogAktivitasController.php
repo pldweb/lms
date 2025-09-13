@@ -14,7 +14,7 @@ class LogAktivitasController extends Controller
 {
     public function getIndex()
     {
-        $logAktivitas = LogAktivitas::all();
+        $logAktivitas = LogAktivitas::orderBy('id', 'desc')->get();
         $params = [
             'logAktivitas' => $logAktivitas
         ];

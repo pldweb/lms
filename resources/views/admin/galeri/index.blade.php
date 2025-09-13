@@ -15,7 +15,7 @@
                         <a href="{{ url('/admin/galeri/create') }}" class="btn btn-primary mb-3 btn-add" style="white-space: nowrap">
                             <i class="ph ph-plus"></i> Tambah Item
                         </a>                   
-                        <select id="filterKategori" class="form-select w-auto mb-3 mr-2">
+                        <select id="filterKategori" class="form-select w-auto mb-3 mr-2 select2">
                             <option value="">Semua Kategori</option>
                             @foreach($kategori as $kat)
                                 <option value="{{ $kat->id }}">{{ $kat->nama_kategori }}</option>
@@ -141,20 +141,7 @@
         
     $(document).ready(function() {
 
-        $('#galeriTable').DataTable({
-            paging: true,
-            lengthChange: true,
-            searching: false,
-            ordering: true,
-            info: true,
-            autoWidth: true,
-            responsive: true,
-        });
-
-        // Search functionality
-        $('#searchInput').on('keyup', function() {
-            filterTable();
-        });
+       initDataTable("#galeriTable")
 
         // Filter by kategori
         $('#filterKategori').on('change', function() {

@@ -10,6 +10,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use App\Helper\CatatLogAktivitas;
+use App\Helper\sendTelegramMessage;
 
 class ProfileController extends Controller
 {
@@ -33,10 +35,14 @@ class ProfileController extends Controller
             $userExist->foto_profile = $path;
             $userExist->save();
             DB::commit();
-            return successAlert('Foto profile berhasil diupload');
+            CatatLogAktivitas::catatAktivitas("Ubah foto profile $user->nama");
+            sendTelegramMessage("Ubah foto profile $user->nama");
+            return successAlert("Foto profile $user->nama berhasil diupload");
         }catch(\Exception $e){
             DB::rollBack();
-            return errorAlert('Foto profile gagal diupload');
+            CatatLogAktivitas::catatAktivitas("Gagal ubah foto profile $user->nama");
+            sendTelegramMessage("Gagal ubah foto profile $user->nama");
+            return errorAlert("Foto profile $user->nama gagal diupload");
         }
     }
 
@@ -96,9 +102,13 @@ class ProfileController extends Controller
             $user->kodepos = $kodepos;
             $user->save();
             DB::commit();
-            return successAlert('Profil berhasil diupdate', '/admin/profile');
+            CatatLogAktivitas::catatAktivitas("Ubah profile $user->nama");
+            sendTelegramMessage("Ubah profile $user->nama");
+            return successAlert("Profil $user->nama berhasil diupdate", '/admin/profile');
         }catch(\Exception $e){
             DB::rollBack();
+            CatatLogAktivitas::catatAktivitas('Gagal ubah profile');
+            sendTelegramMessage('Gagal ubah profile');
             return errorAlert('Profil gagal diupdate', '/admin/profile');
         }
     }
@@ -121,9 +131,13 @@ class ProfileController extends Controller
             $user->password = Hash::make($password);
             User::where('id', $user->id)->update(['password' => $user->password]);
             DB::commit();
+            CatatLogAktivitas::catatAktivitas("$user->nama berhasil ubah password");
+            sendTelegramMessage("$user->nama berhasil ubah password");
             return successAlert('Password berhasil diganti', '/admin/profile');
         }catch(\Exception $e){
             DB::rollBack();
+            CatatLogAktivitas::catatAktivitas('Gagal ubah password');
+            sendTelegramMessage('Gagal ubah password');
             return errorAlert('Password gagal diganti', '/admin/profile');
         }
     }

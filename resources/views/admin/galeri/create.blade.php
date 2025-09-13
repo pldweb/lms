@@ -20,7 +20,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="kategori_galeri_id" class="form-label">Kategori <span class="text-danger">*</span></label>
-                                <select class="form-select" id="kategori_galeri_id" name="kategori_galeri_id" required>
+                                <select class="form-select select2" id="kategori_galeri" name="kategori_galeri" required>
                                     <option value="">Pilih Kategori</option>
                                     @foreach($kategori as $kat)
                                         <option value="{{ $kat->id }}">{{ $kat->nama_kategori }}</option>
@@ -56,7 +56,7 @@
 
                             <div class="mb-3">
                                 <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                                <select class="form-select" id="status" name="status" required>
+                                <select class="form-select select2" id="status" name="status" required>
                                     <option value="">Pilih Status</option>
                                     <option value="aktif" selected>Aktif</option>
                                     <option value="nonaktif">Non-Aktif</option>
@@ -128,6 +128,9 @@
 
 <script>
     $(document).ready(function() {
+
+        initSelect2(".select2");
+
         // Toggle content type
         $('input[name="tipe"]').change(function() {
             if ($(this).val() === 'foto') {

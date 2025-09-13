@@ -4,12 +4,15 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kontak;
+use App\Helper\CatatLogAktivitas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 
 class KontakController extends Controller
 {
+    public array $roles = ['Admin'];
+
     public static function getKontak()
     {
         $kontak = Kontak::aktif()
@@ -53,61 +56,94 @@ class KontakController extends Controller
     public function getIndex()
     {
         $kontak = Kontak::orderBy('urutan', 'asc')->get();
-        return view('admin.kontak.index', compact('kontak'));
+        $params = ['kontak' => $kontak];
+        return view('admin.kontak.index', $params);
     }
 
-    public function getCreate()
+    public function getCreate(Request $request)
     {
-        return view('admin.kontak.detail');
+        $data = Kontak::find($request->id);
+        $params = ['data' => $data];
+        return view('admin.kontak.detail', $params);
     }
 
     public function getEdit($id)
     {
-        $data = Kontak::findOrFail($id);
-        return view('admin.kontak.detail', compact('data'));
+        $data = Kontak::find($id);
+        $params = ['data' => $data];
+        return view('admin.kontak.detail', $params);
     }
 
     public function postStore(Request $request)
     {
-        DB::beginTransaction();
+        $id = $request->id;
+        $kontak = $id ? Kontak::find($id) : new Kontak();
+        
         try {
-            $kontak = $request->id ? Kontak::findOrFail($request->id) : new Kontak();
-
-            $data = [
-                'nama' => $request->nama ?? null,
-                'jabatan' => $request->jabatan ?? null,
-                'email' => $request->email ?? null,
-                'telepon' => $request->telepon ?? null,
-                'alamat' => $request->alamat ?? null,
-                'icon' => $request->icon ?? null,
-                'urutan' => $request->urutan ?? 0,
-                'aktif' => $request->has('aktif'),
-            ];
-
-            if ($request->id) {
-                $kontak->update($data);
-            } else {
-                Kontak::create($data);
-            }
-
+            DB::beginTransaction();
+            
+            $kontak->nama = $request->nama ?? '';
+            $kontak->jabatan = $request->jabatan ?? '';
+            $kontak->email = $request->email ?? '';
+            $kontak->telepon = $request->telepon ?? '';
+            $kontak->alamat = $request->alamat ?? '';
+            $kontak->icon = $request->icon ?? null;
+            $kontak->urutan = $request->urutan ?? 0;
+            $kontak->aktif = $request->has('aktif') ? true : false;
+            
+            $kontak->save();
             DB::commit();
-            $text = $request->id ? 'Kontak berhasil diperbarui' : 'Kontak berhasil ditambahkan';
-            return successAlert($text, null, '#masterData', '/admin/kontak');
+            
+            if($id){
+                sendTelegramMessage('Kontak berhasil diupdate');
+                CatatLogAktivitas::catatAktivitas('Kontak berhasil diupdate');
+                return successAlert('Kontak berhasil diupdate', null, '', '/admin/kontak');
+            } else {
+                sendTelegramMessage('Kontak berhasil ditambahkan');
+                CatatLogAktivitas::catatAktivitas('Kontak berhasil ditambahkan');
+                return successAlert('Kontak berhasil ditambahkan', null, '', '/admin/kontak');
+            }
         } catch (\Throwable $th) {
             DB::rollBack();
-            return errorAlert('Gagal menyimpan kontak: ' . $th->getMessage());
+            return errorAlert('Kontak gagal ' . ($id ? 'diupdate' : 'ditambahkan'), $th->getMessage());
         }
     }
 
-    public function postDeleteAction($id)
+    public function postDelete($id)
     {
-        $kontak = Kontak::findOrFail($id);
-
+        $kontak = Kontak::find($id);
+        
         try {
+            DB::beginTransaction();
             $kontak->delete();
-            return successAlert('Berhasil hapus kontak');
-        }catch(\Exception $e){
-            return errorAlert('Gagal hapus kontak');
+            DB::commit();
+            
+            sendTelegramMessage('Kontak berhasil dihapus');
+            CatatLogAktivitas::catatAktivitas('Kontak berhasil dihapus');
+            return successAlert('Kontak berhasil dihapus', null, '', '/admin/kontak');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return errorAlert('Kontak gagal dihapus', $th->getMessage());
+        }
+    }
+    
+    public function postToggleStatus($id)
+    {
+        $kontak = Kontak::find($id);
+        
+        try {
+            DB::beginTransaction();
+            $kontak->aktif = !$kontak->aktif;
+            $kontak->save();
+            DB::commit();
+            
+            $status = $kontak->aktif ? 'diaktifkan' : 'dinonaktifkan';
+            sendTelegramMessage('Kontak berhasil ' . $status);
+            CatatLogAktivitas::catatAktivitas('Kontak berhasil ' . $status);
+            return successAlert('Kontak berhasil ' . $status);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return errorAlert('Kontak gagal diupdate', $th->getMessage());
         }
     }
 }

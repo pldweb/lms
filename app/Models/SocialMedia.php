@@ -15,9 +15,10 @@ class SocialMedia extends Model
         'nama',
         'icon',
         'link',
-        'deskripsi',
         'urutan',
-        'aktif'
+        'aktif',
+        'created_at',
+        'updated_at'
     ];
 
     protected $casts = [

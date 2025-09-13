@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Helper\CatatLogAktivitas;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -71,9 +72,13 @@ class UserController extends Controller
             }
             $user->save();
             DB::commit();
+            CatatLogAktivitas::catatAktivitas('Ubah profile user');
+            sendTelegramMessage('Ubah profile user');
             return successAlert('Berhasil ubah profile', null, '#message-modal', '/admin/user/'.$jenis);
         }catch (\Exception $e){
             DB::rollBack();
+            CatatLogAktivitas::catatAktivitas('Gagal ubah profile user');
+            sendTelegramMessage('Gagal ubah profile user');
             return errorAlert('Gagal ubah profile'. $e->getMessage());
         }
     }
@@ -103,9 +108,13 @@ class UserController extends Controller
             $user->save();
             $user->assignRole($jenis);
             DB::commit();
+            CatatLogAktivitas::catatAktivitas('Buat user');
+            sendTelegramMessage('Buat user');
             return successAlert('Berhasil buat user', null, '#message-modal', '/admin/user/'.  $lowerJenis);
         }catch (\Exception $e){
             DB::rollBack();
+            CatatLogAktivitas::catatAktivitas('Gagal buat user');
+            sendTelegramMessage('Gagal buat user');
             return errorAlert('Gagal buat user'. $e->getMessage());
         }
     }
@@ -115,10 +124,17 @@ class UserController extends Controller
         $id = intval($id);
         $lowerJenis = strtolower($jenis);
         try {
+            DB::beginTransaction();
             $user = User::find($id);
             $user->delete();
+            DB::commit();
+            CatatLogAktivitas::catatAktivitas('Hapus user');
+            sendTelegramMessage('Hapus user');
             return successAlert('Berhasil hapus user', null, '#message-modal', '/admin/user/'.$lowerJenis);
         }catch (\Exception $e){
+            DB::rollBack();
+            CatatLogAktivitas::catatAktivitas('Gagal hapus user');
+            sendTelegramMessage('Gagal hapus user');
             return errorAlert('Gagal hapus user'. $e->getMessage());
         }
     }
