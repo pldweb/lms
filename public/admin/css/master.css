@@ -116,12 +116,14 @@ span[class^="select2-"] {
     color: #OC1018 !important;
 }
 
-span#select2-jenis-container {
+span[id^="select2-"] {
     padding-top: 5px;
-    padding-left: 12px;
+    padding-left: 16px !important;
 }
 
-span#select2-inputJenis-container {
-    padding-top: 5px;
-    padding-left: 16px;
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    background-color: #f5f5f5 !important;
+    color: #555;
 }

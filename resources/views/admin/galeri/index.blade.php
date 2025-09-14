@@ -40,7 +40,6 @@
                                             <th class="h6 text-gray-300">Preview</th>
                                             <th class="h6 text-gray-300">Judul</th>
                                             <th class="h6 text-gray-300">Kategori</th>
-                                            <th class="h6 text-gray-300">Tipe</th>
                                             <th class="h6 text-gray-300">Status</th>
                                             <th class="h6 text-gray-300">Urutan</th>
                                             <th class="h6 text-gray-300">Aksi</th>
@@ -49,11 +48,6 @@
                                     <tbody>
                                         @foreach ($galeri as $item)
                                             <tr data-kategori="{{ $item->kategori_galeri_id }}">
-                                                <td class="fixed-width">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input border-gray-200 rounded-4" type="checkbox">
-                                                    </div>
-                                                </td>
                                                 <td>
                                                     @if($item->tipe == 'foto' && $item->file_path)
                                                         <img src="{{ asset('img/galeri/' . $item->file_path) }}" alt="Preview" class="w-60 h-40 rounded object-fit-cover">
@@ -80,15 +74,15 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <span class="badge bg-info">{{ $item->kategori->nama_kategori }}</span>
+                                                    <span class="badge bg-info">{{$item->kategori->nama_kategori}}</span>
                                                 </td>
-                                                <td>
+                                                {{-- <td>
                                                     @if($item->tipe == 'foto')
                                                         <span class="badge bg-primary"><i class="ph ph-image"></i> Foto</span>
                                                     @else
                                                         <span class="badge bg-danger"><i class="ph ph-video"></i> Video</span>
                                                     @endif
-                                                </td>
+                                                </td> --}}
                                                 <td>
                                                     @if($item->status == 'aktif')
                                                         <span class="badge bg-success">Aktif</span>
@@ -97,32 +91,18 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <span class="h6 mb-0 fw-medium text-gray-300">{{ $item->urutan }}</span>
+                                                    <span class="h6 mb-0 fw-medium text-gray-300">{{$item->urutan}}</span>
                                                 </td>
                                                 <td>
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-sm btn-add btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                                            Aksi
-                                                        </button>
-                                                        <ul class="dropdown-menu">
-                                                            @if($item->tipe == 'video' && $item->youtube_url)
-                                                                <li><a class="dropdown-item" href="{{ $item->youtube_url }}" target="_blank">
-                                                                    <i class="ph ph-play"></i> Lihat Video
-                                                                </a></li>
-                                                            @elseif($item->tipe == 'foto' && $item->file_path)
-                                                                <li><a class="dropdown-item" href="{{ asset('img/galeri/' . $item->file_path) }}" target="_blank">
-                                                                    <i class="ph ph-eye"></i> Lihat Foto
-                                                                </a></li>
-                                                            @endif
-                                                            <li><a class="dropdown-item" href="{{ url('/admin/galeri-edit/' . $item->id) }}">
-                                                                <i class="ph ph-pencil"></i> Edit
-                                                            </a></li>
-                                                            <li><hr class="dropdown-divider"></li>
-                                                            <li><button class="dropdown-item text-danger" onclick="deleteGaleri({{ $item->id }})">
-                                                                <i class="ph ph-trash"></i> Hapus
-                                                            </button></li>
-                                                        </ul>
-                                                    </div>
+                                                    <a href="{{ url('/admin/galeri/edit/' . $item->id) }}" class="btn btn-sm btn-edit btn-add btn-primary">
+                                                        <i class="ph ph-pencil"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-sm btn-add btn-{{ $item->status == 'aktif' ? 'warning' : 'success' }}" onclick="toggleStatus({{ $item->id }})">
+                                                        <i class="ph ph-{{ $item->status == 'aktif' ? 'eye-slash' : 'eye' }}"></i> 
+                                                    </button>
+                                                    <button onclick="deleteGaleri('{{ $item->id }}')" class="btn btn-sm btn-delete btn-add btn-danger">
+                                                        <i class="ph ph-trash"></i>
+                                                    </button>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -138,27 +118,29 @@
 </div>
 
 <script>
-        
     $(document).ready(function() {
-
        initDataTable("#galeriTable")
-
-        // Filter by kategori
-        $('#filterKategori').on('change', function() {
-            filterTable();
-        });
-
-        function filterTable() {
-            var searchValue = $('#searchInput').val().toLowerCase();
-            var kategoriValue = $('#filterKategori').val();
-            
-            $('#galeriTable tbody tr').filter(function() {
-                var textMatch = $(this).text().toLowerCase().indexOf(searchValue) > -1;
-                var kategoriMatch = kategoriValue === '' || $(this).data('kategori') == kategoriValue;
-                $(this).toggle(textMatch && kategoriMatch);
-            });
-        }
     });
+    
+    function toggleStatus(id) {
+        confirmModal('Apakah Anda yakin ingin mengubah status galeri ini?', function(){
+            ajxProcess('/admin/galeri/toggle-status/' + id, {
+                data: {
+                    _token: '{{ csrf_token() }}'
+                }
+            }, '#message-modal')
+        })
+    }
+    
+    function deleteGaleri(id) {
+        confirmModal('Apakah Anda yakin ingin menghapus item galeri ini? Data yang dihapus tidak dapat dikembalikan.', function(){
+            ajxProcess('/admin/galeri/delete/' + id, {
+                data: {
+                    _token: '{{ csrf_token() }}'
+                }
+            }, '#message-modal')
+        })
+    }
 </script>
 
 @endsection

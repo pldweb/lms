@@ -17,7 +17,7 @@ class UserController extends Controller
 
     public function getAdmin()
     {
-        $users = User::role(['Admin'])->get();
+        $users = User::role(['Admin'])->orderBy('created_at', 'desc')->get();
         $params = [
             'users' => $users,
             'jenis' => 'admin'
@@ -27,7 +27,7 @@ class UserController extends Controller
 
     public function getGuru()
     {
-        $users = User::role(['Guru'])->get();
+        $users = User::role(['Guru'])->orderBy('created_at', 'desc')->get();
         $params = [
             'users' => $users,
             'jenis' => 'guru'
@@ -37,7 +37,7 @@ class UserController extends Controller
 
     public function getSiswa()
     {
-        $users = User::role(['Siswa'])->get();
+        $users = User::role(['Siswa'])->orderBy('created_at', 'desc')->get();
         $params = [
             'users' => $users,
             'jenis' => 'siswa'
@@ -55,68 +55,6 @@ class UserController extends Controller
         return view('admin.user.detail', $params);
     }
 
-    public function postUpdateUserAction(Request $request)
-    {
-        $id = $request->id;
-        $nama = $request->nama;
-        $email = $request->email;
-        $password = $request->password;
-        $jenis = $request->jenis;
-        $jenisUser = $request->jenis_user;
-        $tanggalLahir = $request->tanggal_lahir;
-
-        try {
-            DB::beginTransaction();
-            $user = User::find($id);
-            $user->nama = $nama;
-            $user->email = $email;
-            if($password != null){
-                $user->password = Hash::make($password);
-            }
-            
-            // Update data umum
-            $user->jenis_user = $jenisUser;
-            $user->tanggal_lahir = $tanggalLahir;
-            $user->alamat = $request->alamat;
-            $user->no_hp = $request->no_hp;
-            $user->provinsi = $request->provinsi;
-            $user->kota = $request->kota;
-            $user->kecamatan = $request->kecamatan;
-            $user->kelurahan = $request->kelurahan;
-            $user->kodepos = $request->kodepos;
-            
-            // Update data khusus berdasarkan jenis user
-            if ($jenisUser == 'siswa') {
-                $user->nama_orang_tua = $request->nama_orang_tua;
-                $user->no_hp_orang_tua = $request->no_hp_orang_tua;
-            }
-            
-            // Upload dan simpan foto profile jika ada
-            if ($request->hasFile('foto_profile')) {
-                // Hapus foto lama jika ada
-                if ($user->foto_profile && Storage::disk('public')->exists($user->foto_profile)) {
-                    Storage::disk('public')->delete($user->foto_profile);
-                }
-                
-                $file = $request->file('foto_profile');
-                $fileName = time() . '.' . $file->getClientOriginalExtension();
-                $path = $file->storeAs('profile', $fileName, 'public');
-                $user->foto_profile = $path;
-            }
-            
-            $user->save();
-            DB::commit();
-            CatatLogAktivitas::catatAktivitas('Ubah profile user');
-            sendTelegramMessage('Ubah profile user');
-            return successAlert('Berhasil ubah profile', null, '#message-modal', '/admin/user/'.$jenis);
-        }catch (\Exception $e){
-            DB::rollBack();
-            CatatLogAktivitas::catatAktivitas('Gagal ubah profile user');
-            sendTelegramMessage('Gagal ubah profile user');
-            return errorAlert('Gagal ubah profile'. $e->getMessage());
-        }
-    }
-
     public function getCreateUser($jenis)
     {
         $params = [
@@ -126,23 +64,38 @@ class UserController extends Controller
         return view('admin.user.create', $params);
     }
 
+    public function getEdit($jenis, $id)
+    {
+        $user = User::find($id);
+        $params = [
+            'jenis' => $jenis,
+            'user' => $user,
+        ];
+        return view('admin.user.create', $params);
+    }
+
     public function postCreateUserAction(Request $request)
     {
         $nama = $request->nama;
         $email = $request->email;
         $password = $request->password;
-        $jenis = $request->jenis;
-        $lowerJenis = strtolower($jenis);
-        $jenisUser = $request->jenis_user;
+        $jenisUser = $request->jenis;
         $tanggalLahir = $request->tanggal_lahir;
+        $id = $request->id;
 
         try {
             DB::beginTransaction();
-            $user = new User();
+            
+            $user = User::find($id) ?? new User();
+            
             $user->nama = $nama;
             $user->email = $email;
-            $user->password = Hash::make($password);
-            $user->jenis_user = $jenisUser;
+            $user->nama_lengkap = $request->nama_lengkap;
+            $user->nisn = $request->nisn;
+            $user->jenis_kelamin = $request->jenis_kelamin;
+            if ($password) { 
+                $user->password = Hash::make($password);
+            }
             $user->tanggal_lahir = $tanggalLahir;
             $user->alamat = $request->alamat;
             $user->no_hp = $request->no_hp;
@@ -167,16 +120,22 @@ class UserController extends Controller
             }
             
             $user->save();
-            $user->assignRole($jenis);
+            
+            $lowerJenis = strtolower($jenisUser);
+            $redirect = '/admin/user/'. $lowerJenis;  
             DB::commit();
-            CatatLogAktivitas::catatAktivitas('Buat user');
-            sendTelegramMessage('Buat user');
-            return successAlert('Berhasil buat user', null, '#message-modal', '/admin/user/'.  $lowerJenis);
-        }catch (\Exception $e){
+            
+            // Pesan sesuai kondisi create/update
+            $aksi = $id ? "Update" : "Buat";
+            CatatLogAktivitas::catatAktivitas("$aksi user $user->nama $jenisUser");
+            sendTelegramMessage("$aksi user $user->nama $jenisUser");
+            return successAlert("Berhasil $aksi user ".$user->nama, null, '#message-modal', $redirect);
+        } catch (\Exception $e) {
             DB::rollBack();
-            CatatLogAktivitas::catatAktivitas('Gagal buat user');
-            sendTelegramMessage('Gagal buat user');
-            return errorAlert('Gagal buat user'. $e->getMessage());
+            $aksi = $id ? "update" : "buat";
+            CatatLogAktivitas::catatAktivitas("Gagal $aksi user $jenisUser");
+            sendTelegramMessage("Gagal $aksi user $jenisUser");
+            return errorAlert("Gagal $aksi user $jenisUser: ". $e->getMessage());
         }
     }
 

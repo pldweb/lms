@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12">
-        <div class="alert alert-info"> Data khusus siswa dapat ditambahkan di sini sesuai kebutuhan. </div>
+        <div class="alert alert-info"> Data khusus {{ ucfirst($jenis) }} dapat ditambahkan di sini sesuai kebutuhan. </div>
     </div>
 
     <div class="col-md-12">
@@ -54,12 +54,36 @@
 
     <div class="col-md-12">
         <div class="form-group row">
+            <label for="tanggal_lahir" class="col-md-3">Tanggal Lahir</label>
+            <div class="col-md-9">
+                <input type="date" class="form-control" id="inputTanggalLahir" name="tanggal_lahir" value="{{ isset($user) ? $user->tanggal_lahir : '' }}">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="form-group row">
+            <label for="jenis_kelamin" class="col-md-3">Jenis Kelamin</label>
+            <div class="col-md-9">
+                <select class="form-control select2" id="inputJenisKelamin" name="jenis_kelamin">
+                    <option value="">Pilih Jenis Kelamin</option>
+                    <option value="laki-laki" {{ isset($user) && $user->jenis_kelamin == 'laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                    <option value="perempuan" {{ isset($user) && $user->jenis_kelamin == 'perempuan' ? 'selected' : '' }}>Perempuan</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    @if($jenis == 'siswa')
+    <div class="col-md-12">
+        <div class="form-group row">
             <label for="nisn" class="col-md-3">NISN</label>
             <div class="col-md-9">
                 <input type="text" class="form-control" id="inputNis" name="nis" placeholder="NIS" value="{{ isset($user) ? $user->nis : '' }}">
             </div>
         </div>
     </div>
+    
     <div class="col-md-12">
         <div class="form-group row">
             <label for="nama_orang_tua" class="col-md-3">Nama Orang Tua</label>
@@ -76,6 +100,8 @@
             </div>
         </div>
     </div>
+    @endif
+
 </div>
 <div class="row">
     
