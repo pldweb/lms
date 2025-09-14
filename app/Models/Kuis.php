@@ -9,14 +9,19 @@ class Kuis extends Model
     protected $table = 'kuis';
     
     protected $fillable = [
+        'pembuat_id',
         'judul',
         'deskripsi',
-        'waktu_pengerjaan_menit',
-        'acak_pertanyaan',
-        'tampilkan_hasil_langsung',
-        'tampilkan_jawaban_benar',
-        'jumlah_percobaan',
-        'created_by'
+        'tipe',
+        'jumlah_soal',
+        'nilai_maksimum',
+        'acak_soal',
+        'tampilkan_hasil'
+    ];
+    
+    protected $casts = [
+        'acak_soal' => 'boolean',
+        'tampilkan_hasil' => 'boolean',
     ];
     
     public function pertanyaan()
@@ -29,13 +34,18 @@ class Kuis extends Model
         return $this->hasOne(Tugas::class, 'kuis_id');
     }
     
-    public function creator()
+    public function pembuat()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'pembuat_id');
     }
     
     public function jawabanSiswa()
     {
         return $this->hasMany(JawabanSiswaKuis::class, 'kuis_id');
+    }
+    
+    public function hasilKuis()
+    {
+        return $this->hasMany(HasilKuis::class, 'kuis_id');
     }
 }

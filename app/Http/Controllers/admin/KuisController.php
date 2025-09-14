@@ -8,6 +8,7 @@ use App\Models\Kuis;
 use App\Models\PertanyaanKuis;
 use App\Models\JawabanKuis;
 use App\Models\JawabanSiswaKuis;
+use App\Models\HasilKuis;
 use App\Models\Tugas;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -15,9 +16,14 @@ use Illuminate\Support\Facades\Auth;
 
 class KuisController extends Controller
 {
+    public $roles = [
+        'Admin',
+        'Guru',
+    ];
+
     public function getIndex(Request $request)
     {
-        $query = Kuis::with('creator')
+        $query = Kuis::with('pembuat')
             ->select('kuis.*');
 
         // Filter berdasarkan pencarian
@@ -30,21 +36,20 @@ class KuisController extends Controller
         }
 
         // Filter berdasarkan pembuat
-        if ($request->filled('created_by')) {
-            $query->where('created_by', $request->created_by);
+        if ($request->filled('pembuat_id')) {
+            $query->where('pembuat_id', $request->pembuat_id);
         }
 
         $kuis = $query->orderBy('created_at', 'desc')
                       ->paginate(20);
 
         // Data untuk filter
-        $guru = User::where('role', 'guru')
-            ->orWhere('role', 'admin')
+        $pembuat = User::role($this->roles)
             ->select('id', 'nama')
             ->orderBy('nama')
             ->get();
 
-        return view('admin.kuis.index', compact('kuis', 'guru'));
+        return view('admin.kuis.index', compact('kuis', 'pembuat'));
     }
 
     public function getCreate($tugasId = null)
@@ -63,30 +68,31 @@ class KuisController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-            'waktu_pengerjaan_menit' => 'nullable|integer|min:1',
-            'acak_pertanyaan' => 'nullable|boolean',
-            'tampilkan_hasil_langsung' => 'nullable|boolean',
-            'tampilkan_jawaban_benar' => 'nullable|boolean',
-            'jumlah_percobaan' => 'nullable|integer|min:1',
+            'tipe' => 'required|in:latihan,ujian,kuis',
+            'jumlah_soal' => 'nullable|integer|min:1',
+            'nilai_maksimum' => 'nullable|numeric|min:0',
+            'acak_soal' => 'nullable|boolean',
+            'tampilkan_hasil' => 'nullable|boolean',
             'tugas_id' => 'nullable|exists:tugas,id',
         ]);
 
         // Simpan kuis baru
         $kuis = new Kuis();
+        $kuis->pembuat_id = Auth::id();
         $kuis->judul = $request->judul;
         $kuis->deskripsi = $request->deskripsi;
-        $kuis->waktu_pengerjaan_menit = $request->waktu_pengerjaan_menit;
-        $kuis->acak_pertanyaan = $request->has('acak_pertanyaan') ? $request->acak_pertanyaan : false;
-        $kuis->tampilkan_hasil_langsung = $request->has('tampilkan_hasil_langsung') ? $request->tampilkan_hasil_langsung : false;
-        $kuis->tampilkan_jawaban_benar = $request->has('tampilkan_jawaban_benar') ? $request->tampilkan_jawaban_benar : false;
-        $kuis->jumlah_percobaan = $request->jumlah_percobaan ?? 1;
-        $kuis->created_by = Auth::id();
+        $kuis->tipe = $request->tipe;
+        $kuis->jumlah_soal = $request->jumlah_soal;
+        $kuis->nilai_maksimum = $request->nilai_maksimum;
+        $kuis->acak_soal = $request->has('acak_soal') ? true : false;
+        $kuis->tampilkan_hasil = $request->has('tampilkan_hasil') ? true : false;
         $kuis->save();
 
         // Jika ada tugas_id, update tugas dengan kuis_id
         if ($request->filled('tugas_id')) {
             $tugas = Tugas::findOrFail($request->tugas_id);
             $tugas->kuis_id = $kuis->id;
+            $tugas->is_kuis = true;
             $tugas->save();
 
             return redirect('/admin/kuis/pertanyaan/' . $kuis->id)->with('success', 'Kuis berhasil dibuat. Silakan tambahkan pertanyaan.');
@@ -101,7 +107,7 @@ class KuisController extends Controller
             $query->orderBy('urutan', 'asc');
         }, 'pertanyaan.jawaban' => function($query) {
             $query->orderBy('urutan', 'asc');
-        }, 'creator'])->findOrFail($id);
+        }, 'pembuat'])->findOrFail($id);
 
         // Cek apakah kuis ini terhubung dengan tugas
         $tugas = Tugas::where('kuis_id', $id)->first();
@@ -125,22 +131,22 @@ class KuisController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-            'waktu_pengerjaan_menit' => 'nullable|integer|min:1',
-            'acak_pertanyaan' => 'nullable|boolean',
-            'tampilkan_hasil_langsung' => 'nullable|boolean',
-            'tampilkan_jawaban_benar' => 'nullable|boolean',
-            'jumlah_percobaan' => 'nullable|integer|min:1',
+            'tipe' => 'required|in:latihan,ujian,kuis',
+            'jumlah_soal' => 'nullable|integer|min:1',
+            'nilai_maksimum' => 'nullable|numeric|min:0',
+            'acak_soal' => 'nullable|boolean',
+            'tampilkan_hasil' => 'nullable|boolean',
         ]);
 
         // Update kuis
         $kuis = Kuis::findOrFail($id);
         $kuis->judul = $request->judul;
         $kuis->deskripsi = $request->deskripsi;
-        $kuis->waktu_pengerjaan_menit = $request->waktu_pengerjaan_menit;
-        $kuis->acak_pertanyaan = $request->has('acak_pertanyaan') ? $request->acak_pertanyaan : false;
-        $kuis->tampilkan_hasil_langsung = $request->has('tampilkan_hasil_langsung') ? $request->tampilkan_hasil_langsung : false;
-        $kuis->tampilkan_jawaban_benar = $request->has('tampilkan_jawaban_benar') ? $request->tampilkan_jawaban_benar : false;
-        $kuis->jumlah_percobaan = $request->jumlah_percobaan ?? 1;
+        $kuis->tipe = $request->tipe;
+        $kuis->jumlah_soal = $request->jumlah_soal;
+        $kuis->nilai_maksimum = $request->nilai_maksimum;
+        $kuis->acak_soal = $request->has('acak_soal') ? true : false;
+        $kuis->tampilkan_hasil = $request->has('tampilkan_hasil') ? true : false;
         $kuis->save();
 
         return redirect('/admin/kuis')->with('success', 'Kuis berhasil diperbarui');
@@ -163,6 +169,9 @@ class KuisController extends Controller
 
         // Hapus jawaban siswa terkait
         JawabanSiswaKuis::where('kuis_id', $id)->delete();
+        
+        // Hapus hasil kuis terkait
+        HasilKuis::where('kuis_id', $id)->delete();
 
         // Hapus kuis
         $kuis = Kuis::findOrFail($id);
@@ -189,6 +198,7 @@ class KuisController extends Controller
             'pertanyaan' => 'required|string',
             'tipe' => 'required|in:pilihan_ganda,benar_salah,isian,esai',
             'bobot_nilai' => 'required|numeric|min:0',
+            'gambar' => 'nullable|image|max:2048',
         ]);
 
         // Hitung urutan terakhir
@@ -201,6 +211,15 @@ class KuisController extends Controller
         $pertanyaan->tipe = $request->tipe;
         $pertanyaan->bobot_nilai = $request->bobot_nilai;
         $pertanyaan->urutan = $lastUrutan + 1;
+        
+        // Upload gambar jika ada
+        if ($request->hasFile('gambar')) {
+            $gambar = $request->file('gambar');
+            $namaGambar = time() . '_' . $gambar->getClientOriginalName();
+            $gambar->move(public_path('img/kuis'), $namaGambar);
+            $pertanyaan->gambar = 'img/kuis/' . $namaGambar;
+        }
+        
         $pertanyaan->save();
 
         // Jika tipe pertanyaan adalah benar/salah, buat jawaban otomatis
@@ -239,6 +258,7 @@ class KuisController extends Controller
             'pertanyaan' => 'required|string',
             'tipe' => 'required|in:pilihan_ganda,benar_salah,isian,esai',
             'bobot_nilai' => 'required|numeric|min:0',
+            'gambar' => 'nullable|image|max:2048',
         ]);
 
         // Update pertanyaan
@@ -247,6 +267,20 @@ class KuisController extends Controller
         $pertanyaan->pertanyaan = $request->pertanyaan;
         $pertanyaan->tipe = $request->tipe;
         $pertanyaan->bobot_nilai = $request->bobot_nilai;
+        
+        // Upload gambar jika ada
+        if ($request->hasFile('gambar')) {
+            // Hapus gambar lama jika ada
+            if ($pertanyaan->gambar && file_exists(public_path($pertanyaan->gambar))) {
+                unlink(public_path($pertanyaan->gambar));
+            }
+            
+            $gambar = $request->file('gambar');
+            $namaGambar = time() . '_' . $gambar->getClientOriginalName();
+            $gambar->move(public_path('img/kuis'), $namaGambar);
+            $pertanyaan->gambar = 'img/kuis/' . $namaGambar;
+        }
+        
         $pertanyaan->save();
 
         // Jika tipe pertanyaan berubah menjadi benar/salah, buat jawaban otomatis
@@ -278,6 +312,11 @@ class KuisController extends Controller
     {
         $pertanyaan = PertanyaanKuis::findOrFail($pertanyaanId);
         $kuisId = $pertanyaan->kuis_id;
+
+        // Hapus gambar jika ada
+        if ($pertanyaan->gambar && file_exists(public_path($pertanyaan->gambar))) {
+            unlink(public_path($pertanyaan->gambar));
+        }
 
         // Hapus jawaban terkait
         JawabanKuis::where('pertanyaan_id', $pertanyaanId)->delete();
@@ -321,15 +360,6 @@ class KuisController extends Controller
 
         $pertanyaan = PertanyaanKuis::findOrFail($pertanyaanId);
 
-        // Jika tipe pertanyaan adalah pilihan ganda atau benar/salah, validasi jawaban benar
-        if (in_array($pertanyaan->tipe, ['pilihan_ganda', 'benar_salah'])) {
-            // Jika jawaban ini ditandai sebagai benar, set semua jawaban lain menjadi salah
-            if ($request->has('is_benar') && $request->is_benar) {
-                JawabanKuis::where('pertanyaan_id', $pertanyaanId)
-                    ->update(['is_benar' => false]);
-            }
-        }
-
         // Hitung urutan terakhir
         $lastUrutan = JawabanKuis::where('pertanyaan_id', $pertanyaanId)->max('urutan') ?? 0;
 
@@ -337,16 +367,24 @@ class KuisController extends Controller
         $jawaban = new JawabanKuis();
         $jawaban->pertanyaan_id = $pertanyaanId;
         $jawaban->jawaban = $request->jawaban;
-        $jawaban->is_benar = $request->has('is_benar') ? $request->is_benar : false;
+        $jawaban->is_benar = $request->has('is_benar') ? true : false;
         $jawaban->urutan = $lastUrutan + 1;
         $jawaban->save();
+
+        // Jika tipe pertanyaan adalah pilihan ganda dan jawaban ini benar,
+        // pastikan hanya ada satu jawaban yang benar
+        if ($pertanyaan->tipe == 'pilihan_ganda' && $request->has('is_benar')) {
+            JawabanKuis::where('pertanyaan_id', $pertanyaanId)
+                ->where('id', '!=', $jawaban->id)
+                ->update(['is_benar' => false]);
+        }
 
         return redirect('/admin/kuis/jawaban/' . $pertanyaanId)->with('success', 'Jawaban berhasil ditambahkan');
     }
 
     public function getEditJawaban($jawabanId)
     {
-        $jawaban = JawabanKuis::with(['pertanyaan', 'pertanyaan.kuis'])->findOrFail($jawabanId);
+        $jawaban = JawabanKuis::with('pertanyaan.kuis')->findOrFail($jawabanId);
 
         return view('admin.kuis.edit_jawaban', compact('jawaban'));
     }
@@ -359,26 +397,21 @@ class KuisController extends Controller
             'is_benar' => 'nullable|boolean',
         ]);
 
-        $jawaban = JawabanKuis::with('pertanyaan')->findOrFail($jawabanId);
-        $pertanyaanId = $jawaban->pertanyaan_id;
-        $pertanyaan = $jawaban->pertanyaan;
-
-        // Jika tipe pertanyaan adalah pilihan ganda atau benar/salah, validasi jawaban benar
-        if (in_array($pertanyaan->tipe, ['pilihan_ganda', 'benar_salah'])) {
-            // Jika jawaban ini ditandai sebagai benar, set semua jawaban lain menjadi salah
-            if ($request->has('is_benar') && $request->is_benar) {
-                JawabanKuis::where('pertanyaan_id', $pertanyaanId)
-                    ->where('id', '!=', $jawabanId)
-                    ->update(['is_benar' => false]);
-            }
-        }
-
         // Update jawaban
+        $jawaban = JawabanKuis::with('pertanyaan')->findOrFail($jawabanId);
         $jawaban->jawaban = $request->jawaban;
-        $jawaban->is_benar = $request->has('is_benar') ? $request->is_benar : false;
+        $jawaban->is_benar = $request->has('is_benar') ? true : false;
         $jawaban->save();
 
-        return redirect('/admin/kuis/jawaban/' . $pertanyaanId)->with('success', 'Jawaban berhasil diperbarui');
+        // Jika tipe pertanyaan adalah pilihan ganda dan jawaban ini benar,
+        // pastikan hanya ada satu jawaban yang benar
+        if ($jawaban->pertanyaan->tipe == 'pilihan_ganda' && $request->has('is_benar')) {
+            JawabanKuis::where('pertanyaan_id', $jawaban->pertanyaan_id)
+                ->where('id', '!=', $jawabanId)
+                ->update(['is_benar' => false]);
+        }
+
+        return redirect('/admin/kuis/jawaban/' . $jawaban->pertanyaan_id)->with('success', 'Jawaban berhasil diperbarui');
     }
 
     public function getDeleteJawaban($jawabanId)
@@ -408,64 +441,24 @@ class KuisController extends Controller
 
     public function getHasilKuis($kuisId)
     {
-        $kuis = Kuis::with(['pertanyaan' => function($query) {
-            $query->orderBy('urutan', 'asc');
-        }, 'pertanyaan.jawaban' => function($query) {
-            $query->orderBy('urutan', 'asc');
-        }])->findOrFail($kuisId);
+        $kuis = Kuis::with('pembuat')->findOrFail($kuisId);
+        $hasilKuis = HasilKuis::with(['siswa', 'tugas'])
+            ->where('kuis_id', $kuisId)
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
 
-        // Ambil tugas yang terhubung dengan kuis ini
-        $tugas = Tugas::where('kuis_id', $kuisId)->first();
+        return view('admin.kuis.hasil', compact('kuis', 'hasilKuis'));
+    }
 
-        // Jika tidak ada tugas, redirect ke halaman kuis
-        if (!$tugas) {
-            return redirect('/admin/kuis/show/' . $kuisId)->with('error', 'Kuis ini tidak terhubung dengan tugas');
-        }
-
-        // Ambil data jawaban siswa
-        $jawabanSiswa = DB::table('jawaban_siswa_kuis')
-            ->join('users', 'jawaban_siswa_kuis.siswa_id', '=', 'users.id')
-            ->join('pertanyaan_kuis', 'jawaban_siswa_kuis.pertanyaan_id', '=', 'pertanyaan_kuis.id')
-            ->leftJoin('jawaban_kuis', 'jawaban_siswa_kuis.jawaban_id', '=', 'jawaban_kuis.id')
-            ->select(
-                'jawaban_siswa_kuis.*',
-                'users.nama as siswa_nama',
-                'pertanyaan_kuis.pertanyaan',
-                'pertanyaan_kuis.tipe',
-                'pertanyaan_kuis.bobot_nilai',
-                'jawaban_kuis.jawaban as jawaban_teks_pilihan'
-            )
-            ->where('jawaban_siswa_kuis.kuis_id', $kuisId)
-            ->orderBy('users.nama')
-            ->orderBy('pertanyaan_kuis.urutan')
+    public function getDetailHasilKuis($hasilId)
+    {
+        $hasil = HasilKuis::with(['siswa', 'kuis', 'tugas'])->findOrFail($hasilId);
+        $jawabanSiswa = JawabanSiswaKuis::with(['pertanyaan', 'jawaban'])
+            ->where('siswa_id', $hasil->siswa_id)
+            ->where('kuis_id', $hasil->kuis_id)
+            ->orderBy('created_at', 'asc')
             ->get();
 
-        // Kelompokkan jawaban berdasarkan siswa
-        $hasilPerSiswa = [];
-        foreach ($jawabanSiswa as $jawaban) {
-            if (!isset($hasilPerSiswa[$jawaban->siswa_id])) {
-                $hasilPerSiswa[$jawaban->siswa_id] = [
-                    'siswa_id' => $jawaban->siswa_id,
-                    'siswa_nama' => $jawaban->siswa_nama,
-                    'total_nilai' => 0,
-                    'total_benar' => 0,
-                    'total_salah' => 0,
-                    'total_pertanyaan' => 0,
-                    'jawaban' => []
-                ];
-            }
-
-            $hasilPerSiswa[$jawaban->siswa_id]['jawaban'][] = $jawaban;
-            $hasilPerSiswa[$jawaban->siswa_id]['total_nilai'] += $jawaban->nilai;
-            $hasilPerSiswa[$jawaban->siswa_id]['total_pertanyaan']++;
-
-            if ($jawaban->is_benar) {
-                $hasilPerSiswa[$jawaban->siswa_id]['total_benar']++;
-            } else {
-                $hasilPerSiswa[$jawaban->siswa_id]['total_salah']++;
-            }
-        }
-
-        return view('admin.kuis.hasil', compact('kuis', 'tugas', 'hasilPerSiswa'));
+        return view('admin.kuis.detail_hasil', compact('hasil', 'jawabanSiswa'));
     }
 }

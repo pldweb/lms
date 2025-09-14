@@ -15,6 +15,11 @@ class JawabanKuis extends Model
         'urutan'
     ];
     
+    protected $casts = [
+        'is_benar' => 'boolean',
+        'urutan' => 'integer',
+    ];
+    
     public function pertanyaan()
     {
         return $this->belongsTo(PertanyaanKuis::class, 'pertanyaan_id');

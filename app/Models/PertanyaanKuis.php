@@ -13,7 +13,13 @@ class PertanyaanKuis extends Model
         'pertanyaan',
         'tipe',
         'bobot_nilai',
-        'urutan'
+        'urutan',
+        'gambar'
+    ];
+    
+    protected $casts = [
+        'bobot_nilai' => 'integer',
+        'urutan' => 'integer',
     ];
     
     public function kuis()

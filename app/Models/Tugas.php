@@ -29,6 +29,15 @@ class Tugas extends Model
         'waktu_selesai',
         'durasi_menit',
     ];
+    
+    protected $casts = [
+        'tenggat_waktu' => 'datetime',
+        'is_kuis' => 'boolean',
+        'tampilkan_nilai' => 'boolean',
+        'waktu_mulai' => 'datetime',
+        'waktu_selesai' => 'datetime',
+        'durasi_menit' => 'integer',
+    ];
 
     public function kelas(): BelongsTo
     {
@@ -48,5 +57,10 @@ class Tugas extends Model
     public function jawabanSiswaKuis(): HasMany
     {
         return $this->hasMany(JawabanSiswaKuis::class, 'tugas_id');
+    }
+    
+    public function hasilKuis(): HasMany
+    {
+        return $this->hasMany(HasilKuis::class, 'tugas_id');
     }
 }
