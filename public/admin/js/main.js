@@ -490,7 +490,7 @@ function initDataTable(selector) {
 
 function initSelect2(selector){
     $(selector).select2({
-        placeholder: 'Pilih Kategori',
+        placeholder: 'Pilih ',
         allowClear: true,
         width: '100%'
     });

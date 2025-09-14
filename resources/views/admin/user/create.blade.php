@@ -1,46 +1,61 @@
-<form id="createUserForm" enctype="multipart/form-data" method="POST" onsubmit="return false;">
-    @csrf
-    <div class="form-group">
-        <label class="form-label" style="display: block;" for="foto_profile">Nama</label>
-        <div class="col-12">
-            <input type="text" class="form-control" id="inputName" name="nama" value="">
+@extends('layouts.admin')
+@section('title', isset($user) ? 'Edit User' : 'Tambah User')
+@section('content')
+
+<div class="row mt-20">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header b-title">
+                <h3 class="card-title">{{ isset($user) ? 'Edit User' : 'Tambah User Baru' }}</h3>
+            </div>
+            <div class="card-body" style="padding-top: 20px;">
+                <div class="tab-content" id="userTypeTabContent">
+                    <form id="createSiswaForm" class="user-form" enctype="multipart/form-data" method="POST" onsubmit="return false;">
+                            @csrf
+                            <input type="hidden" id="inputJenis" name="jenis" value="{{ isset($user) && $user->roles->first() ? $user->roles->first()->name : (isset($defaultRole) ? $defaultRole : 'siswa') }}">
+                            <div class="row">
+                                <div class="col-12">
+                                    @include('admin.user.form')
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="form-group">
-        <label class="form-label" style="display: block;" for="foto_profile">Email</label>
-        <div class="col-12">
-            <input type="text" class="form-control" id="inputEmail" name="email" value="">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="form-label" style="display: block;" for="foto_profile">Ganti Password</label>
-        <div class="col-12">
-            <input type="password" class="form-control" id="inputPassword" name="password">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="form-label" style="display: block;" for="foto_profile">Role User</label>
-        <div class="col-12">
-            <select class="form-control" id="inputJenis" name="jenis">
-                <option value="Admin">Admin</option>
-                <option value="Guru">Guru</option>
-                <option value="Siswa">Siswa</option>
-                <option value="Wali Murid">Wali Murid</option>
-            </select>
-        </div>
-    <div class="mb-20 mt-20">
-        <button type="submit" id="btnChangePassword" class="btn btn-primary">Simpan</button>
-    </div>
-</form>
+</div>
 
 <script>
     $(document).ready(function () {
-        $('#createUserForm').submit(function(e) {
+
+        // Preview foto saat file dipilih untuk siswa
+        $('#inputFoto').change(function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#previewFoto').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Submit form siswa
+        $('#createSiswaForm').submit(function(e) {
             e.preventDefault();
-            const formData = new FormData(this);
-            confirmModal('Apakah data yang kamu masukkan sudah benar?', function (){
-                ajxProcess('/admin/user/create-user-action', formData, '#message-modal')
+            let dataInput = new FormData(this);
+            let url = '{{ isset($user) ? "/admin/user/update-user-action" : "/admin/user/create-user-action" }}';
+            
+            // Jika mode edit, tambahkan ID user
+            @if(isset($user))
+            dataInput.append('id', '{{ $user->id }}');
+            @endif
+            
+            confirmModal('Apakah data siswa yang kamu masukkan sudah benar?', function (){
+                ajxProcess(url, dataInput, '#message-modal')
             });
         });
     });
 </script>
+
+@endsection

@@ -7,12 +7,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public array $roles = ['Admin', 'Guru', 'Siswa'];
+    public array $roles = ['Admin', 'Guru', 'Siswa', 'Wali Murid'];
 
     public function getAdmin()
     {
@@ -61,15 +62,48 @@ class UserController extends Controller
         $email = $request->email;
         $password = $request->password;
         $jenis = $request->jenis;
+        $jenisUser = $request->jenis_user;
+        $tanggalLahir = $request->tanggal_lahir;
 
         try {
-            DB::transaction();
+            DB::beginTransaction();
             $user = User::find($id);
             $user->nama = $nama;
             $user->email = $email;
             if($password != null){
                 $user->password = Hash::make($password);
             }
+            
+            // Update data umum
+            $user->jenis_user = $jenisUser;
+            $user->tanggal_lahir = $tanggalLahir;
+            $user->alamat = $request->alamat;
+            $user->no_hp = $request->no_hp;
+            $user->provinsi = $request->provinsi;
+            $user->kota = $request->kota;
+            $user->kecamatan = $request->kecamatan;
+            $user->kelurahan = $request->kelurahan;
+            $user->kodepos = $request->kodepos;
+            
+            // Update data khusus berdasarkan jenis user
+            if ($jenisUser == 'siswa') {
+                $user->nama_orang_tua = $request->nama_orang_tua;
+                $user->no_hp_orang_tua = $request->no_hp_orang_tua;
+            }
+            
+            // Upload dan simpan foto profile jika ada
+            if ($request->hasFile('foto_profile')) {
+                // Hapus foto lama jika ada
+                if ($user->foto_profile && Storage::disk('public')->exists($user->foto_profile)) {
+                    Storage::disk('public')->delete($user->foto_profile);
+                }
+                
+                $file = $request->file('foto_profile');
+                $fileName = time() . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('profile', $fileName, 'public');
+                $user->foto_profile = $path;
+            }
+            
             $user->save();
             DB::commit();
             CatatLogAktivitas::catatAktivitas('Ubah profile user');
@@ -83,10 +117,11 @@ class UserController extends Controller
         }
     }
 
-    public function getCreateUser()
+    public function getCreateUser($jenis)
     {
         $params = [
             'roles' => $this->roles,
+            'jenis' => $jenis,
         ];
         return view('admin.user.create', $params);
     }
@@ -98,6 +133,8 @@ class UserController extends Controller
         $password = $request->password;
         $jenis = $request->jenis;
         $lowerJenis = strtolower($jenis);
+        $jenisUser = $request->jenis_user;
+        $tanggalLahir = $request->tanggal_lahir;
 
         try {
             DB::beginTransaction();
@@ -105,6 +142,30 @@ class UserController extends Controller
             $user->nama = $nama;
             $user->email = $email;
             $user->password = Hash::make($password);
+            $user->jenis_user = $jenisUser;
+            $user->tanggal_lahir = $tanggalLahir;
+            $user->alamat = $request->alamat;
+            $user->no_hp = $request->no_hp;
+            $user->provinsi = $request->provinsi;
+            $user->kota = $request->kota;
+            $user->kecamatan = $request->kecamatan;
+            $user->kelurahan = $request->kelurahan;
+            $user->kodepos = $request->kodepos;
+            
+            // Tambahkan data khusus berdasarkan jenis user
+            if ($jenisUser == 'siswa') {
+                $user->nama_orang_tua = $request->nama_orang_tua;
+                $user->no_hp_orang_tua = $request->no_hp_orang_tua;
+            }
+            
+            // Upload dan simpan foto profile jika ada
+            if ($request->hasFile('foto_profile')) {
+                $file = $request->file('foto_profile');
+                $fileName = time() . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('profile', $fileName, 'public');
+                $user->foto_profile = $path;
+            }
+            
             $user->save();
             $user->assignRole($jenis);
             DB::commit();
@@ -126,10 +187,10 @@ class UserController extends Controller
         try {
             DB::beginTransaction();
             $user = User::find($id);
+            CatatLogAktivitas::catatAktivitas('Hapus user '.$user->nama);
+            sendTelegramMessage('Hapus user '.$user->nama);
             $user->delete();
             DB::commit();
-            CatatLogAktivitas::catatAktivitas('Hapus user');
-            sendTelegramMessage('Hapus user');
             return successAlert('Berhasil hapus user', null, '#message-modal', '/admin/user/'.$lowerJenis);
         }catch (\Exception $e){
             DB::rollBack();

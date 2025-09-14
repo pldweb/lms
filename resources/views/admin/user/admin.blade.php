@@ -10,7 +10,7 @@
                     <h3 class="card-title w-content">Data {{ ucfirst($jenis) }}</h3>
                     <div class="d-flex justify-center align-items-center" style="gap: 5px;">
                         @if(Auth::user()->hasRole('Admin'))
-                        <a onclick="showModal('{{ url('/admin/user/create-user') }}', 'Tambah User Baru')" class="btn btn-primary btn-sm btn-add" style="white-space: nowrap">
+                        <a href="{{ url('/admin/user/create-user/'.$jenis) }}" class="btn btn-primary btn-sm btn-add" style="white-space: nowrap">
                             <i class="ph ph-plus"></i> Tambah {{ ucfirst($jenis) }} 
                         </a>
                         @endif

@@ -29,6 +29,10 @@ class User extends Authenticatable
         'kecamatan',// Menyimpan kode kecamatan
         'kelurahan',// Menyimpan kode kelurahan
         'kodepos',
+        'tanggal_lahir', // Tanggal lahir user
+        'jenis_user', // Jenis user (siswa/guru)
+        'nama_orang_tua', // Nama orang tua (untuk siswa)
+        'no_hp_orang_tua', // Nomor HP orang tua (untuk siswa)
     ];
 
     /**
