@@ -18,7 +18,7 @@ class GaleriController extends Controller
     public function getKategori()
     {
         $kategori = KategoriGaleri::withCount('galeri')->orderBy('urutan')->get();
-        
+
         $params = [
             'kategori' => $kategori,
         ];
@@ -32,7 +32,6 @@ class GaleriController extends Controller
 
     public function postKategoriStore(Request $request)
     {
-
         try {
             DB::beginTransaction();
 
@@ -68,7 +67,7 @@ class GaleriController extends Controller
     public function getKategoriEdit($id)
     {
         $kategori = KategoriGaleri::findOrFail($id);
-        
+
         $params = [
             'kategori' => $kategori,
         ];
@@ -77,7 +76,6 @@ class GaleriController extends Controller
 
     public function postKategoriUpdate(Request $request, $id)
     {
-
         try {
             DB::beginTransaction();
 
@@ -123,7 +121,7 @@ class GaleriController extends Controller
             DB::beginTransaction();
 
             $kategori = KategoriGaleri::findOrFail($id);
-            
+
             // Check if category has galeri items
             if ($kategori->galeri()->count() > 0) {
                 return errorAlert('Kategori tidak dapat dihapus karena masih memiliki item galeri');
@@ -152,7 +150,7 @@ class GaleriController extends Controller
     {
         $galeri = Galeri::with('kategori')->orderBy('kategori_galeri_id')->orderBy('urutan')->get();
         $kategori = KategoriGaleri::aktif()->orderBy('urutan')->get();
-        
+
         $params = [
             'galeri' => $galeri,
             'kategori' => $kategori,
@@ -198,7 +196,7 @@ class GaleriController extends Controller
             }
 
             DB::commit();
-        
+
             CatatLogAktivitas::catatAktivitas('Berhasil upload galeri');
             sendTelegramMessage('Berhasil upload galeri');
             return successAlert('Item galeri berhasil disimpan', null, '#message-modal', '/admin/galeri');
@@ -215,7 +213,7 @@ class GaleriController extends Controller
     {
         $galeri = Galeri::with('kategori')->findOrFail($id);
         $kategori = KategoriGaleri::aktif()->orderBy('urutan')->get();
-        
+
         $params = [
             'galeri' => $galeri,
             'kategori' => $kategori,
@@ -224,7 +222,7 @@ class GaleriController extends Controller
     }
 
     public function postUpdate(Request $request, $id)
-    {  
+    {
 
         try {
             DB::beginTransaction();
@@ -308,7 +306,7 @@ class GaleriController extends Controller
             CatatLogAktivitas::catatAktivitas('Berhasil hapus galeri');
             sendTelegramMessage('Berhasil hapus galeri');
 
-            return successAlert('Item galeri berhasil dihapus', null, '/admin/galeri');
+            return successAlert('Item galeri berhasil dihapus', null, '', '/admin/galeri');
 
         } catch (\Exception $e) {
             DB::rollBack();
