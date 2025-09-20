@@ -1,5 +1,6 @@
 @php
     $informasiSekolah = \App\Models\InformasiSekolah::first();
+    $sosialMedia = \App\Models\SocialMedia::all();
 @endphp
 <footer class="footer-wrapper footer-layout2" style="background-color: #0D3D91;">
     <div class="widget-area pt-7 pb-7">
@@ -9,15 +10,15 @@
                     <div class="widget footer-widget">
                         <div class="mb-2">
                             @if($informasiSekolah)
-                                <img src="{{ asset('img/' . $informasiSekolah->logo) ?? '#' }}" alt="Logo Sekolah" class="footer-logo me-3 mb-15" style="width: 200px; height: auto;">
+                                <img src="{{ logo_invert() ?? '' }}" alt="Logo Sekolah" class="footer-logo me-3 mb-15" style="width: 200px; height: auto;">
                             @endif
                         </div>
                         <p class="footer-text text-white">{{ $informasiSekolah->tagline ?? '' }}</p>
                         <div class="social-links mt-4">
-                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                            @foreach($sosialMedia as $item)
+                                <a href="{{ $item->link }}" class="social-link" target="_blank">
+                                    <img src="{{ Storage::url($item->icon) }}" alt="{{ $item->nama }}" class="social-icon" style="max-height: 25px;"></a>
+                            @endforeach
                         </div>
                     </div>
                 </div>

@@ -2,7 +2,7 @@
     <div class="container">
         <div class="title-area text-center wow fadeInUp" data-wow-delay="0.3s">
             <div class="sec-icon">
-                <img src="{{ asset('img/logo-SMPN20.png') }}" alt="">
+                <img src="{{ logo_utama() ?? '' }}" alt="">
             </div>
             <h2 class="sec-title">Informasi Unggulan</h2>
         </div>

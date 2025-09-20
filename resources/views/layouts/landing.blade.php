@@ -30,7 +30,7 @@
     <meta property="twitter:description" content="@yield('description', $informasiSekolah->tagline ?? 'SMP Negeri 20 Jakarta')">
     <meta property="twitter:image" content="@yield('og_image', asset('img/' . ($informasiSekolah->logo ?? 'Logo-SMPN20.png')))">
     
-    <link rel="shortcut icon" href="{{asset('img/favicon/smp20-icon.png')}}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ favicon() }}" type="image/x-icon">
     
     <!-- Styling -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

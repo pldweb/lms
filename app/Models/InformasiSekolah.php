@@ -17,6 +17,8 @@ class InformasiSekolah extends Model
         'latitude',
         'longitude',
         'tagline',
-        'logo'
+        'logo',
+        'favicon',
+        'logo_invert',
     ];
 }

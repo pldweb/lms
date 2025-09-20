@@ -46,33 +46,46 @@ class InformasiSekolahController extends Controller
             $informasiSekolah->longitude = $longitude;
             $informasiSekolah->tagline = $tagline;
             
+            $imgPath = public_path('img');
+            if (!file_exists($imgPath)) {
+                mkdir($imgPath, 0755, true);
+            }
+            
             if ($request->hasFile('logo')) {
-                // Delete old logo if exists
-                if ($informasiSekolah->logo && $informasiSekolah->logo != 'Logo-SMPN20.png') {
-                    if (file_exists(public_path('img/' . $informasiSekolah->logo))) {
-                        unlink(public_path('img/' . $informasiSekolah->logo));
-                    }
+                $logo = $request->file('logo');
+                if ($informasiSekolah->logo) {
+                    Storage::delete('public/img/' . $informasiSekolah->logo);
                 }
+
+                $strip = str_replace(' ', '_', $logo->getClientOriginalName());
+                $logoName = time() . '_' . $strip;
                 
-                // Upload new logo
-                $logoName = time() . '.' . $request->logo->extension();
-                $request->logo->move(public_path('img'), $logoName);
+                $logo->move($imgPath, $logoName);
                 $informasiSekolah->logo = $logoName;
             }
 
-            if ($request->hasFile('favicon')) {
-                // Delete old favicon if exists
-                if ($informasiSekolah->favicon && $informasiSekolah->favicon != 'favicon.png') {
-                    if (file_exists(public_path('img/' . $informasiSekolah->favicon))) {
-                        unlink(public_path('img/' . $informasiSekolah->favicon));
-                    }
+            if ($request->hasFile('logo_invert')) {
+                if ($informasiSekolah->logo_invert) {
+                    Storage::delete('public/img/' . $informasiSekolah->logo_invert);
                 }
+                $logoInvert = $request->file('logo_invert');
+                $strip = str_replace(' ', '_', $logoInvert->getClientOriginalName());
+                $logoInvertName = time() . '_' . $strip;
+                $logoInvert->move($imgPath, $logoInvertName);
+                $informasiSekolah->logo_invert = $logoInvertName;
+            }
 
-                // Upload new favicon
-                $faviconName = time() . '.' . $request->favicon->extension();
-                $request->favicon->move(public_path('img'), $faviconName);
+            if ($request->hasFile('favicon')) {
+                if ($informasiSekolah->favicon) {
+                    Storage::delete('public/img/' . $informasiSekolah->favicon);
+                }
+                $favicon = $request->file('favicon');
+                $strip = str_replace(' ', '_', $favicon->getClientOriginalName());
+                $faviconName = time() . '_' . $strip;
+                $favicon->move($imgPath, $faviconName);
                 $informasiSekolah->favicon = $faviconName;
             }
+            
             
             $informasiSekolah->save();
             DB::commit();
@@ -81,7 +94,7 @@ class InformasiSekolahController extends Controller
             return successAlert('Berhasil memperbarui informasi sekolah', null, '#message-modal', '/admin/informasi-sekolah');
         } catch (\Exception $e) {
             DB::rollBack();
-            return errorAlert('Gagal memperbarui informasi sekolah'. $e->getMessage());
+            return errorAlert('Gagal memperbarui informasi sekolah: '. $e->getMessage());
         }
     }
 }

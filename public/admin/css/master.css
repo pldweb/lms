@@ -127,3 +127,7 @@ span[id^="select2-"] {
     background-color: #f5f5f5 !important;
     color: #555;
 }
+
+button.dt-paging-button {
+    white-space: nowrap;
+}

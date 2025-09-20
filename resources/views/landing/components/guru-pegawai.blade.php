@@ -2,7 +2,7 @@
     <div class="container">
         <div class="title-area text-center wow fadeInUp" data-wow-delay="0.3s">
             <div class="sec-icon">
-                <img src="{{ asset('img/logo-SMPN20.png') }}" alt="">
+                <img src="{{ logo_utama() }}" alt="" class="img-fluid">
             </div>
             <h2 class="sec-title">Guru Dan Pegawai</h2>
             <p class="sec-text">Daftar Guru dan Pegawai di SMP Negeri 199 Jakarta Timur</p>
@@ -11,7 +11,7 @@
         <div class="row mt-4 justify-content-center">
             <!-- Guru dan Pegawai -->
             @forelse($guruPegawai as $guru)
-            <div class="col-lg-3 col-md-6 mb-4">
+            <div class="col-lg-3 col-md-6 mb-4 wow fadeInUp" data-wow-delay="0.{{ $loop->iteration * 2 }}s">
                 <div class="card team-card h-100 border-0 shadow-sm">
                     <div class="card-img-top overflow-hidden" style="height: 250px;">
                         @if($guru->foto_profile)

@@ -4,7 +4,7 @@
     </button>
 
     <a href="{{ url('/') }}" class="sidebar__logo text-center p-20 position-sticky inset-block-start-0 bg-white w-100 z-1 pb-10">
-        <img src="{{ asset('img/Logo-SMPN20.png') }}" alt="Logo">
+        <img src="{{ logo_utama() }}" alt="Logo">
     </a>
 
     <div class="sidebar-menu-wrapper overflow-y-auto scroll-sm">

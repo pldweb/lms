@@ -28,7 +28,7 @@
                                     <thead>
                                         <tr>
                                             <th style="width: 75px;" class="h6 text-gray-300">No</th>
-                                            <th class="h6 text-gray-300">Aktivitas</th>
+                                            <th class="h6 text-gray-300" style="width: 500px;">Aktivitas</th>
                                             <th class="h6 text-gray-300">Waktu</th>
                                         </tr>
                                     </thead>

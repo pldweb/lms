@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Http;
-
+use App\Models\InformasiSekolah;
 
 if (!function_exists('formInput')) {
     function formInput($type, $name, $attributes = [])
@@ -162,5 +162,27 @@ if (!function_exists('sendTelegramMessage')) {
 if(!function_exists('alert')){
     function alert($msg = null, $type = 'success'){
         return "<div class='alert alert-{$type} alert-dismissible'>$msg</div>";
+    }
+}
+
+
+if (!function_exists('logo_utama')) {
+    function logo_utama(){
+        $informasi = InformasiSekolah::first();
+        return asset("img/$informasi->logo") ?? '';
+    }
+}
+
+if (!function_exists('logo_invert')) {
+    function logo_invert(){
+        $informasi = InformasiSekolah::first();
+        return asset("img/$informasi->logo_invert") ?? '';
+    }
+}
+
+if (!function_exists('favicon')) {
+    function favicon(){
+        $informasi = InformasiSekolah::first();
+        return asset("img/$informasi->favicon") ?? '';
     }
 }

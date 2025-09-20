@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="title-area text-center wow fadeInUp" data-wow-delay="0.3s">
-                    <img src="{{ asset('img/' . $informasi->favicon) }}" style="max-height: 50px; margin-bottom: 20px;" alt="">
+                    <img src="{{logo_utama()}}" style="max-height: 50px; margin-bottom: 20px;" alt="">
                     <h2 class="sec-title">Berita Terbaru</h2>
                     <p class="sec-text">Daftar Berita di SMP Negeri 20 Jakarta Timur</p>
                 </div>
@@ -15,7 +15,7 @@
         <div class="row">
             @if($beritaTerbaru->count() > 0)
                 @foreach($beritaTerbaru as $berita)
-                <div class="col-lg-4 col-md-6 mb-4">
+                <div class="col-lg-4 col-md-6 mb-4 wow fadeInUp" data-wow-delay="0.{{ $loop->iteration * 2 }}s">
                     <div class="blog-card">
                         @if($berita->gambar)
                         <div class="blog-img">
@@ -62,6 +62,7 @@
         <div class="row mb-9">
             <div class="col-md-12">
                 <div class="text-center wow fadeInUp" style="margin-top: 50px;" data-wow-delay="0.3s">
+                    <img src="{{ logo_utama() }}" style="max-height: 50px; margin-bottom: 20px;" alt="">
                     <h2 class="sec-title">Pengumuman Terbaru</h2>
                     <p class="sec-text">Daftar Pengumuman di SMP Negeri 20 Jakarta Timur</p>
                 </div>
@@ -71,7 +72,7 @@
         <div class="row mt-5">
             @if($pengumumanTerbaru->count() > 0)
                 @foreach($pengumumanTerbaru as $pengumuman)
-                <div class="col-lg-4 col-md-6 mb-4">
+                <div class="col-lg-4 col-md-6 mb-4 wow fadeInUp" data-wow-delay="0.{{ $loop->iteration * 2 }}s">
                     <div class="blog-card">
                         @if($pengumuman->gambar)
                         <div class="blog-img">
@@ -89,7 +90,7 @@
                             </div>
                             <h3 class="blog-title">
                                 <a href="{{ url('/artikel/' . $pengumuman->jenis . '/' . ($pengumuman->kategori ? $pengumuman->kategori->slug : 'tanpa-kategori') . '/' . $pengumuman->slug) }}">
-                                    {{ $pengumuman->judul }}
+                                    {{ Str::limit($pengumuman->judul, 50) }}
                                 </a>
                             </h3>
                             @if($pengumuman->ringkasan)

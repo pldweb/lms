@@ -65,28 +65,43 @@
                                 <div class="form-group">
                                     <label for="logo" class="col-sm-12 col-form-label">Logo Sekolah</label>
                                     <div class="col-sm-12">
-                                        <input type="file" class="form-control" id="logo" name="logo">
+                                        <input type="file" class="form-control" id="logo" name="logo[]" multiple>
                                     </div>
                                 </div>
                                 <div>
                                     <div class="p-2 rounded-2xl mt-2.5">
                                         @if($data)
-                                            <img id="logoPreview" src="{{ asset('img/' . $data->logo) }}" alt="Logo Preview" class="img-fluid" style="max-height: 150px;">
+                                            <img id="logoPreview" src="{{ logo_utama() }}" alt="Logo Preview" class="img-fluid" style="max-height: 150px;">
                                         @else
                                         <div class='alert alert-warning alert-dismissible' style="margin-top: 5px;">Belum ada logo</div>
                                         @endif
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="logo" class="col-sm-12 col-form-label">Logo Icon</label>
+                                    <label for="logo_invert" class="col-sm-12 col-form-label">Logo Sekolah Invert</label>
                                     <div class="col-sm-12">
-                                        <input type="file" class="form-control" id="favicon" name="favicon">
+                                        <input type="file" class="form-control" id="logo_invert" name="logo_invert[]" multiple>
                                     </div>
                                 </div>
                                 <div>
                                     <div class="p-2 rounded-2xl">
                                         @if($data)
-                                            <img id="faviconPreview" src="{{ asset('img/' . $data->favicon) ?? null }}" alt="Favicon Preview" class="img-fluid" style="max-height: 150px;">
+                                            <img id="logoInvertPreview" src="{{ logo_invert() }}" alt="Logo Invert Preview" class="img-fluid" style="max-height: 150px;">
+                                        @else
+                                        <div class='alert alert-warning alert-dismissible' style="margin-top: 5px;">Belum ada Logo Invert</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="logo" class="col-sm-12 col-form-label">Logo Favicon</label>
+                                    <div class="col-sm-12">
+                                        <input type="file" class="form-control" id="favicon" name="favicon[]" multiple>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="p-2 rounded-2xl">
+                                        @if($data)
+                                            <img id="faviconPreview" src="{{ favicon() }}" alt="Favicon Preview" class="img-fluid" style="max-height: 70px;">
                                         @else
                                         <div class='alert alert-warning alert-dismissible' style="margin-top: 5px;">Belum ada Favicon</div>
                                         @endif
@@ -103,29 +118,67 @@
             $(document).ready(function() {
                 // Preview logo ketika file dipilih
                 $('#logo').change(function(e) {
-                    const file = e.target.files[0];
-                    if (file) {
+                    const files = e.target.files;
+                    if (files.length > 0) {
+                        // Hapus preview sebelumnya
+                        $('#logoPreview').attr('src', '').hide();
+                        $('#logoPreview').siblings('.alert-warning').remove();
+                        
+                        // Tampilkan preview file pertama
                         const reader = new FileReader();
                         reader.onload = function(e) {
                             $('#logoPreview').attr('src', e.target.result).show();
-                            // Hapus alert warning jika ada
-                            $('#logoPreview').siblings('.alert-warning').remove();
                         };
-                        reader.readAsDataURL(file);
+                        reader.readAsDataURL(files[0]);
+                        
+                        // Tampilkan jumlah file yang dipilih
+                        if (files.length > 1) {
+                            $('<div class="alert alert-info mt-2">' + files.length + ' file dipilih</div>').insertAfter('#logoPreview');
+                        }
                     }
                 });
 
                 // Preview favicon ketika file dipilih
                 $('#favicon').change(function(e) {
-                    const file = e.target.files[0];
-                    if (file) {
+                    const files = e.target.files;
+                    if (files.length > 0) {
+                        // Hapus preview sebelumnya
+                        $('#faviconPreview').attr('src', '').hide();
+                        $('#faviconPreview').siblings('.alert-warning').remove();
+                        
+                        // Tampilkan preview file pertama
                         const reader = new FileReader();
                         reader.onload = function(e) {
                             $('#faviconPreview').attr('src', e.target.result).show();
-                            // Hapus alert warning jika ada
-                            $('#faviconPreview').siblings('.alert-warning').remove();
                         };
-                        reader.readAsDataURL(file);
+                        reader.readAsDataURL(files[0]);
+                        
+                        // Tampilkan jumlah file yang dipilih
+                        if (files.length > 1) {
+                            $('<div class="alert alert-info mt-2">' + files.length + ' file dipilih</div>').insertAfter('#faviconPreview');
+                        }
+                    }
+                });
+
+                // Preview logo invert ketika file dipilih
+                $('#logo_invert').change(function(e) {
+                    const files = e.target.files;
+                    if (files.length > 0) {
+                        // Hapus preview sebelumnya
+                        $('#logoInvertPreview').attr('src', '').hide();
+                        $('#logoInvertPreview').siblings('.alert-warning').remove();
+                        
+                        // Tampilkan preview file pertama
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            $('#logoInvertPreview').attr('src', e.target.result).show();
+                        };
+                        reader.readAsDataURL(files[0]);
+                        
+                        // Tampilkan jumlah file yang dipilih
+                        if (files.length > 1) {
+                            $('<div class="alert alert-info mt-2">' + files.length + ' file dipilih</div>').insertAfter('#logoInvertPreview');
+                        }
                     }
                 });
             });
@@ -136,6 +189,8 @@
                 
                 const logoFile = $('#logo')[0].files[0];
                 const faviconFile = $('#favicon')[0].files[0];
+                const logoInvertFile = $('#logo_invert')[0].files[0];
+
                 
                 if (logoFile) {
                     dataInput.append('logo', logoFile);
@@ -143,6 +198,10 @@
                 
                 if (faviconFile) {
                     dataInput.append('favicon', faviconFile);
+                }
+                
+                if (logoInvertFile) {
+                    dataInput.append('logo_invert', logoInvertFile);
                 }
                 
                 confirmModal('Anda yakin ingin mengupdate informasi sekolah?', function(){

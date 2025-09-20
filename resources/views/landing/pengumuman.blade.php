@@ -40,7 +40,7 @@
                                 <span><i class="fas fa-eye"></i> {{ number_format($item->views) }}</span>
                             </div>
                             <h3 class="blog-title">
-                                <a href="{{ url('/artikel/' . $item->slug) }}">
+                                <a href="{{ url('/artikel/' . $item->jenis . '/' . ($item->kategori ? $item->kategori->slug : 'tanpa-kategori') . '/' . $item->slug) }}">
                                     {{ Str::limit($item->judul, 55) }}
                                 </a>
                             </h3>
@@ -49,7 +49,7 @@
                                 {{ Str::limit($item->ringkasan, 90) }}
                             </p>
                             @endif
-                            <a href="{{ url('/artikel/' . $item->slug) }}" class="read-more-btn">
+                            <a href="{{ url('/artikel/' . $item->jenis . '/' . ($item->kategori ? $item->kategori->slug : 'tanpa-kategori') . '/' . $item->slug) }}" class="read-more-btn">
                                 Baca Selengkapnya <i class="fas fa-arrow-right"></i>
                             </a>
                         </div>

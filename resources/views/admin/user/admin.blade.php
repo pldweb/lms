@@ -34,7 +34,7 @@
                                 <table id="studentTable" class="table table-striped table-hover">
                                     <thead>
                                             <tr>
-                                                <th class="h6 text-gray-300" style="width: 5px;">No</th>
+                                                <th class="h6 text-gray-300" style="width: 100px;">No</th>
                                                 <th class="h6 text-gray-300">Nama</th>
                                                 <th class="h6 text-gray-300">Email</th>
                                                 @if(Auth::user()->hasRole('Admin'))

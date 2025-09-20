@@ -32,14 +32,14 @@
                                 <table id="slideshowTable" class="table table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th class="h6 text-gray-300">No</th>
+                                            <th class="h6 text-gray-300" style="width: 75px;">No</th>
                                             <th class="h6 text-gray-300">Gambar</th>
                                             <th class="h6 text-gray-300">Judul</th>
                                             <th class="h6 text-gray-300">Deskripsi</th>
-                                            <th class="h6 text-gray-300">Urutan</th>
+                                            <th class="h6 text-gray-300" style="width: 100px;">Urutan</th>
                                             <th class="h6 text-gray-300">Status</th>
                                             @if(Auth::user()->hasRole('Admin'))
-                                            <th class="h6 text-gray-300">Aksi</th>
+                                            <th class="h6 text-gray-300" style="width: 200px;">Aksi</th>
                                             @endif
                                         </tr>
                                     </thead>

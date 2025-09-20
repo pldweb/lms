@@ -472,14 +472,14 @@ function TinyMCE(selector) {
 function initDataTable(selector) {
     var table = $(selector).DataTable({
         "paging": true,
-        "lengthChange": true,
+        "lengthChange": false,
         "searching": true,
         "ordering": false,
         "info": true,
-        "autoWidth": true,
+        "autoWidth": false,
         "responsive": true,
         "columnDefs": [
-            { orderable: false, targets: [0, -1] }
+            { orderable: false, targets: [0] }
         ]
     });
 

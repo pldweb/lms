@@ -8,9 +8,9 @@
                         <div class="hero-bg" style="background-image: url('{{$heroAsset['image']}}');"></div>
                         <div class="container">
                             <div class="hero-content">
-                                <h1 class="hero-title animated text-white">{{$heroAsset['title']}}</h1>
-                                <p class="hero-text animated text-white">{{$heroAsset['deskripsi']}}</p>
-                                {{-- <div class="hero-btns animated">
+                                <h1 class="hero-title animated text-white wow fadeInUp" data-wow-delay="0.3s">{{$heroAsset['title']}}</h1>
+                                <p class="hero-text animated text-white wow fadeInUp" data-wow-delay="0.5s">{{$heroAsset['deskripsi']}}</p>
+                                {{-- <div class="hero-btns animated wow fadeInUp" data-wow-delay="0.7s">
                                     <a href="{{$heroAsset['link']}}" class="vs-btn style5"><i class="far fa-angle-right"></i>{{$heroAsset['tombol_text']}}</a>
                                 </div> --}}
                             </div>
