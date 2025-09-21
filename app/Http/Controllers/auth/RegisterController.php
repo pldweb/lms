@@ -31,6 +31,10 @@ class RegisterController extends Controller
             return errorAlert('Password harus memiliki minimal 1 huruf kapital', null, '', null);
        }
 
+       if(User::where('email', $credentials['email'])->exists()){
+            return errorAlert('Email sudah pernah terdaftar, silahkan gunakan email lain', null, '', null);
+       }
+
        try {
             DB::beginTransaction();
             $user = User::create([
@@ -44,7 +48,7 @@ class RegisterController extends Controller
             return successAlert('Berhasil Register, silahkan login untuk melanjutkan', null, '', '/auth/login');
        } catch (\Throwable $th) {
             DB::rollBack();
-            return errorAlert('Gagal Register', null, '', null);
+            return errorAlert('Gagal Register' . $th->getMessage(), null, '', null);
        }
     }
 }

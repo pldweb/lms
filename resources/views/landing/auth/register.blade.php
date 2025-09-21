@@ -11,14 +11,14 @@
 
     <section class="auth d-flex">
         <div class="auth-left p-40 d-flex flex-column align-items-start justify-content-center">
-            <img src="{{asset('landing/img/auth/fav-auth.png')}}" style="max-height: 70px; margin-bottom: 20px;" alt="">
+            <img src="{{ logo_invert() }}" style="max-height: 70px; margin-bottom: 20px;" alt="">
             <h2 class="title-auth font-white">Learning Management System <br> SMPN 20 Jakarta</h2>
             <h4 class="subtitle-auth font-white font-medium">Sistem induk dalam pengembangan manajemen pembelajaran di SMPN 20 Jakarta</h4>
         </div>
         <div class="auth-right py-40 px-24 flex-center flex-column">
             <div class="auth-right__inner mx-auto w-100">
                 <a href="{{url('/')}}" class="auth-right__logo">
-                    <img src="{{asset('img/Logo-SMPN20.png')}}" style="max-height: 70px" alt="">
+                    <img src="{{ logo_utama() }}" style="max-height: 70px" alt="">
                 </a>
                 <h2 class="mb-8">Selamat Datang di LMS SMPN 20 Jakarta &#128075;</h2>
                 <p class="text-gray-600 text-15 mb-32">Daftar dengan akun Anda</p>
