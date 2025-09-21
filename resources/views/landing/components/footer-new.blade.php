@@ -17,7 +17,7 @@
                         <div class="social-links mt-4">
                             @foreach($sosialMedia as $item)
                                 <a href="{{ $item->link }}" class="social-link" target="_blank">
-                                    <img src="{{ Storage::url($item->icon) }}" alt="{{ $item->nama }}" class="social-icon" style="max-height: 25px;"></a>
+                                    <img src="{{ asset(Storage::url($item->icon)) }}" alt="{{ $item->nama }}" class="social-icon" style="max-height: 25px;"></a>
                             @endforeach
                         </div>
                     </div>
