@@ -17,10 +17,15 @@
     </div>
 
     <div class="form-group mb-10 row">
-        <label class="form-label" for="icon">Icon <span class="text-danger">*</span></label>
+        <label class="form-label" for="icon">Icon</label>
         <div class="col-12">
-            <input type="file" class="form-control" id="icon" name="icon" required>
+            <input type="file" class="form-control" id="icon" name="icon">
             <small class="text-muted">Contoh: icon instagram</small>
+            <div id="iconPreview" class="mt-2">
+                @if($socialMedia->icon)
+                    <img src="{{ Storage::url($socialMedia->icon ?? '') }}" alt="Preview Icon" class="img-thumbnail" style="max-width: 100px;">
+                @endif
+            </div>
         </div>
     </div>
     
@@ -64,5 +69,16 @@
                 ajxProcess('/admin/social-media/store', formData, '#message-modal')
             });
         });
+    });
+    
+    $('#icon').change(function () {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                $('#iconPreview').html(`<img src="${e.target.result}" alt="Preview Icon" class="img-thumbnail" style="max-width: 100px;">`);
+            }
+            reader.readAsDataURL(file);
+        }
     });
 </script>

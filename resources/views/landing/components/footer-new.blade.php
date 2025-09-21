@@ -1,6 +1,6 @@
 @php
     $informasiSekolah = \App\Models\InformasiSekolah::first();
-    $sosialMedia = \App\Models\SocialMedia::all();
+    $sosialMedia = \App\Models\SocialMedia::orderBy('urutan', 'asc')->get();
 @endphp
 <footer class="footer-wrapper footer-layout2" style="background-color: #0D3D91;">
     <div class="widget-area pt-7 pb-7">
