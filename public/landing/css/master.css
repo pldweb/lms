@@ -61,7 +61,7 @@
 
 .blog-card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    
+
 }
 
 .blog-card:hover {
@@ -202,15 +202,15 @@
     .blog-card {
         margin-bottom: 30px;
     }
-    
+
     .blog-img img {
         height: 200px;
     }
-    
+
     .blog-content {
         padding: 20px;
     }
-    
+
     .blog-title {
         font-size: 18px;
     }
@@ -237,7 +237,7 @@ span.badge.bg-info {
     margin-bottom: 1.2rem;
 }
 
-.content-text h1, .content-text h2, .content-text h3, 
+.content-text h1, .content-text h2, .content-text h3,
 .content-text h4, .content-text h5, .content-text h6 {
     margin-top: 1.5rem;
     margin-bottom: 1rem;
@@ -380,7 +380,7 @@ section.auth {
     z-index: 1;
 }
 .font-white {
-    color: white; 
+    color: white;
 }
 
 .title-auth {
@@ -424,6 +424,54 @@ section.auth {
 @media (max-width: 2100px) {
     .sec-title2, .sec-title {
         font-size: 38px;
+    }
+}
+
+@media (max-width: 600px) {
+    .header-detail-artikel {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+
+    .share-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    h1.hero-title {
+        font-size: 20px;
+    }
+
+    .swiper-button-prev, .swiper-button-next {
+        display: none !important;
+    }
+
+    .swiper-slide .container {
+        width: 90% !important;
+    }
+
+    .sec-title2, .sec-title {
+        font-size: 22px;
+    }
+
+    .category-img img {
+        height: 200px;
+        object-fit: cover;
+    }
+
+    #count-school .card-count {
+        flex-wrap: wrap;
+        row-gap: 10px;
+    }
+
+    .count {
+        width: 50%;
+        border: none !important;
+    }
+
+    .icon i {
+        font-size: 32px !important;
     }
 }
 

@@ -16,12 +16,18 @@
                     <div class="artikel-meta mb-4 p-3 bg-light rounded">
                         <div class="row align-items-center">
                             <div class="col-md-12">
-                                <div class="d-flex align-items-center justify-content-md-start">
-                                    <span class="me-3 italic"><strong>Penulis:</strong> {{ $artikel->penulis->nama }}</span>
-                                    <i class="fas fa-calendar me-2 text-muted"></i>
-                                    <span class="me-3">{{ $artikel->tanggal_publish->format('d F Y, H:i') }}</span>
-                                    <i class="fas fa-eye me-2 text-muted"></i>
-                                    <span>{{ number_format($artikel->views) }} views</span>
+                                <div class="d-flex align-items-center justify-content-md-start header-detail-artikel">
+                                    <div>
+                                        <span class="me-3 italic"><strong>Penulis:</strong> {{ $artikel->penulis->nama }}</span>
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-calendar me-2 text-muted"></i>
+                                        <span class="me-3">{{ $artikel->tanggal_publish->format('d F Y, H:i') }}</span>
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-eye me-2 text-muted"></i>
+                                        <span>{{ number_format($artikel->views) }} views</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
