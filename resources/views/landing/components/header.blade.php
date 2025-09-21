@@ -46,8 +46,14 @@
                     </div>
                     <div class="col-auto">
                         <div class="header-social">
-                            <a href="#"><i class="fab fa-facebook"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            @php
+                                $sosmed = \App\Models\SocialMedia::orderBy('urutan', 'asc')->get();
+                            @endphp
+                            @foreach($sosmed as $item)
+                                <a href="{{ $item->link }}" class="social-link" target="_blank">
+                                    <img src="{{ asset(Storage::url($item->icon)) }}" alt="{{ $item->nama }}" style="max-height: 25px;">
+                                </a>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -59,7 +65,7 @@
                     <div class="row gx-50 align-items-center justify-content-between master-menu">
                         <div class="col-auto col-xl align-self-stretch">
                             <div class="vs-logo style2">
-                                <a href="{{url('/')}}"><img src="{{ logo_utama() ?? '' }}" alt="logo"></a>
+                                <a href="{{url('/')}}"><img src="{{ logo_utama() }}" alt="logo"></a>
                             </div>
                         </div>
                         <div class="col-auto">
@@ -84,7 +90,7 @@
                         <div class="col-auto d-none d-xl-block">
                             <div class="header-btns style2">
                                 <button type="button" class="searchBoxTggler"><i class="far fa-search"></i></button>
-                                <a href="find-program.html" class="vs-btn style6"><i class="fal fa-graduation-cap"></i>Tentang Kami</a>
+                                <a href="{{url('halaman/tentang-kami')}}" class="vs-btn style6"><i class="fal fa-graduation-cap"></i>Tentang Kami</a>
                             </div>
                         </div>
                     </div>
