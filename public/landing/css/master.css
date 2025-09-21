@@ -280,7 +280,7 @@ span.badge.bg-info {
 
 .content-text blockquote {
     background: #f8f9fa;
-    border-left: 4px solid var(--bs-{{ $artikel->jenis == 'berita' ? 'primary' : 'info' }});
+    border-left: 4px solid black;
     margin: 1.5rem 0;
     padding: 1rem;
     font-style: italic;
@@ -304,7 +304,7 @@ span.badge.bg-info {
 }
 
 .content-text a {
-    color: var(--bs-{{ $artikel->jenis == 'berita' ? 'primary' : 'info' }});
+    color: black;
     text-decoration: none;
 }
 
@@ -346,7 +346,7 @@ span.badge.bg-info {
 }
 
 .artikel-meta {
-    border-left: 4px solid var(--bs-{{ $artikel->jenis == 'berita' ? 'primary' : 'info' }});
+    border-left: 4px solid white;
 }
 
 section.auth {
