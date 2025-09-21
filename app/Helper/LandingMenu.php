@@ -2,21 +2,25 @@
 
 namespace App\Helper;
 
+use App\Models\InformasiSekolah;
 use App\Models\Menu;
 
-class LandingMenu 
+class LandingMenu
 {
     public static function setContactMenu(){
+
+        $informasiSekolah = InformasiSekolah::first();
+
         return [
             [
                 'icon' => 'fas fa-phone-alt',
-                'text' => '021 8002033',
-                'link' => '+440076897888',
+                'text' => $informasiSekolah->nomor_telepon ?? '',
+                'link' => "tel:$informasiSekolah->nomor_telepon" ?? '',
             ],
             [
                 'icon' => 'fas fa-envelope',
-                'text' => 'smpn20jakarta@gmail.com',
-                'link' => 'mailto:smpn20jakarta@gmail.com',
+                'text' => $informasiSekolah->email ?? '',
+                'link' => "mailto:$informasiSekolah->email" ?? '',
             ],
         ];
     }
@@ -53,12 +57,12 @@ class LandingMenu
                             'title' => $child->title,
                             'url' => $child->url,
                         ];
-                        
+
                         // Tambahkan icon jika ada
                         if ($child->icon) {
                             $childItem['icon'] = $child->icon;
                         }
-                        
+
                         $menuItem['children'][] = $childItem;
                     }
                 }
