@@ -68,9 +68,9 @@
                                                     <span class="h6 mb-0 fw-medium text-gray-300">{{ $item->urutan }}</span>
                                                 </td>
                                                 <td>
-                                                    <button onclick="showModal('/admin/kategori-galeri/detail/{{ $item->id }}', 'Data Detail')" style="margin-right: 5px;" class="btn btn-primary btn-add btn-sm">
+                                                    <a href="{{url('admin/galeri/kategori-edit/' . $item->id)}}" style="margin-right: 5px;" class="btn btn-primary btn-add btn-sm">
                                                         <i class="ph ph-eye btn-icon"></i>
-                                                    </button>
+                                                    </a>
                                                     <button onclick="confirmDelete('{{ $item->id }}')" class="btn btn-danger btn-add btn-sm">
                                                         <i class="ph ph-trash btn-icon"></i>
                                                     </button>

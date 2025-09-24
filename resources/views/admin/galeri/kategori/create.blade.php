@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'Tambah Kategori Galeri')
+@section('title', isset($kategori) ? 'Edit Kategori Galeri' : 'Tambah Kategori Galeri')
 @section('content')
 
 <div class="row mt-20">
@@ -7,7 +7,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">Tambah Kategori Galeri</h3>
+                    <h3 class="card-title">{{ isset($kategori) ? 'Edit Kategori Galeri' : 'Tambah Kategori Galeri' }}</h3>
                     <a href="{{ url('/admin/galeri/kategori') }}" class="btn btn-secondary">
                         <i class="ph ph-arrow-left"></i> Kembali
                     </a>
@@ -16,16 +16,19 @@
             <div class="card-body">
                 <form id="kategoriForm" method="POST" onsubmit="return false" enctype="multipart/form-data">
                     @csrf
+                    @if(isset($kategori))
+                        <input type="hidden" name="id" value="{{ $kategori->id }}">
+                    @endif
                     <div class="row">
                         <div class="col-md-8">
                             <div class="mb-3">
                                 <label for="nama_kategori" class="form-label">Nama Kategori <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="nama_kategori" name="nama_kategori" required>
+                                <input type="text" class="form-control" id="nama_kategori" name="nama_kategori" required value="{{ old('nama_kategori', $kategori->nama_kategori ?? '') }}">
                             </div>
 
                             <div class="mb-3">
                                 <label for="deskripsi" class="form-label">Deskripsi</label>
-                                <textarea class="form-control" id="deskripsi" name="deskripsi" style="height: auto;" rows="4" cols="6" placeholder="Deskripsi kategori galeri..."></textarea>
+                                <textarea class="form-control" id="deskripsi" name="deskripsi" style="height: auto;" rows="4" cols="6" placeholder="Deskripsi kategori galeri...">{{ trim(old('deskripsi', $kategori->deskripsi ?? '')) }}</textarea>
                             </div>
 
                             <div class="row">
@@ -34,15 +37,15 @@
                                         <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
                                         <select class="form-select" id="status" name="status" required>
                                             <option value="">Pilih Status</option>
-                                            <option value="aktif" selected>Aktif</option>
-                                            <option value="nonaktif">Non-Aktif</option>
+                                            <option value="aktif" {{ (isset($kategori) && $kategori->status == 'aktif') ? 'selected' : (!isset($kategori) ? 'selected' : '') }}>Aktif</option>
+                                            <option value="nonaktif" {{ (isset($kategori) && $kategori->status == 'nonaktif') ? 'selected' : '' }}>Non-Aktif</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="urutan" class="form-label">Urutan</label>
-                                        <input type="number" class="form-control" id="urutan" name="urutan" min="0" value="0">
+                                        <input type="number" class="form-control" id="urutan" name="urutan" min="0" value="{{ old('urutan', $kategori->urutan ?? '') }}">
                                         <small class="text-muted">Urutan tampil kategori (angka kecil tampil pertama)</small>
                                     </div>
                                 </div>
@@ -56,17 +59,18 @@
                                 <small class="text-muted">Format: JPG, PNG, GIF. Maksimal 5MB</small>
                             </div>
 
-                            <div id="imagePreview" class="mb-3" style="display: none;">
-                                <img id="previewImg" src="" alt="Preview" class="img-fluid rounded" style="max-height: 200px;">
+                            <div id="imagePreview" class="mb-3" style="{{ isset($kategori) && $kategori->gambar_cover ? '' : 'display: none;' }}">
+                                <img id="previewImg" src="{{ isset($kategori) && $kategori->gambar_cover ? asset('img/galeri/kategori/' . $kategori->gambar_cover) : '' }}" alt="Preview" class="img-fluid rounded" style="max-height: 150px;">
                             </div>
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-end gap-2">
-                        <button type="button" id="simpanDraft" class="btn btn-secondary">
+                    <hr>
+                    <div class="d-flex justify-content-start gap-2">
+                        <button type="button" id="simpanDraft" class="btn btn-secondary btn-add">
                             <i class="ph ph-floppy-disk"></i> Simpan sebagai Draft
                         </button>
-                        <button type="button" id="simpanAktif" class="btn btn-primary">
+                        <button type="button" id="simpanAktif" class="btn btn-primary btn-add">
                             <i class="ph ph-check"></i> Simpan & Aktifkan
                         </button>
                     </div>
@@ -78,6 +82,11 @@
 
 <script>
     $(document).ready(function() {
+        // Trigger character counter on load if nama_kategori has value
+        if ($('#nama_kategori').val()) {
+            $('#nama_kategori').trigger('input');
+        }
+        
         // Image preview
         $('#gambar_cover').change(function() {
             const file = this.files[0];
@@ -88,8 +97,25 @@
                     $('#imagePreview').show();
                 };
                 reader.readAsDataURL(file);
+                
+                // Uncheck hapus_gambar if it exists
+                if ($('#hapus_gambar').length) {
+                    $('#hapus_gambar').prop('checked', false);
+                }
             } else {
-                $('#imagePreview').hide();
+                // Only hide if no existing image
+                if (!$('#previewImg').attr('src') || $('#previewImg').attr('src') === '') {
+                    $('#imagePreview').hide();
+                }
+            }
+        });
+        
+        // Handle hapus_gambar checkbox
+        $('#hapus_gambar').change(function() {
+            if ($(this).is(':checked')) {
+                $('#imagePreview').css('opacity', '0.3');
+            } else {
+                $('#imagePreview').css('opacity', '1');
             }
         });
 
@@ -139,7 +165,7 @@
                 'Apakah Anda yakin ingin menyimpan kategori sebagai draft?';
 
             confirmModal(confirmMessage, function() {
-                ajxProcess('/admin/galeri/kategori-store', formData, '#message-modal');
+                ajxProcess('/admin/galeri/kategori-save', formData, '#message-modal');
             });
         }
 

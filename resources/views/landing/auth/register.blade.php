@@ -2,7 +2,6 @@
 @section('title', 'Register')
 @section('content')
 
-    
     <div class="preloader">
         <div class="loader"></div>
     </div>
@@ -61,7 +60,7 @@
                     </div>
                     <button type="submit" class="btn btn-main rounded-pill w-100">Daftar</button>
                     <p class="mt-32 text-gray-600 text-center">Sudah punya akun?
-                        <a href="{{url('login')}}" class="text-main-600 hover-text-decoration-underline"> Log In</a>
+                        <a href="{{url('auth/login')}}" class="text-main-600 hover-text-decoration-underline"> Log In</a>
                     </p>
                 </form>
             </div>

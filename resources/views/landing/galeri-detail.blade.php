@@ -28,7 +28,7 @@
                 <div class="media-content mb-4">
                     @if($galeri->tipe == 'foto' && $galeri->file_path)
                         <div class="photo-container position-relative">
-                            <img src="{{ asset('img/galeri/' . $galeri->file_path) }}" alt="{{ $galeri->judul }}" class="img-fluid rounded shadow-sm w-100" id="mainPhoto">
+                            <img src="{{ asset('img/uploads/' . $galeri->file_path) }}" alt="{{ $galeri->judul }}" class="img-fluid rounded shadow-sm w-100" id="mainPhoto">
                             <button class="btn btn-primary position-absolute top-50 start-50 translate-middle" id="zoomButton" style="opacity: 0;">
                                 <i class="ph ph-magnifying-glass-plus"></i> Zoom
                             </button>
@@ -117,7 +117,7 @@
                                     <div class="card border-0 shadow-sm">
                                         <div class="position-relative overflow-hidden" style="height: 120px;">
                                             @if($item->tipe == 'foto' && $item->file_path)
-                                                <img src="{{ asset('img/galeri/' . $item->file_path) }}" alt="{{ $item->judul }}" class="w-100 h-100 object-fit-cover">
+                                                <img src="{{ asset('img/uploads/' . $item->file_path) }}" alt="{{ $item->judul }}" class="w-100 h-100 object-fit-cover">
                                             @elseif($item->tipe == 'video' && $item->youtube_thumbnail)
                                                 <img src="{{ $item->youtube_thumbnail }}" alt="{{ $item->judul }}" class="w-100 h-100 object-fit-cover">
                                                 <div class="position-absolute top-50 start-50 translate-middle">
@@ -181,7 +181,7 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body d-flex align-items-center justify-content-center">
-                <img src="{{ $galeri->tipe == 'foto' && $galeri->file_path ? asset('img/galeri/' . $galeri->file_path) : '' }}" alt="{{ $galeri->judul }}" class="img-fluid">
+                <img src="{{ $galeri->tipe == 'foto' && $galeri->file_path ? asset('img/uploads/' . $galeri->file_path) : '' }}" alt="{{ $galeri->judul }}" class="img-fluid">
             </div>
         </div>
     </div>

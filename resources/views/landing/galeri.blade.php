@@ -33,7 +33,7 @@
                         <div class="col-6">
                             <div class="gallery-item position-relative overflow-hidden rounded-3" style="height: {{ $index < 2 ? '200px' : '150px' }};">
                                 @if($item->tipe == 'foto' && $item->file_path)
-                                    <img src="{{ asset('img/galeri/' . $item->file_path) }}" alt="{{ $item->judul }}" class="w-100 h-100 object-fit-cover">
+                                    <img src="{{ asset('img/uploads/' . $item->file_path) }}" alt="{{ $item->judul }}" class="w-100 h-100 object-fit-cover">
                                 @elseif($item->tipe == 'video' && $item->youtube_thumbnail)
                                     <img src="{{ $item->youtube_thumbnail }}" alt="{{ $item->judul }}" class="w-100 h-100 object-fit-cover">
                                     <div class="position-absolute top-50 start-50 translate-middle">
@@ -118,7 +118,7 @@
                     <div class="card border-0 shadow-sm h-100">
                         <div class="position-relative overflow-hidden" style="height: 200px;">
                             @if($item->tipe == 'foto' && $item->file_path)
-                                <img src="{{ asset('img/galeri/' . $item->file_path) }}" alt="{{ $item->judul }}" class="w-100 h-100 object-fit-cover">
+                                <img src="{{ asset('img/uploads/' . $item->file_path) }}" alt="{{ $item->judul }}" class="w-100 h-100 object-fit-cover">
                                 <a href="{{ url('/galeri/detail/' . $item->id) }}" class="stretched-link"></a>
                             @elseif($item->tipe == 'video' && $item->youtube_thumbnail)
                                 <img src="{{ $item->youtube_thumbnail }}" alt="{{ $item->judul }}" class="w-100 h-100 object-fit-cover">

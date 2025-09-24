@@ -473,6 +473,15 @@ section.auth {
     .icon i {
         font-size: 32px !important;
     }
+
+    section.auth.d-flex {
+        flex-direction: column !important;
+    }
+
+    .auth-left, .title-auth, .subtitle-auth {
+        width: 100% !important;
+        max-width: 100%;
+    }
 }
 
 

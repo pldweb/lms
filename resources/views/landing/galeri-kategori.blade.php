@@ -88,7 +88,7 @@
                     <div class="card border-0 shadow-sm h-100">
                         <div class="position-relative overflow-hidden gallery-image" style="height: 250px;">
                             @if($item->tipe == 'foto' && $item->file_path)
-                                <img src="{{ asset('img/galeri/' . $item->file_path) }}" alt="{{ $item->judul }}" class="w-100 h-100 object-fit-cover" loading="lazy">
+                                <img src="{{ asset('img/uploads/' . $item->file_path) }}" alt="{{ $item->judul }}" class="w-100 h-100 object-fit-cover" loading="lazy">
                                 <div class="gallery-overlay position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex align-items-center justify-content-center opacity-0">
                                     <div class="text-center text-white">
                                         <i class="ph ph-magnifying-glass-plus" style="font-size: 2rem;"></i>
@@ -147,7 +147,7 @@
                         <div class="col-md-4">
                             <div class="position-relative overflow-hidden" style="height: 200px;">
                                 @if($item->tipe == 'foto' && $item->file_path)
-                                    <img src="{{ asset('img/galeri/' . $item->file_path) }}" alt="{{ $item->judul }}" class="w-100 h-100 object-fit-cover">
+                                    <img src="{{ asset('img/uploads/' . $item->file_path) }}" alt="{{ $item->judul }}" class="w-100 h-100 object-fit-cover">
                                 @elseif($item->tipe == 'video' && $item->youtube_thumbnail)
                                     <img src="{{ $item->youtube_thumbnail }}" alt="{{ $item->judul }}" class="w-100 h-100 object-fit-cover">
                                     <div class="position-absolute top-50 start-50 translate-middle">
