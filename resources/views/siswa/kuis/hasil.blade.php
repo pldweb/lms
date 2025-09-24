@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4>Hasil Kuis: {{ $hasil->kuis->judul }}</h4>
-                    <a href="{{ url('/siswa/kuis') }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ url('/siswa/kuis') }}" class="btn btn-secondary">url()->previous()</a>
                 </div>
                 <div class="card-body">
                     @if (session('success'))
@@ -110,15 +110,15 @@
                                                 <div class="pertanyaan mb-3">
                                                     <strong>Pertanyaan:</strong>
                                                     <div>{!! $jawaban->pertanyaan->pertanyaan !!}</div>
-                                                    
+
                                                     @if($jawaban->pertanyaan->gambar)
                                                         <div class="mt-2">
-                                                            <img src="{{ asset('storage/kuis/' . $jawaban->pertanyaan->gambar) }}" 
+                                                            <img src="{{ asset('storage/kuis/' . $jawaban->pertanyaan->gambar) }}"
                                                                 alt="Gambar Soal" class="img-fluid" style="max-height: 200px;">
                                                         </div>
                                                     @endif
                                                 </div>
-                                                
+
                                                 <div class="jawaban-anda mb-3">
                                                     <strong>Jawaban Anda:</strong>
                                                     <div>
@@ -137,7 +137,7 @@
                                                         @endif
                                                     </div>
                                                 </div>
-                                                
+
                                                 @if($jawaban->pertanyaan->tipe != 'esai')
                                                     <div class="jawaban-benar">
                                                         <strong>Jawaban Benar:</strong>
@@ -168,7 +168,7 @@
                                                         </div>
                                                     </div>
                                                 @endif
-                                                
+
                                                 <div class="nilai mt-2">
                                                     <strong>Nilai:</strong> {{ $jawaban->nilai }}
                                                 </div>

@@ -83,7 +83,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-12">
         <div class="form-group row">
             <label for="nama_orang_tua" class="col-md-3">Nama Orang Tua</label>
@@ -104,7 +104,7 @@
 
 </div>
 <div class="row">
-    
+
     <div class="col-md-12">
         <div class="form-group row">
             <label for="alamat" class="col-md-3">Alamat</label>
@@ -181,6 +181,6 @@
     <div class="col-md-3"></div>
     <div class="col-md-9">
         <button type="submit" class="btn btn-primary btn-add">Simpan Data Siswa</button>
-        <a href="/admin/user" class="btn btn-secondary btn-add">Kembali</a>
+        <a href="/admin/user" class="btn btn-secondary btn-add">url()->previous()</a>
     </div>
 </div>

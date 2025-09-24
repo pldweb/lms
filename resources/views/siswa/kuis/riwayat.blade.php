@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4>Riwayat Kuis</h4>
-                    <a href="{{ url('/siswa/kuis') }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ url('/siswa/kuis') }}" class="btn btn-secondary">url()->previous()</a>
                 </div>
                 <div class="card-body">
                     @if (session('success'))
