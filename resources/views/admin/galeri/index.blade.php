@@ -2,6 +2,33 @@
 @section('title', 'Galeri')
 @section('content')
 
+<!-- Modal Pilih Kategori -->
+<div class="modal fade" id="pilihKategoriModal" tabindex="-1" aria-labelledby="pilihKategoriModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pilihKategoriModalLabel">Pilih Kategori Galeri</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="kategoriSelect" class="form-label">Kategori</label>
+                    <select id="kategoriSelect" class="form-select">
+                        <option value="">-- Pilih Kategori --</option>
+                        @foreach($kategori as $kat)
+                            <option value="{{ $kat->id }}">{{ $kat->nama_kategori }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="btnLanjutUpload" disabled>Lanjut Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row mt-20">
     <div class="col-md-12">
         <div class="card">
@@ -12,9 +39,9 @@
                         <a href="{{ url('/admin/galeri/kategori') }}" class="btn btn-secondary mb-3 btn-add" style="white-space: nowrap">
                             <i class="ph ph-folder"></i> Kelola Kategori
                         </a>
-                        <a href="{{ url('/admin/galeri/create') }}" class="btn btn-primary mb-3 btn-add" style="white-space: nowrap">
+                        <button type="button" class="btn btn-primary mb-3 btn-add" data-bs-toggle="modal" data-bs-target="#pilihKategoriModal" style="white-space: nowrap">
                             <i class="ph ph-plus"></i> Tambah Item
-                        </a>                   
+                        </button>                   
                         <select id="filterKategori" class="form-select w-auto mb-3 mr-2 select2">
                             <option value="">Semua Kategori</option>
                             @foreach($kategori as $kat)
@@ -95,13 +122,13 @@
                                                         </td>
                                                         <td>
                                                             <div class="btn-group" role="group">
-                                                                <a href="{{ url('/admin/galeri/edit/' . $item->id) }}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                                                <a href="{{ url('/admin/galeri/edit/' . $item->id) }}" class="btn btn-sm btn-add" title="Edit">
                                                                     <i class="ph ph-pencil"></i>
                                                                 </a>
                                                                 <button type="button" class="btn btn-sm btn-outline-{{ $item->status == 'aktif' ? 'warning' : 'success' }}" onclick="toggleStatus({{ $item->id }})" title="{{ $item->status == 'aktif' ? 'Nonaktifkan' : 'Aktifkan' }}">
                                                                     <i class="ph ph-{{ $item->status == 'aktif' ? 'eye-slash' : 'eye' }}"></i>
                                                                 </button>
-                                                                <button onclick="deleteGaleri('{{ $item->id }}')" class="btn btn-sm btn-outline-danger" title="Hapus">
+                                                                <button onclick="deleteGaleri('{{ $item->id }}')" class="btn btn-sm btn-add" title="Hapus">
                                                                     <i class="ph ph-trash"></i>
                                                                 </button>
                                                             </div>
@@ -256,6 +283,24 @@
                 $(this).html(highlightedText);
             });
         }
+        
+        // Pilih Kategori Modal
+        $('#kategoriSelect').on('change', function() {
+            var kategoriId = $(this).val();
+            if (kategoriId) {
+                $('#btnLanjutUpload').prop('disabled', false);
+            } else {
+                $('#btnLanjutUpload').prop('disabled', true);
+            }
+        });
+
+        // Lanjut Upload Button
+        $('#btnLanjutUpload').on('click', function() {
+            var kategoriId = $('#kategoriSelect').val();
+            if (kategoriId) {
+                window.location.href = "{{ url('/admin/galeri/create') }}?kategori_id=" + kategoriId;
+            }
+        });
     });
     
     function toggleStatus(id) {

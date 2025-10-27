@@ -121,11 +121,21 @@ class GaleriController extends Controller
         return view('admin.galeri.index', $params);
     }
 
-    public function getCreate()
+    public function getCreate(Request $request)
     {
+        $kategori_id = $request->query('kategori_id');
+        
+        // Jika tidak ada kategori_id, redirect ke halaman index
+        if (!$kategori_id) {
+            return redirect('/admin/galeri')->with('error', 'Silahkan pilih kategori terlebih dahulu');
+        }
+        
+        $kategori_terpilih = KategoriGaleri::findOrFail($kategori_id);
         $kategori = KategoriGaleri::aktif()->orderBy('urutan')->get();
+        
         $params = [
             'kategori' => $kategori,
+            'kategori_terpilih' => $kategori_terpilih,
         ];
         return view('admin.galeri.create', $params);
     }
@@ -230,9 +240,14 @@ class GaleriController extends Controller
 
     public function getEdit($id)
     {
+        $galeri = Galeri::with('kategori')->findOrFail($id);
+        $kategori = KategoriGaleri::aktif()->orderBy('urutan')->get();
+        $kategori_terpilih = $galeri->kategori;
+        
         $params = [
-            'galeri' => Galeri::with('kategori')->findOrFail($id),
-            'kategori' => KategoriGaleri::aktif()->orderBy('urutan')->get(),
+            'galeri' => $galeri,
+            'kategori' => $kategori,
+            'kategori_terpilih' => $kategori_terpilih,
         ];
         return view('admin.galeri.create', $params);
     }

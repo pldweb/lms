@@ -25,12 +25,9 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="kategori_galeri_id" class="form-label">Kategori <span class="text-danger">*</span></label>
-                                <select class="form-select select2" id="kategori_galeri_id" name="kategori_galeri_id" required>
-                                    <option value="">Pilih Kategori</option>
-                                    @foreach($kategori as $kat)
-                                        <option value="{{ $kat->id }}" {{ isset($galeri) && $galeri->kategori_galeri_id == $kat->id ? 'selected' : '' }}>{{ $kat->nama_kategori }}</option>
-                                    @endforeach
-                                </select>
+                                <input type="hidden" name="kategori_galeri_id" value="{{ $kategori_terpilih->id }}">
+                                <div class="form-control bg-light">{{ $kategori_terpilih->nama_kategori }}</div>
+                                <small class="text-muted">{{ $kategori_terpilih->deskripsi }}</small>
                             </div>
 
                             <div class="mb-3">
@@ -84,7 +81,7 @@
                                                         <button type="button" class="btn btn-sm btn-warning btn-edit-image" data-item-id="{{ $item->id }}" title="Ganti gambar ini">
                                                             <i class="ph ph-pencil" style="font-size: 10px;"></i>
                                                         </button>
-                                                        @if($index > 0) {{-- Jangan hapus gambar utama --}}
+                                                        @if($index > 0)
                                                             <button type="button" class="btn btn-sm btn-danger btn-delete-image" data-item-id="{{ $item->id }}" title="Hapus gambar ini">
                                                                 <i class="ph ph-trash" style="font-size: 10px;"></i>
                                                             </button>

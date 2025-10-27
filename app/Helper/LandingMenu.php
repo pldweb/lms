@@ -79,6 +79,15 @@ class LandingMenu
                 'url' => url('/'),
             ],
             [
+                'title' => 'Profil',
+                'url' => '#',
+                'children' => [
+                    ['title' => 'Sejarah Sekolah', 'url' => url('/sejarah-sekolah')],
+                    ['title' => 'Program Sekolah', 'url' => url('/program-sekolah')],
+                    ['title' => 'Prestasi Sekolah', 'url' => url('/prestasi-sekolah')],
+                ],
+            ],
+            [
                 'title' => 'Informasi',
                 'url' => '#',
                 'children' => [
